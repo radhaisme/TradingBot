@@ -7,9 +7,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{660DA004-8DA9-
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingBot.WinForms", "TradingBot.WinForms\TradingBot.WinForms.csproj", "{71495B78-CAB1-4974-B1D0-70DAC2E1857D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{DA2B2593-4642-4C9F-9D15-2F64D8B9CA1C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{DA2B2593-4642-4C9F-9D15-2F64D8B9CA1C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradingBot.Core", "TradingBot.Common\TradingBot.Core.csproj", "{70471BDE-F487-4C11-A55E-78553646FB27}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradingBot.Core", "TradingBot.Core\TradingBot.Core.csproj", "{D49B0CCE-7EBE-430D-8C92-4221752F3329}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,17 +21,17 @@ Global
 		{71495B78-CAB1-4974-B1D0-70DAC2E1857D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71495B78-CAB1-4974-B1D0-70DAC2E1857D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{71495B78-CAB1-4974-B1D0-70DAC2E1857D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{70471BDE-F487-4C11-A55E-78553646FB27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{70471BDE-F487-4C11-A55E-78553646FB27}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{70471BDE-F487-4C11-A55E-78553646FB27}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{70471BDE-F487-4C11-A55E-78553646FB27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D49B0CCE-7EBE-430D-8C92-4221752F3329}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D49B0CCE-7EBE-430D-8C92-4221752F3329}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D49B0CCE-7EBE-430D-8C92-4221752F3329}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D49B0CCE-7EBE-430D-8C92-4221752F3329}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{71495B78-CAB1-4974-B1D0-70DAC2E1857D} = {660DA004-8DA9-4955-B743-7DC0775B22B6}
-		{70471BDE-F487-4C11-A55E-78553646FB27} = {DA2B2593-4642-4C9F-9D15-2F64D8B9CA1C}
+		{D49B0CCE-7EBE-430D-8C92-4221752F3329} = {DA2B2593-4642-4C9F-9D15-2F64D8B9CA1C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BDE7EDEE-E5DB-4F69-8BE2-21FE15B3001B}
