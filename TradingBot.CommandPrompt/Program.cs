@@ -7,11 +7,8 @@ namespace TradingBot.CommandPrompt
 
 	public class Program
     {
-        private async static Task Main(string[] args)
+        private static async Task Main(string[] args)
         {
-	        //var api = new YobitApi("https://yobit.net");
-	        //var r = api.GetPairs();
-
 	        Console.ReadLine();
         }
     }

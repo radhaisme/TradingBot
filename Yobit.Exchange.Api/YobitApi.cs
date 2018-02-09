@@ -1,47 +1,58 @@
 ﻿
 namespace Yobit.Exchange.Api
 {
-	using System;
-	using System.Net.Http;
-	using System.Text;
-	using TradingBot.Core;
+    using System;
+    using System.Net.Http;
+    using System.Text;
+    using System.Threading.Tasks;
+    using TradingBot.Core;
 
-	public class YobitApi : ExchangeApi
+    public class YobitApi : ExchangeApi
 	{		
 	    public YobitApi(string baseAddress) : base(baseAddress)
 	    { }
 
-		public string GetPairs()
+	    public async Task<string> GetPairsAsync()
+	    {
+            HttpResponseMessage response = await Http.GetAsync(new Uri(Http.BaseAddress + "api/3/info"));
+
+            if (response.IsSuccessStatusCode)
+            {
+                byte[] buffer = await response.Content.ReadAsByteArrayAsync();
+
+                return Encoding.Default.GetString(buffer);
+            }
+
+            return null;
+	    }
+
+        public string GetPairs()
 		{
-			HttpResponseMessage response = Http.GetAsync(new Uri(Http.BaseAddress + "api/3/info")).Result;
-
-			if (response.IsSuccessStatusCode)
-			{
-				var buffer = response.Content.ReadAsByteArrayAsync().Result;
-
-				return Encoding.Default.GetString(buffer);
-			}
-
-			return null;
+			return GetPairsAsync().Result;
 		}
 
-		public string GetPairData(string pair)
+	    public async Task<string> GetPairDataAsync(string pair)
 	    {
-		    if (String.IsNullOrEmpty(pair))
-		    {
-				throw new ArgumentNullException(nameof(pair));
-		    }
+	        if (String.IsNullOrEmpty(pair))
+	        {
+	            throw new ArgumentNullException(nameof(pair));
+	        }
 
-			HttpResponseMessage response = Http.GetAsync(new Uri(String.Format(Http.BaseAddress + "api/3/ticker/{0}", pair))).Result;
+	        HttpResponseMessage response = await Http.GetAsync(new Uri(String.Format(Http.BaseAddress + "api/3/ticker/{0}", pair)));
 
-		    if (response.IsSuccessStatusCode)
-		    {
-			    var buffer = response.Content.ReadAsByteArrayAsync().Result;
-			    
-				return Encoding.Default.GetString(buffer);
-			}
+	        if (response.IsSuccessStatusCode)
+	        {
+	            byte[] buffer = await response.Content.ReadAsByteArrayAsync();
 
-			return null;
+	            return Encoding.Default.GetString(buffer);
+	        }
+
+	        return null;
+	    }
+
+        public string GetPairData(string pair)
+	    {
+			return GetPairDataAsync(pair).Result;
 	    }
     }
 }
