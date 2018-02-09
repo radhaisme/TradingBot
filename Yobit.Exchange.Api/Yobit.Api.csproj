@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Yobit.Exchange.Api</AssemblyName>
+    <RootNamespace>Yobit.Exchange.Api</RootNamespace>
   </PropertyGroup>
 
 </Project>
