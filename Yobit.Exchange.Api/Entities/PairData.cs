@@ -1,5 +1,5 @@
 ﻿
-namespace TradingBot.Common
+namespace Yobit.Exchange.Api.Entities
 {
 	using System;
 

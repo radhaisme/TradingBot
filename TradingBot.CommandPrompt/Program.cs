@@ -9,8 +9,8 @@ namespace TradingBot.CommandPrompt
     {
         private async static Task Main(string[] args)
         {
-	        var client = new YobitClient();
-			Console.WriteLine(client.GetPairData("ltc_btc"));
+	        //var api = new YobitApi("https://yobit.net");
+	        //var r = api.GetPairs();
 
 	        Console.ReadLine();
         }

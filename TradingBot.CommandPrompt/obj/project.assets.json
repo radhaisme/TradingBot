@@ -197,9 +197,22 @@
           "build/netstandard2.0/NETStandard.Library.targets": {}
         }
       },
+      "TradingBot.Core/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "compile": {
+          "bin/placeholder/TradingBot.Core.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/TradingBot.Core.dll": {}
+        }
+      },
       "Yobit.Exchange.Api/1.0.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
+        "dependencies": {
+          "TradingBot.Core": "1.0.0"
+        },
         "compile": {
           "bin/placeholder/Yobit.Exchange.Api.dll": {}
         },
@@ -666,6 +679,11 @@
         "netstandard.library.2.0.0.nupkg.sha512",
         "netstandard.library.nuspec"
       ]
+    },
+    "TradingBot.Core/1.0.0": {
+      "type": "project",
+      "path": "../TradingBot.Core/TradingBot.Core.csproj",
+      "msbuildProject": "../TradingBot.Core/TradingBot.Core.csproj"
     },
     "Yobit.Exchange.Api/1.0.0": {
       "type": "project",

@@ -81,6 +81,10 @@
       <Project>{d49b0cce-7ebe-430d-8c92-4221752f3329}</Project>
       <Name>TradingBot.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Yobit.Exchange.Api\Yobit.Api.csproj">
+      <Project>{C4D05AAA-30CA-4944-8AD8-F306E860B445}</Project>
+      <Name>Yobit.Api</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
