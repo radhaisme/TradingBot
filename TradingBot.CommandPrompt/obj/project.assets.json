@@ -196,6 +196,16 @@
         "build": {
           "build/netstandard2.0/NETStandard.Library.targets": {}
         }
+      },
+      "Yobit.Exchange.Api/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "compile": {
+          "bin/placeholder/Yobit.Exchange.Api.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Yobit.Exchange.Api.dll": {}
+        }
       }
     }
   },
@@ -656,11 +666,17 @@
         "netstandard.library.2.0.0.nupkg.sha512",
         "netstandard.library.nuspec"
       ]
+    },
+    "Yobit.Exchange.Api/1.0.0": {
+      "type": "project",
+      "path": "../Yobit.Exchange.Api/Yobit.Api.csproj",
+      "msbuildProject": "../Yobit.Exchange.Api/Yobit.Api.csproj"
     }
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.0": [
-      "Microsoft.NETCore.App >= 2.0.0"
+      "Microsoft.NETCore.App >= 2.0.0",
+      "Yobit.Exchange.Api >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -699,7 +715,11 @@
       },
       "frameworks": {
         "netcoreapp2.0": {
-          "projectReferences": {}
+          "projectReferences": {
+            "D:\\Projects\\TradingBot\\Yobit.Exchange.Api\\Yobit.Api.csproj": {
+              "projectPath": "D:\\Projects\\TradingBot\\Yobit.Exchange.Api\\Yobit.Api.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

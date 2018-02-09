@@ -2,11 +2,16 @@
 
 namespace TradingBot.CommandPrompt
 {
-    public class Program
+	using Yobit.Exchange.Api;
+
+	public class Program
     {
         private static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+	        var client = new YobitClient();
+			Console.WriteLine(client.GetPairData("ltc_btc"));
+
+	        Console.ReadLine();
         }
     }
 }
