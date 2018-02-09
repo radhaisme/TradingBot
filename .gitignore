@@ -86,3 +86,11 @@
 /TradingBot.Web/obj/TradingBot.Web.csproj.nuget.g.props
 /TradingBot.Web/obj/TradingBot.Web.csproj.nuget.g.targets
 /TradingBot.WPF/obj/Debug/TradingBot.WPF_MarkupCompile.i.lref
+/TradingBot.WinForms/obj/Debug/TempPE/*.dll
+/TradingBot.WPF/obj/Debug/TempPE/*.dll
+/TradingBot.Web/obj/Debug/netcoreapp2.0
+netstandard2.0
+netcoreapp2.0
+v15
+/TradingBot.Common/obj
+Debug
