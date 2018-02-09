@@ -76,5 +76,11 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TradingBot.Core\TradingBot.Core.csproj">
+      <Project>{d49b0cce-7ebe-430d-8c92-4221752f3329}</Project>
+      <Name>TradingBot.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
