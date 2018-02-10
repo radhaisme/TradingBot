@@ -14,7 +14,8 @@ namespace TradingBot.Cmd
         Exit,
         Help,
         RegisterUser,
-        Login
+        Login,
+        Logout
     }
 
     public class Command
@@ -29,49 +30,65 @@ namespace TradingBot.Cmd
 
         public string Description { get; set; }
 
+        public bool AllowAnonymous { get; set; }
+
         public string Info
         {
             get
             {
-                return string.Format("* command '{0}', aliases: {1}", Type.ToString(),
-                    string.Join(", ", Aliases.Select(m => string.Format("/{0}", m))));
+                return string.Format("{3}- Command '{0}', aliases: {1}, Info: {2}\n\r", Type.ToString(),
+                    string.Join(", ", Aliases.Select(m => string.Format("/{0}", m))), Description, AllowAnonymous ? "" : "[ONLY WHEN AUTHORIZED] ");
             }
         }
 
         public Command()
         {
+            AllowAnonymous = true;
             Aliases = new List<string>();
         }
+
+        public Command(CommandEnum type, List<string> aliases, string description = "", bool allowAnonym = true)
+        {
+            Type = type;
+            Aliases = aliases;
+            Description = description;
+            AllowAnonymous = allowAnonym;
+        }
+
+        public Command(CommandEnum type, List<string> aliases, bool allowAnonym, string description = "")
+        {
+            Type = type;
+            Aliases = aliases;
+            Description = description;
+            AllowAnonymous = allowAnonym;
+        }
+
 
         static Command()
         {
             Commands = new List<Command>();
 
-            Commands.Add(Command.None);
+            Commands.Add(None);
 
-            Commands.Add(new Command
-            {
-                Type = CommandEnum.Exit,
-                Aliases = new List<string> { "exit", "e", "finish", "esc" }
-            });
+            Commands.Add(
+                new Command(CommandEnum.Exit, new List<string> { "exit", "e", "finish", "esc" }, "Finish the program, amazing?")
+            );
 
-            Commands.Add(new Command
-            {
-                Type = CommandEnum.Help,
-                Aliases = new List<string> { "help", "h", "?" }
-            });
+            Commands.Add(
+                new Command(CommandEnum.Help, new List<string> { "help", "h", "?" }, "Show all valid commands")
+            );
 
-            Commands.Add(new Command
-            {
-                Type = CommandEnum.RegisterUser,
-                Aliases = new List<string> { "register", "signup", "create-user" }
-            });
+            Commands.Add(
+                new Command(CommandEnum.RegisterUser, new List<string> { "register", "signup", "create-user" }, "Register user to allow to add accounts and get more private functionality. Parameters (* - required): username*, password*")
+            );
 
-            Commands.Add(new Command
-            {
-                Type = CommandEnum.Login,
-                Aliases = new List<string> { "login", "signin", "let-me-enter", "authorization" }
-            });
+            Commands.Add(
+                new Command(CommandEnum.Login, new List<string> { "login", "signin", "let-me-enter", "authorization" }, "Sign in to add accounts and get more private functionality. Parameters (* - required): username*, password*")
+            );
+
+            Commands.Add(
+                new Command(CommandEnum.Logout, new List<string> { "logout", "signoff", "signout", "lock" }, false, "Allow you sign out, you will not have access to private functionality")
+            );
         }
     }
 }

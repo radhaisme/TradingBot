@@ -14,6 +14,8 @@ namespace TradingBot.Cmd
           
         }
 
+        static User CurrentUser { get; set; }
+
         static void Main(string[] args)
         {
             Console.WriteLine("Use /help to get list of commands");
@@ -21,6 +23,7 @@ namespace TradingBot.Cmd
             var command = Command.None;
             do
             {
+                Console.Write(string.Format("{0}> ", CurrentUser == null ? "Anonymous" : CurrentUser.Username));
                 input = Console.ReadLine().ToLowerInvariant().Trim();
                 if (input.Length < 1 || input[0] != '/')
                     continue;
@@ -35,15 +38,18 @@ namespace TradingBot.Cmd
                 switch (command.Type)
                 {
                     case CommandEnum.Help:
-                        Console.WriteLine("Available commands: " +
+                        Console.WriteLine("\n\rAvailable commands:\n\r\n\r" +
                             string.Join("\n\r", Command.Commands.Where(m => m.Type != CommandEnum.None)
                             .Select(m => m.Info)));
                         break;
                     case CommandEnum.RegisterUser:
-                        RegisterUser(parameters);
+                        CurrentUser = RegisterUser(parameters);
                         break;
                     case CommandEnum.Login:
-                        LoginUser(parameters);
+                        CurrentUser = LoginUser(parameters);
+                        break;
+                    case CommandEnum.Logout:
+                        CurrentUser = LogoutUser();
                         break;
                 }
             }
@@ -54,12 +60,12 @@ namespace TradingBot.Cmd
         }
 
 
-        private static bool RegisterUser(params string[] list)
+        private static User RegisterUser(params string[] list)
         {
             if (list.Length != 2)
             {
                 Console.WriteLine("You must enter your username and password");
-                return false;
+                return null;
             }
 
             using (var usrService = new UserService())
@@ -68,21 +74,21 @@ namespace TradingBot.Cmd
                 if (usr == null)
                 {
                     Console.WriteLine("Such username already registered");
-                    return false;
+                    return usr;
                 }
 
                 Console.WriteLine("Registration complete");
 
-                return true;
+                return usr;
             }
         }
 
-        private static bool LoginUser(params string[] list)
+        private static User LoginUser(params string[] list)
         {
             if (list.Length != 2)
             {
                 Console.WriteLine("You must enter your username and password");
-                return false;
+                return null;
             }
 
             using (var usrService = new UserService())
@@ -91,13 +97,21 @@ namespace TradingBot.Cmd
                 if (usr == null)
                 {
                     Console.WriteLine("Incorrect username or password");
-                    return false;
+                    return usr;
                 }
 
-                Console.WriteLine("It's correct");
+                Console.WriteLine("You are logged in");
 
-                return true;
+                return usr;
             }
+        }
+
+        private static User LogoutUser()
+        {
+            if(CurrentUser == null)
+                Console.WriteLine("You are not authorized");
+            
+            return null;
         }
     }
 }
