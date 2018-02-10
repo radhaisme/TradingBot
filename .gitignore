@@ -95,3 +95,9 @@ v15
 /TradingBot.Common/obj
 Debug
 obj
+/Domain/Domain.csproj.user
+AssemblyInfo.cs
+Settings.Designer.cs
+Settings.settings
+EntityFramework.6.2.0
+Newtonsoft.Json.10.0.3
