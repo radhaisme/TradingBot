@@ -58,9 +58,21 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{cefc6906-aa84-4056-9286-65cc2a6ca2ce}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Domain\TradingBot.Domain.csproj">
       <Project>{0c9ef55e-f464-42f3-a345-e01dfa548bcc}</Project>
       <Name>TradingBot.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TradingBot.Core\TradingBot.Core.csproj">
+      <Project>{d49b0cce-7ebe-430d-8c92-4221752f3329}</Project>
+      <Name>TradingBot.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Yobit.Exchange.Api\Yobit.Api.csproj">
+      <Project>{0ea3272e-dfbe-4126-801c-16d9a3bb7beb}</Project>
+      <Name>Yobit.Api</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TradingBot.Core;
+using TradingBot.Domain;
 
 namespace TradingBot.Cmd
 {
-
-
     public enum CommandEnum
     {
         None,
@@ -15,7 +15,11 @@ namespace TradingBot.Cmd
         Help,
         RegisterUser,
         Login,
-        Logout
+        Logout,
+        AddAccount,
+        RemoveAccount,
+        GetPairs,
+        GetPairInfo,
     }
 
     public class Command
@@ -87,8 +91,28 @@ namespace TradingBot.Cmd
             );
 
             Commands.Add(
-                new Command(CommandEnum.Logout, new List<string> { "logout", "signoff", "signout", "lock" }, false, "Allow you sign out, you will not have access to private functionality")
+                new Command(CommandEnum.Logout, new List<string> { "logout", "signoff", "signout", "lock" }, false, "Allow you to sign out, you will not have access to private functionality")
             );
+
+            //Commands.Add(
+            //    new Command(CommandEnum.AddAccount, new List<string> { "addaccount", "add-account" }, false, "Allow you to add private Api key")
+            //);
+
+            //Commands.Add(
+            //    new Command(CommandEnum.RemoveAccount, new List<string> { "removeaccount", "remove-account" , "rem-account", "del-account", "delete-account" }, false, "Allow you to remove private Api key")
+            //);
+
+            Commands.Add(
+              new Command(CommandEnum.GetPairs, new List<string> { "getpairs", "all", "info" },
+              string.Format("Get all list of tickers with basic statistics. Parameters (* - required): exchangeType* ({0})",
+              ExchangeInfo.GetAccountTypes))
+            );
+
+            Commands.Add(
+              new Command(CommandEnum.GetPairInfo, new List<string> { "getpairinfo", "tickerinfo", "get-ticker-info", "get-pair-info", "pair-info", "ticker-info" },
+              string.Format("Get basic ticker info. It uses info stored from last 'getpairs'. Parameters (* - required): exchangeType* ({0}), tickerCode* ", ExchangeInfo.GetAccountTypes))
+            );
+
         }
     }
 }
