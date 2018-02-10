@@ -10,11 +10,13 @@ using System.Windows.Forms;
 
 namespace TradingBot
 {
-    public partial class MainForm : Form
+	using Yobit.Exchange.Api;
+
+	public partial class MainForm : Form
     {
         public MainForm()
-        {
-            InitializeComponent();
+        {	
+			InitializeComponent();
         }
 
         private void MainMenu_ManageAccounts_Click(object sender, EventArgs e)
