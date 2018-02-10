@@ -9,37 +9,9 @@ namespace TradingBot.Cmd
 {
     class Program
     {
-        static List<Command> commands;
-
         static Program()
         {
-            commands = new List<Command>();
-
-            commands.Add(Command.None);
-
-            commands.Add(new Command
-            {
-                Type = CommandEnum.Exit,
-                Aliases = new List<string> { "exit", "e", "finish", "esc" }
-            });
-
-            commands.Add(new Command
-            {
-                Type = CommandEnum.Help,
-                Aliases = new List<string> { "help", "h", "?" }
-            });
-
-            commands.Add(new Command
-            {
-                Type = CommandEnum.RegisterUser,
-                Aliases = new List<string> { "register", "signup", "create-user" }
-            });
-
-            commands.Add(new Command
-            {
-                Type = CommandEnum.Login,
-                Aliases = new List<string> { "login", "signin", "let-me-enter", "authorization" }
-            });
+          
         }
 
         static void Main(string[] args)
@@ -55,22 +27,23 @@ namespace TradingBot.Cmd
                 input = input.Substring(1);
                 var parts = input.Split(' ');
 
-                command = commands.FirstOrDefault(m => m.Aliases.Contains(parts[0]));
+                command = Command.Commands.FirstOrDefault(m => m.Aliases.Contains(parts[0]));
                 if (command == null)
                     command = Command.None;
 
+                var parameters = parts.Skip(1).ToArray();
                 switch (command.Type)
                 {
                     case CommandEnum.Help:
                         Console.WriteLine("Available commands: " +
-                            string.Join("\n\r", commands.Where(m => m.Type != CommandEnum.None)
+                            string.Join("\n\r", Command.Commands.Where(m => m.Type != CommandEnum.None)
                             .Select(m => m.Info)));
                         break;
                     case CommandEnum.RegisterUser:
-                        RegisterUser(parts.Skip(1).ToArray());
+                        RegisterUser(parameters);
                         break;
                     case CommandEnum.Login:
-                        LoginUser(parts.Skip(1).ToArray());
+                        LoginUser(parameters);
                         break;
                 }
             }
