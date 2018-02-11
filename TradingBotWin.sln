@@ -23,6 +23,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Exchange.API", "Exchange.AP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yobit.Api", "Yobit.Exchange.Api\Yobit.Api.csproj", "{0EA3272E-DFBE-4126-801C-16D9A3BB7BEB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradinBot.Services", "TradinBot.Services\TradinBot.Services.csproj", "{E8E30FA4-4BB3-4EAD-A120-30B14ADB73E2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{0EA3272E-DFBE-4126-801C-16D9A3BB7BEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0EA3272E-DFBE-4126-801C-16D9A3BB7BEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0EA3272E-DFBE-4126-801C-16D9A3BB7BEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8E30FA4-4BB3-4EAD-A120-30B14ADB73E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8E30FA4-4BB3-4EAD-A120-30B14ADB73E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8E30FA4-4BB3-4EAD-A120-30B14ADB73E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8E30FA4-4BB3-4EAD-A120-30B14ADB73E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -64,6 +70,7 @@ Global
 		{CEFC6906-AA84-4056-9286-65CC2A6CA2CE} = {DA2B2593-4642-4C9F-9D15-2F64D8B9CA1C}
 		{157E9E59-AAB3-4328-A13E-800B15E61CAF} = {660DA004-8DA9-4955-B743-7DC0775B22B6}
 		{0EA3272E-DFBE-4126-801C-16D9A3BB7BEB} = {85E0A353-6B44-4984-9660-8B235EBF9FE6}
+		{E8E30FA4-4BB3-4EAD-A120-30B14ADB73E2} = {DA2B2593-4642-4C9F-9D15-2F64D8B9CA1C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BDE7EDEE-E5DB-4F69-8BE2-21FE15B3001B}

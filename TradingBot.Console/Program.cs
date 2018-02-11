@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TradingBot.Core;
 using TradingBot.Domain;
+using TradingBot.Services;
 using Yobit.Exchange.Api;
 using Yobit.Exchange.Api.Entities;
 
@@ -175,42 +176,21 @@ namespace TradingBot.Cmd
                 case AccountTypeEnum.Yobit:
                     using (var api = new YobitApi(ExchangeInfo.Exchanges[eType].BasicUrl))
                     {
-                        var result = api.GetPairs();
                         try
                         {
-                            dynamic data = JsonHelper.ToObject(result);
-
-                            Console.WriteLine("Saving pairs info into db...");
-
+                            PairsResponse<Dictionary<string, Pair>> result = null;
                             using (var pairService = new PairService())
                             {
-                                foreach (var pair in data.pairs)
-                                {
-                                    var name = pair.Name;
-                                    Pair pairInfo = JsonHelper.ToObject<Pair>(pair.Value.ToString());
-
-                                    pairService.AddOrUpdate(new PairInfo
-                                    {
-                                        AccountType = eType,
-                                        UpdatedDt = DateTime.UtcNow,
-                                        Name = name,
-                                        DecimalPlaces = pairInfo.DecimalPlaces,
-                                        Fee = pairInfo.Fee,
-                                        FeeBuyer = pairInfo.FeeBuyer,
-                                        FeeSeller = pairInfo.FeeSeller,
-                                        IsHidden = pairInfo.IsHidden,
-                                        MaxPrice = pairInfo.MaxPrice,
-                                        MinAmount = pairInfo.MinAmount,
-                                        MinPrice = pairInfo.MinPrice,
-                                        MinTotal = pairInfo.MinTotal
-                                    });
-                                }
+                                result = pairService.PullPairs<Dictionary<string, Pair>>(api);
                             }
-                            Console.WriteLine("Pairs info received, you can use /tickerInfo [tickerCode] to get appropriate info");
+                            if (result.IsSuccess)
+                                Console.WriteLine("Pairs info received, you can use /tickerInfo [tickerCode] to get appropriate info");
+                            else
+                                Console.WriteLine(string.Format("Error when pull pairs: {0}", result));
                         }
                         catch
                         {
-                            Console.WriteLine(string.Format("Can't parse response: {0}", result));
+                            Console.WriteLine("Unexpected error");
                         }
                     }
                     break;
