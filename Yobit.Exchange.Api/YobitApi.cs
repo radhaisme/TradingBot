@@ -14,7 +14,7 @@ namespace Yobit.Exchange.Api
 
 	    public async Task<string> GetPairsAsync()
 	    {
-            HttpResponseMessage response = await Http.GetAsync(new Uri(Http.BaseAddress + "api/3/info"));
+            HttpResponseMessage response = await HttpClient.GetAsync(new Uri(HttpClient.BaseAddress + "api/3/info"));
 
             if (response.IsSuccessStatusCode)
             {
@@ -38,7 +38,7 @@ namespace Yobit.Exchange.Api
 	            throw new ArgumentNullException(nameof(pair));
 	        }
 
-	        HttpResponseMessage response = await Http.GetAsync(new Uri(String.Format(Http.BaseAddress + "api/3/ticker/{0}", pair)));
+	        HttpResponseMessage response = await HttpClient.GetAsync(new Uri(String.Format(HttpClient.BaseAddress + "api/3/ticker/{0}", pair)));
 
 	        if (response.IsSuccessStatusCode)
 	        {

@@ -9,7 +9,9 @@ namespace TradingBot.CommandPrompt
     {
         private static async Task Main(string[] args)
         {
-	        Console.ReadLine();
+
+
+            Console.ReadLine();
         }
     }
 }
