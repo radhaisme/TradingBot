@@ -61,7 +61,12 @@
     <Compile Include="Migrations\201802101323280_AddedSalt.Designer.cs">
       <DependentUpon>201802101323280_AddedSalt.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201802101918012_AddedPairInfos.cs" />
+    <Compile Include="Migrations\201802101918012_AddedPairInfos.Designer.cs">
+      <DependentUpon>201802101918012_AddedPairInfos.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\PairInfo.cs" />
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\AccountTypeEnum.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -71,8 +76,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Services\BaseService.cs" />
-    <Compile Include="Services\UserService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
@@ -99,6 +102,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201802101323280_AddedSalt.resx">
       <DependentUpon>201802101323280_AddedSalt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802101918012_AddedPairInfos.resx">
+      <DependentUpon>201802101918012_AddedPairInfos.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

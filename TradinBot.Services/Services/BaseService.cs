@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using TradingBot.Domain.Base;
 
-namespace TradingBot.Domain
+namespace TradingBot.Services
 {
     public abstract class BaseService: IDisposable
     {
@@ -19,7 +18,7 @@ namespace TradingBot.Domain
             {
                 if (disposing)
                 {
-                    dbContext.Dispose();
+                    DbContext.Dispose();
                     // TODO: освободить управляемое состояние (управляемые объекты).
                 }
 
@@ -47,11 +46,11 @@ namespace TradingBot.Domain
 
         #endregion
 
-        protected TbDbContext dbContext { get; set; }
+        public TbDbContext DbContext { get; private set; }
         
         public BaseService()
         {
-            dbContext = new TbDbContext();
+            DbContext = new TbDbContext();
         }
         
     }

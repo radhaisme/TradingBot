@@ -6,6 +6,7 @@ namespace TradingBot.Domain.Base
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Account> Accounts { get; set; }
+        public DbSet<PairInfo> PairInfos { get; set; }
 
         public TbDbContext()
             : base("DbConnectionString")

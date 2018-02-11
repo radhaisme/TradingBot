@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using TradingBot.Domain;
 using TradingBot.Domain.Base;
 
-namespace TradingBot.Domain
+namespace TradingBot.Services
 {
     public class UserService: BaseService
     {
@@ -53,7 +53,7 @@ namespace TradingBot.Domain
         {
             username = (username ?? "").Trim();
             var key = username.ToLowerInvariant();
-            var row = dbContext.Users.FirstOrDefault(m => m.Username.ToLower() == key);
+            var row = DbContext.Users.FirstOrDefault(m => m.Username.ToLower() == key);
             return row;
         }
 
@@ -69,13 +69,13 @@ namespace TradingBot.Domain
 
             var passwordHash = CreatePasswordHashAndSalt(password, out passwordSalt);
 
-            user = dbContext.Users.Add(new User
+            user = DbContext.Users.Add(new User
             {
                 Username = username,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt
             });
-            dbContext.SaveChanges();
+            DbContext.SaveChanges();
 
             return user;
         }
