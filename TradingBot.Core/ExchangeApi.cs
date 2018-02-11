@@ -30,8 +30,7 @@ namespace TradingBot.Core
 	public abstract class ExchangeApi : IDisposable
 	{
         public AccountTypeEnum Type { get; protected set; }
-
-	    protected readonly HttpClient Http = new HttpClient();
+		
 	    protected readonly HttpClient HttpClient = new HttpClient();
 
 	    protected ExchangeApi(string baseAddress)

@@ -12544,11 +12544,11 @@
       "hideWarningsAndErrors": true
     },
     "restore": {
-      "projectUniqueName": "e:\\Projects\\TradingBot\\TradingBot.Web\\TradingBot.Web.csproj",
+      "projectUniqueName": "E:\\Projects\\TradingBot\\TradingBot.Web\\TradingBot.Web.csproj",
       "projectName": "TradingBot.Web",
-      "projectPath": "e:\\Projects\\TradingBot\\TradingBot.Web\\TradingBot.Web.csproj",
+      "projectPath": "E:\\Projects\\TradingBot\\TradingBot.Web\\TradingBot.Web.csproj",
       "packagesPath": "C:\\Users\\Roman\\.nuget\\packages\\",
-      "outputPath": "e:\\Projects\\TradingBot\\TradingBot.Web\\obj\\",
+      "outputPath": "E:\\Projects\\TradingBot\\TradingBot.Web\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
