@@ -1,12 +1,11 @@
 ﻿
 namespace TradingBot.Core
 {
+	using Data.Enums;
 	using System;
-    using System.Collections.Generic;
-    using System.Net.Http;
-    using TradingBot.Domain;
+	using System.Net.Http;
 
-    public abstract class PairsResponse<T>
+	public abstract class PairsResponse<T>
     {
         public bool IsSuccess { get; set; }
 
@@ -29,7 +28,7 @@ namespace TradingBot.Core
 
 	public abstract class ExchangeApi : IDisposable
 	{
-        public AccountTypeEnum Type { get; protected set; }
+        public AccountType Type { get; protected set; }
 		
 	    protected readonly HttpClient HttpClient = new HttpClient();
 

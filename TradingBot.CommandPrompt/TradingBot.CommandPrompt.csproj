@@ -14,7 +14,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\TradingBot.Data\TradingBot.Data.csproj" />
-		<ProjectReference Include="..\Yobit.Exchange.Api\Yobit.Api.csproj" />
 	</ItemGroup>
 
 </Project>

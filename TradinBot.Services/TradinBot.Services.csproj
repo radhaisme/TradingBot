@@ -59,12 +59,12 @@
       <Name>TradingBot.Domain</Name>
     </ProjectReference>
     <ProjectReference Include="..\TradingBot.Core\TradingBot.Core.csproj">
-      <Project>{d49b0cce-7ebe-430d-8c92-4221752f3329}</Project>
+      <Project>{52453ad4-1cb6-4f6a-b93f-fd20172a0a04}</Project>
       <Name>TradingBot.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Yobit.Exchange.Api\Yobit.Api.csproj">
-      <Project>{0ea3272e-dfbe-4126-801c-16d9a3bb7beb}</Project>
-      <Name>Yobit.Api</Name>
+    <ProjectReference Include="..\TradingBot.Data\TradingBot.Data.csproj">
+      <Project>{3763444D-C277-47A8-B0EB-233F632BBE96}</Project>
+      <Name>TradingBot.Data</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

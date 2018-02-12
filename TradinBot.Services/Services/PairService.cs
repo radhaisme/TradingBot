@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using TradingBot.Core;
-using TradingBot.Domain;
-using TradingBot.Domain.Base;
-using Yobit.Exchange.Api.Entities;
-
+﻿
 namespace TradingBot.Services
 {
-    public class PairService: BaseService
+	using Domain;
+	using System.Linq;
+	using Core;
+
+	public class PairService: BaseService
     {
         public PairService()
         {
@@ -74,33 +68,33 @@ namespace TradingBot.Services
             {
                 switch (api.Type)
                 {
-                    case AccountTypeEnum.Yobit:
-                        {
-                            var data = result.Data as Dictionary<string, Pair>;
-                            foreach (var pair in data)
-                            {
-                                var pairInfo = pair.Value;
-                                AddOrUpdate(new PairInfo
-                                {
-                                    AccountType = api.Type,
-                                    UpdatedDt = DateTime.UtcNow,
-                                    Name = pair.Key,
-                                    DecimalPlaces = pairInfo.DecimalPlaces,
-                                    Fee = pairInfo.Fee,
-                                    FeeBuyer = pairInfo.FeeBuyer,
-                                    FeeSeller = pairInfo.FeeSeller,
-                                    IsHidden = pairInfo.IsHidden,
-                                    MaxPrice = pairInfo.MaxPrice,
-                                    MinAmount = pairInfo.MinAmount,
-                                    MinPrice = pairInfo.MinPrice,
-                                    MinTotal = pairInfo.MinTotal
-                                });
-                            }
-                            DbContext.SaveChanges();
-                        }
-                        break;
-                    default:
-                        break;
+                    //case AccountType.Yobit:
+                    //    {
+                    //        var data = result.Data as Dictionary<string, Pair>;
+                    //        foreach (var pair in data)
+                    //        {
+                    //            var pairInfo = pair.Value;
+                    //            AddOrUpdate(new PairInfo
+                    //            {
+                    //                AccountType = api.Type,
+                    //                UpdatedDt = DateTime.UtcNow,
+                    //                Name = pair.Key,
+                    //                DecimalPlaces = pairInfo.DecimalPlaces,
+                    //                Fee = pairInfo.Fee,
+                    //                FeeBuyer = pairInfo.FeeBuyer,
+                    //                FeeSeller = pairInfo.FeeSeller,
+                    //                IsHidden = pairInfo.IsHidden,
+                    //                MaxPrice = pairInfo.MaxPrice,
+                    //                MinAmount = pairInfo.MinAmount,
+                    //                MinPrice = pairInfo.MinPrice,
+                    //                MinTotal = pairInfo.MinTotal
+                    //            });
+                    //        }
+                    //        DbContext.SaveChanges();
+                    //    }
+                    //    break;
+                    //default:
+                    //    break;
 
                 }
             }

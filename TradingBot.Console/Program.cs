@@ -1,18 +1,17 @@
-﻿using Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TradingBot.Core;
 using TradingBot.Domain;
 using TradingBot.Services;
-using Yobit.Exchange.Api;
-using Yobit.Exchange.Api.Entities;
 
 namespace TradingBot.Cmd
 {
-    class Program
+	using Core;
+	using Data.Enums;
+	using Yobit.Api;
+	using Yobit.Api.Entities;
+
+	class Program
     {
         static Program()
         {
@@ -170,10 +169,10 @@ namespace TradingBot.Cmd
                 return;
             }
 
-            var eType = (AccountTypeEnum)type;
+            var eType = (AccountType)type;
             switch (eType)
             {
-                case AccountTypeEnum.Yobit:
+                case AccountType.Yobit:
                     using (var api = new YobitApi(ExchangeInfo.Exchanges[eType].BasicUrl))
                     {
                         try

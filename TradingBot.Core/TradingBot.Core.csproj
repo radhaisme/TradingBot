@@ -5,8 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj" />
-    <ProjectReference Include="..\Domain\TradingBot.Domain.csproj" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TradingBot.Data\TradingBot.Data.csproj" />
   </ItemGroup>
 
 </Project>

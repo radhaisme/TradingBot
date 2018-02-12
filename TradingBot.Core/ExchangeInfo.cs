@@ -1,13 +1,11 @@
-﻿
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using TradingBot.Domain;
 
 namespace TradingBot.Core
 {
-    public class ExchangeInfo
+	using Data.Enums;
+
+	public class ExchangeInfo
     {
         private static string accountTypes { get; set; }
         public static string GetAccountTypes
@@ -22,20 +20,20 @@ namespace TradingBot.Core
             }
         }
 
-        public static Dictionary<AccountTypeEnum, ExchangeInfo> Exchanges { get; set; }
+        public static Dictionary<AccountType, ExchangeInfo> Exchanges { get; set; }
 
         static ExchangeInfo()
         {
-            Exchanges = new Dictionary<AccountTypeEnum, ExchangeInfo>();
-            Exchanges.Add(AccountTypeEnum.Yobit, new ExchangeInfo(AccountTypeEnum.Yobit, "https://yobit.net/api/3/"));
-            Exchanges.Add(AccountTypeEnum.Bitfinex, new ExchangeInfo(AccountTypeEnum.Bitfinex, "https://api.bitfinex.com/v2/"));
+            Exchanges = new Dictionary<AccountType, ExchangeInfo>();
+            Exchanges.Add(AccountType.Yobit, new ExchangeInfo(AccountType.Yobit, "https://yobit.net/api/3/"));
+            Exchanges.Add(AccountType.Bitfinex, new ExchangeInfo(AccountType.Bitfinex, "https://api.bitfinex.com/v2/"));
         }
 
-        public AccountTypeEnum Type { get; set; }
+        public AccountType Type { get; set; }
         
         public string BasicUrl { get; set; }
 
-        public ExchangeInfo(AccountTypeEnum type, string basicUrl)
+        public ExchangeInfo(AccountType type, string basicUrl)
         {
             Type = type;
             BasicUrl = basicUrl;

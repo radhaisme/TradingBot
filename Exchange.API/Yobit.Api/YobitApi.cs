@@ -1,14 +1,14 @@
 ﻿
-namespace Yobit.Exchange.Api
+namespace Yobit.Api
 {
-	using Common;
 	using System;
 	using System.Collections.Generic;
 	using System.Net.Http;
 	using System.Text;
 	using System.Threading.Tasks;
-	using TradingBot.Core;
 	using Entities;
+	using TradingBot.Core;
+	using TradingBot.Data.Enums;
 
 	public class YobitPairsResponse : PairsResponse<Dictionary<string, Pair>>
 	{
@@ -25,7 +25,7 @@ namespace Yobit.Exchange.Api
 	{
 		public YobitApi(string baseAddress) : base(baseAddress)
 		{
-			Type = TradingBot.Domain.AccountTypeEnum.Yobit;
+			Type = AccountType.Yobit;
 		}
 
 		public async Task<YobitPairsResponse> GetPairsAsync()

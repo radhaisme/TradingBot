@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Newtonsoft.Json;
-
-namespace Common
+﻿
+namespace TradingBot.Core
 {
-    public static class JsonHelper
+	using Newtonsoft.Json;
+
+	public static class JsonHelper
     {
         public static string ToJson(object @object)
         {

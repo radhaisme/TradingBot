@@ -1,5 +1,5 @@
 ﻿
-namespace Yobit.Exchange.Api.Entities
+namespace Yobit.Api.Entities
 {
 	using System;
 

@@ -1,4 +1,4 @@
-﻿namespace TradingBot
+﻿namespace TradingBot.WinForms
 {
     partial class MainForm
     {
