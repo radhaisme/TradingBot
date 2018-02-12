@@ -9,7 +9,9 @@ namespace TradingBot.Data
 
 		public UnitOfWork() //Add IoC
 		{
-			_context = new BotContext();
+			var ctx = new BotContext();
+			ctx.Database.EnsureCreated();
+			_context = ctx;
 		}
 
 	    public Repository<Account> Accounts
