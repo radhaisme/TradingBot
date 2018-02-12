@@ -1179,8 +1179,7 @@
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
-          "Newtonsoft.Json": "10.0.3",
-          "TradingBot.Data": "1.0.0"
+          "Newtonsoft.Json": "10.0.3"
         },
         "compile": {
           "bin/placeholder/TradingBot.Core.dll": {}
@@ -1193,10 +1192,12 @@
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
+          "E:\\Projects\\TradingBot\\Common\\Common.csproj": "1.0.0",
           "Microsoft.EntityFrameworkCore": "2.0.1",
           "Microsoft.EntityFrameworkCore.Design": "2.0.1",
           "Microsoft.EntityFrameworkCore.Sqlite": "2.0.1",
-          "System.Configuration.ConfigurationManager": "4.4.1"
+          "System.Configuration.ConfigurationManager": "4.4.1",
+          "TradingBot.Core": "1.0.0"
         },
         "compile": {
           "bin/placeholder/TradingBot.Data.dll": {}
@@ -4480,8 +4481,7 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\v-roasei\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\": {},
+    "C:\\Users\\Roman\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
@@ -4490,37 +4490,34 @@
       "hideWarningsAndErrors": true
     },
     "restore": {
-      "projectUniqueName": "d:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\TradingBot.CommandPrompt.csproj",
+      "projectUniqueName": "E:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\TradingBot.CommandPrompt.csproj",
       "projectName": "TradingBot.CommandPrompt",
-      "projectPath": "d:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\TradingBot.CommandPrompt.csproj",
-      "packagesPath": "C:\\Users\\v-roasei\\.nuget\\packages\\",
-      "outputPath": "d:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\obj\\",
+      "projectPath": "E:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\TradingBot.CommandPrompt.csproj",
+      "packagesPath": "C:\\Users\\Roman\\.nuget\\packages\\",
+      "outputPath": "E:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\",
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\v-roasei\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.Fallback.config"
+        "C:\\Users\\Roman\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp2.0"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "https://api.nuget.org/v3/index.json": {},
-        "https://dynamicscrm.pkgs.visualstudio.com/_packaging/XrmSolutions/nuget/v3/index.json": {}
+        "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "netcoreapp2.0": {
           "projectReferences": {
-            "d:\\Projects\\TradingBot\\TradingBot.Data\\TradingBot.Data.csproj": {
-              "projectPath": "d:\\Projects\\TradingBot\\TradingBot.Data\\TradingBot.Data.csproj"
+            "E:\\Projects\\TradingBot\\TradingBot.Data\\TradingBot.Data.csproj": {
+              "projectPath": "E:\\Projects\\TradingBot\\TradingBot.Data\\TradingBot.Data.csproj"
             },
-            "d:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj": {
-              "projectPath": "d:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj"
+            "E:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj": {
+              "projectPath": "E:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj"
             }
           }
         }
@@ -4547,5 +4544,16 @@
         "warn": true
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1105",
+      "level": "Error",
+      "message": "Unable to find project information for 'E:\\Projects\\TradingBot\\Common\\Common.csproj'. The project file may be invalid or missing targets required for restore.",
+      "libraryId": "E:\\Projects\\TradingBot\\Common\\Common.csproj",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v2.0"
+      ]
+    }
+  ]
 }
