@@ -4511,7 +4511,8 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Roman\\.nuget\\packages\\": {},
+    "C:\\Users\\v-roasei\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
@@ -4520,34 +4521,37 @@
       "hideWarningsAndErrors": true
     },
     "restore": {
-      "projectUniqueName": "E:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\TradingBot.CommandPrompt.csproj",
+      "projectUniqueName": "D:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\TradingBot.CommandPrompt.csproj",
       "projectName": "TradingBot.CommandPrompt",
-      "projectPath": "E:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\TradingBot.CommandPrompt.csproj",
-      "packagesPath": "C:\\Users\\Roman\\.nuget\\packages\\",
-      "outputPath": "E:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\obj\\",
+      "projectPath": "D:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\TradingBot.CommandPrompt.csproj",
+      "packagesPath": "C:\\Users\\v-roasei\\.nuget\\packages\\",
+      "outputPath": "D:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\",
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\Roman\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\v-roasei\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.Fallback.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp2.0"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "https://api.nuget.org/v3/index.json": {}
+        "https://api.nuget.org/v3/index.json": {},
+        "https://dynamicscrm.pkgs.visualstudio.com/_packaging/XrmSolutions/nuget/v3/index.json": {}
       },
       "frameworks": {
         "netcoreapp2.0": {
           "projectReferences": {
-            "E:\\Projects\\TradingBot\\TradingBot.Data\\TradingBot.Data.csproj": {
-              "projectPath": "E:\\Projects\\TradingBot\\TradingBot.Data\\TradingBot.Data.csproj"
+            "D:\\Projects\\TradingBot\\TradingBot.Data\\TradingBot.Data.csproj": {
+              "projectPath": "D:\\Projects\\TradingBot\\TradingBot.Data\\TradingBot.Data.csproj"
             },
-            "E:\\Projects\\TradingBot\\Yobit.Exchange.Api\\Yobit.Api.csproj": {
-              "projectPath": "E:\\Projects\\TradingBot\\Yobit.Exchange.Api\\Yobit.Api.csproj"
+            "D:\\Projects\\TradingBot\\Yobit.Exchange.Api\\Yobit.Api.csproj": {
+              "projectPath": "D:\\Projects\\TradingBot\\Yobit.Exchange.Api\\Yobit.Api.csproj"
             }
           }
         }
