@@ -5,6 +5,7 @@ namespace Yobit.Api
 	using System;
 	using System.Collections.Generic;
 	using System.Net.Http;
+	using System.Security.Cryptography;
 	using System.Text;
 	using System.Threading.Tasks;
 	using TradingBot.Core;
@@ -23,9 +24,46 @@ namespace Yobit.Api
 
 	public class YobitApi : ExchangeApi
 	{
+		private readonly int _requestCount;
+
 		public YobitApi(string baseAddress) : base(baseAddress)
 		{
 			Type = AccountType.Yobit;
+			_requestCount = 0;
+		}
+
+		public async Task<object> GetActiveOrdersOfUserAsync(string pair, string key, string secret)
+		{
+			if (String.IsNullOrEmpty(pair))
+			{
+				throw new ArgumentNullException(nameof(pair));
+			}
+
+			if (String.IsNullOrEmpty(key))
+			{
+				throw new ArgumentNullException(nameof(key));
+			}
+
+			if (String.IsNullOrEmpty(secret))
+			{
+				throw new ArgumentNullException(nameof(secret));
+			}
+
+			var h = new HashAlgorithm(secret);
+			string q = String.Format("?pair={0}&nonce={1}", pair, _requestCount);
+			string sign = Convert.ToBase64String(h.ComputeHash(Encoding.Default.GetBytes(q)));
+			HttpClient.DefaultRequestHeaders.Add("Key", key);
+			HttpClient.DefaultRequestHeaders.Add("Sign", sign);
+			HttpResponseMessage response = await HttpClient.PostAsync(new Uri(HttpClient.BaseAddress + "activeorders" + q), null);
+
+
+
+			return null;
+		}
+
+		public object GetActiveOrdersOfUser(string pair, string key, string secret)
+		{
+			return GetActiveOrdersOfUserAsync(pair, key, secret).Result;
 		}
 
 		public async Task<PairsInfo> GetPairsAsync()
@@ -86,12 +124,12 @@ namespace Yobit.Api
 
 			foreach (dynamic order in result[pair].asks)
 			{
-				model.Asks.Add(new Order { Price = order[0], Amount = order[1] });
+				model.Asks.Add(new Order { Rate = order[0], Amount = order[1] });
 			}
 
 			foreach (dynamic order in result[pair].bids)
 			{
-				model.Bids.Add(new Order { Price = order[0], Amount = order[1] });
+				model.Bids.Add(new Order { Rate = order[0], Amount = order[1] });
 			}
 
 			return model;
