@@ -1,8 +1,6 @@
 ﻿
-namespace Yobit.Exchange.Api.Entities
+namespace Yobit.Api.Entities
 {
-	using System;
-
 	public class PairData
     {
 		public decimal High { get; set; }
@@ -13,6 +11,5 @@ namespace Yobit.Exchange.Api.Entities
 		public decimal Last { get; set; }
 		public decimal Buy { get; set; }
 		public decimal Sell { get; set; }
-		public DateTimeOffset Updated { get; set; }
     }
 }

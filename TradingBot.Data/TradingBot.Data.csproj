@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Repositories\**" />
+	  <EmbeddedResource Remove="Repositories\**" />
+	  <None Remove="Repositories\**" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.0.1" />
+		<PackageReference Include="System.Configuration.ConfigurationManager" Version="4.4.1" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\Common\Common.csproj" />
+	  <ProjectReference Include="..\TradingBot.Core\TradingBot.Core.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Enums\" />
+	</ItemGroup>
+
+</Project>

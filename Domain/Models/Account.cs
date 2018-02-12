@@ -1,5 +1,4 @@
-﻿using Common;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TradingBot.Domain
@@ -26,17 +25,17 @@ namespace TradingBot.Domain
 
         public virtual User User { get; set; }
 
-        [NotMapped]
-        public YobitSettings YobitSettings
-        {
-            get
-            {
-                return JsonHelper.ToObject<YobitSettings>(Settings);
-            }
-            set
-            {
-                Settings = JsonHelper.ToJson(value);
-            }
-        }
+        //[NotMapped]
+        //public YobitSettings YobitSettings
+        //{
+        //    get
+        //    {
+        //        return JsonHelper.ToObject<YobitSettings>(Settings);
+        //    }
+        //    set
+        //    {
+        //        Settings = JsonHelper.ToJson(value);
+        //    }
+        //}
     }
 }

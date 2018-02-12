@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Yobit.Exchange.Api</AssemblyName>
-    <RootNamespace>Yobit.Exchange.Api</RootNamespace>
+    <AssemblyName>Yobit.Api</AssemblyName>
+    <RootNamespace>Yobit.Api</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -15,8 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj" />
-    <ProjectReference Include="..\TradingBot.Core\TradingBot.Core.csproj" />
+    <ProjectReference Include="..\..\TradingBot.Core\TradingBot.Core.csproj" />
+    <ProjectReference Include="..\..\TradingBot.Data\TradingBot.Data.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,18 +1,19 @@
-﻿using Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using TradingBot.Core;
-using TradingBot.Domain;
 using TradingBot.Services;
-using Yobit.Exchange.Api;
-using Yobit.Exchange.Api.Entities;
 
 namespace TradingBot.Cmd
 {
+	using Core;
+    using TradingBot.Common;
+    using TradingBot.Core.Enums;
+    using TradingBot.Data.Entities;
+
     class Program
     {
         static Program()
@@ -21,6 +22,7 @@ namespace TradingBot.Cmd
         }
 
         static User CurrentUser { get; set; }
+
 
         static void Main(string[] args)
         {
@@ -147,7 +149,7 @@ namespace TradingBot.Cmd
 
             using (var pairService = new PairService())
             {
-                var info = pairService.GetPair((AccountTypeEnum) type, tickerCode);
+                var info = pairService.GetPair((AccountType) type, tickerCode);
                 if (info == null)
                     Console.WriteLine("Nothing found");
                 else
@@ -171,7 +173,7 @@ namespace TradingBot.Cmd
                 return;
             }
 
-            var eType = (AccountTypeEnum)type;
+            var eType = (AccountType)type;
             if (!ExchangeInfo.Exchanges.ContainsKey(eType))
             {
                 Console.WriteLine("It's not implemented Exchange type");

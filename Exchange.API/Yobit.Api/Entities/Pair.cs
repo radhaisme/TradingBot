@@ -1,9 +1,9 @@
 ﻿
-using Newtonsoft.Json;
-
-namespace Yobit.Exchange.Api.Entities
+namespace Yobit.Api.Entities
 {
-    public class Pair
+	using Newtonsoft.Json;
+
+	public class Pair
     {
         [JsonProperty(PropertyName = "decimal_places")]
         public byte DecimalPlaces { get; set; }

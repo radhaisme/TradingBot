@@ -3,7 +3,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using TradingBot.Domain.Base;
+using TradingBot.Data;
 
 namespace TradingBot.Services
 {
@@ -18,7 +18,7 @@ namespace TradingBot.Services
             {
                 if (disposing)
                 {
-                    DbContext.Dispose();
+                    UnitOfWork.Dispose();
                     // TODO: освободить управляемое состояние (управляемые объекты).
                 }
 
@@ -46,11 +46,11 @@ namespace TradingBot.Services
 
         #endregion
 
-        public TbDbContext DbContext { get; private set; }
+        public UnitOfWork UnitOfWork { get; private set; }
         
         public BaseService()
         {
-            DbContext = new TbDbContext();
+            UnitOfWork = new UnitOfWork();
         }
         
     }

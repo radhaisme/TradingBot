@@ -8,9 +8,10 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>TradingBot.Cmd</RootNamespace>
     <AssemblyName>TradingBot.Cmd</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -21,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -30,6 +32,10 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -54,7 +60,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -62,9 +70,9 @@
       <Project>{cefc6906-aa84-4056-9286-65cc2a6ca2ce}</Project>
       <Name>Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Domain\TradingBot.Domain.csproj">
-      <Project>{0c9ef55e-f464-42f3-a345-e01dfa548bcc}</Project>
-      <Name>TradingBot.Domain</Name>
+    <ProjectReference Include="..\Exchange.API\Yobit.Api\Yobit.Api.csproj">
+      <Project>{b7a5b5fb-6ab0-4ab4-a9a8-ae876b123942}</Project>
+      <Name>Yobit.Api</Name>
     </ProjectReference>
     <ProjectReference Include="..\TradinBot.Services\TradinBot.Services.csproj">
       <Project>{e8e30fa4-4bb3-4ead-a120-30b14adb73e2}</Project>
@@ -74,9 +82,9 @@
       <Project>{d49b0cce-7ebe-430d-8c92-4221752f3329}</Project>
       <Name>TradingBot.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Yobit.Exchange.Api\Yobit.Api.csproj">
-      <Project>{0ea3272e-dfbe-4126-801c-16d9a3bb7beb}</Project>
-      <Name>Yobit.Api</Name>
+    <ProjectReference Include="..\TradingBot.Data\TradingBot.Data.csproj">
+      <Project>{fc663f04-d021-4b5e-807e-c660afcc11a5}</Project>
+      <Name>TradingBot.Data</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

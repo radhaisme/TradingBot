@@ -1,5 +1,5 @@
 ﻿
-namespace Yobit.Exchange.Api.Entities
+namespace Yobit.Api.Entities
 {
 	using System;
 	using System.Collections.Generic;
@@ -7,6 +7,6 @@ namespace Yobit.Exchange.Api.Entities
 	public class PairsInfo
 	{
 		public DateTimeOffset ServerTime { get; set; }
-		public List<Pair> Pairs { get; set; }
+		public Dictionary<string, Pair> Pairs { get; set; }
     }
 }

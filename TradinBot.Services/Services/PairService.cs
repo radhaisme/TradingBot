@@ -6,24 +6,27 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using TradingBot.Core;
-using TradingBot.Domain;
-using TradingBot.Domain.Base;
-using Yobit.Exchange.Api;
-using Yobit.Exchange.Api.Entities;
+using Yobit.Api;
+using Yobit.Api.Entities;
 
 namespace TradingBot.Services
 {
-    public class PairService: BaseService
+    using System.Linq;
+    using Core;
+    using TradingBot.Core.Enums;
+    using TradingBot.Data.Entities;
+
+    public class PairService : BaseService
     {
         public PairService()
         {
         }
-   
-        public PairInfo GetPair(AccountTypeEnum type, string tickerCode)
+
+        public PairInfo GetPair(AccountType type, string tickerCode)
         {
             tickerCode = (tickerCode ?? "").Trim();
             var key = tickerCode.ToLowerInvariant();
-            var item = DbContext.PairInfos.FirstOrDefault(m => m.AccountType == type && m.Name == key);
+            var item = UnitOfWork.PairInfos.Query().FirstOrDefault(m => m.AccountType == type && m.Name == key);
             return item;
         }
 
@@ -47,7 +50,7 @@ namespace TradingBot.Services
             }
             else
             {
-                item = DbContext.PairInfos.Add(new PairInfo
+                item = new PairInfo
                 {
                     Name = name,
                     AccountType = info.AccountType,
@@ -61,10 +64,11 @@ namespace TradingBot.Services
                     MinPrice = info.MinPrice,
                     MinTotal = info.MinTotal,
                     UpdatedDt = info.UpdatedDt
-                });
+                };
+                UnitOfWork.PairInfos.Add(item);
             }
-            if(commit)
-                DbContext.SaveChanges();
+            if (commit)
+                UnitOfWork.SaveChanges();
 
             return item;
         }
@@ -72,10 +76,10 @@ namespace TradingBot.Services
         public dynamic PullPairs(ExchangeApi api)
         {
             Type type = null;
-          
+
             switch (api.Type)
             {
-                case AccountTypeEnum.Yobit:
+                case AccountType.Yobit:
                     type = typeof(YobitPairsResponse);
                     break;
                 default:
@@ -93,7 +97,7 @@ namespace TradingBot.Services
             {
                 switch (api.Type)
                 {
-                    case AccountTypeEnum.Yobit:
+                    case AccountType.Yobit:
                         {
                             var data = result as YobitPairsResponse;
                             foreach (var pair in data.Data)
@@ -115,16 +119,14 @@ namespace TradingBot.Services
                                     MinTotal = pairInfo.MinTotal
                                 });
                             }
-                            DbContext.SaveChanges();
+                            UnitOfWork.SaveChanges();
                         }
                         break;
                     default:
                         break;
-
                 }
             }
             return result;
         }
-
     }
 }

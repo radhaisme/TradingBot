@@ -2,9 +2,8 @@
 namespace TradingBot.Core
 {
 	using System;
-    using System.Collections.Generic;
     using System.Net.Http;
-    using TradingBot.Domain;
+    using TradingBot.Core.Enums;
 
     public class PairsResponse<T>
     {
@@ -36,21 +35,21 @@ namespace TradingBot.Core
 
     public abstract class ExchangeApi : IDisposable
 	{
-        public AccountTypeEnum Type { get; protected set; }
+		public AccountType Type { get; protected set; }
 
-	    protected readonly HttpClient Http = new HttpClient();
+		protected readonly HttpClient HttpClient = new HttpClient();
 
-	    protected ExchangeApi(string baseAddress)
+        protected ExchangeApi(string baseAddress)
 	    {
-		    Http.BaseAddress = new Uri(baseAddress);
-		    Http.DefaultRequestHeaders.ConnectionClose = false;
+			HttpClient.BaseAddress = new Uri(baseAddress);
+			HttpClient.DefaultRequestHeaders.ConnectionClose = false;
 	    }
 
 	    protected virtual void Dispose(bool disposing)
 	    {
 		    if (disposing)
 		    {
-			    Http.Dispose();
+				HttpClient.Dispose();
 		    }
 	    }
 
@@ -60,6 +59,6 @@ namespace TradingBot.Core
 		    GC.SuppressFinalize(this);
 	    }
 
-        public abstract PairsResponse<T> GetPairs<T>();
+		public abstract PairsResponse<T> GetPairs<T>();
     }
 }

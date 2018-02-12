@@ -1,12 +1,11 @@
-﻿
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using TradingBot.Domain;
 
 namespace TradingBot.Core
 {
+    using System;
+    using TradingBot.Core.Enums;
+
     public class ExchangeInfo
     {
         private static string accountTypes { get; set; }
@@ -22,16 +21,16 @@ namespace TradingBot.Core
             }
         }
 
-        public static Dictionary<AccountTypeEnum, ExchangeInfo> Exchanges { get; set; }
+        public static Dictionary<AccountType, ExchangeInfo> Exchanges { get; set; }
 
         static ExchangeInfo()
         {
-            Exchanges = new Dictionary<AccountTypeEnum, ExchangeInfo>();
-            Exchanges.Add(AccountTypeEnum.Yobit, new ExchangeInfo(AccountTypeEnum.Yobit, "https://yobit.net/api/3/", typeof(Yobit.Exchange.Api.YobitApi)));
-            Exchanges.Add(AccountTypeEnum.Bitfinex, new ExchangeInfo(AccountTypeEnum.Bitfinex, "https://api.bitfinex.com/v2/", typeof(Yobit.Exchange.Api.YobitApi)));
+            Exchanges = new Dictionary<AccountType, ExchangeInfo>();
+            Exchanges.Add(AccountType.Yobit, new ExchangeInfo(AccountType.Yobit, "https://yobit.net/api/3/", typeof(Yobit.Api.YobitApi)));
+            Exchanges.Add(AccountType.Bitfinex, new ExchangeInfo(AccountType.Bitfinex, "https://api.bitfinex.com/v2/", typeof(Yobit.Api.YobitApi)));
         }
 
-        public AccountTypeEnum Type { get; set; }
+        public AccountType Type { get; set; }
         
         public string BasicUrl { get; set; }
 
@@ -42,7 +41,7 @@ namespace TradingBot.Core
             get { return (ExchangeApi)Activator.CreateInstance(ExcangeApi, new[] { BasicUrl }); }
         }
 
-        public ExchangeInfo(AccountTypeEnum type, string basicUrl, Type excangeApi)
+        public ExchangeInfo(AccountType type, string basicUrl, Type excangeApi)
         {
             Type = type;
             BasicUrl = basicUrl;

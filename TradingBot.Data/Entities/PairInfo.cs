@@ -1,18 +1,16 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using TradingBot.Core.Enums;
 
-namespace TradingBot.Domain
+namespace TradingBot.Data.Entities
 {
-    public class PairInfo
+    public class PairInfo: Entity
     {
-        [Key]
-        public int Id { get; set; }
-
         public string Name { get; set; }
 
         public DateTime UpdatedDt { get; set; }
 
-        public AccountTypeEnum AccountType { get; set; }
+        public AccountType AccountType { get; set; }
 
         public byte DecimalPlaces { get; set; }
         

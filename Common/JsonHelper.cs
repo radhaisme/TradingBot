@@ -1,36 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Newtonsoft.Json;
-
-namespace Common
+﻿
+namespace TradingBot.Common
 {
-    public static class JsonHelper
-    {
-        public static string ToJson(object @object)
-        {
-            return JsonConvert.SerializeObject(@object);
-        }
+	using Newtonsoft.Json;
+	using Newtonsoft.Json.Converters;
 
-        public static string ToJson(object @object, JsonSerializerSettings settings)
-        {
-            return JsonConvert.SerializeObject(@object, settings);
-        }
+	public static class JsonHelper
+	{
+		public static string ToJson(object @object)
+		{
+			return JsonConvert.SerializeObject(@object);
+		}
 
-        public static T ToObject<T>(string json)
-        {
-            return JsonConvert.DeserializeObject<T>(json);
-        }
+		public static string ToJson(object @object, JsonSerializerSettings settings)
+		{
+			return JsonConvert.SerializeObject(@object, settings);
+		}
 
-        public static T ToObject<T>(string json, JsonSerializerSettings settings)
-        {
-            return JsonConvert.DeserializeObject<T>(json, settings);
-        }
+		public static T FromJson<T>(string json)
+		{
+			return JsonConvert.DeserializeObject<T>(json, new JsonSerializerSettings());
+		}
 
-        public static object ToObject(string json)
-        {
-            return JsonConvert.DeserializeObject(json);
-        }
-    }
-
+		public static T FromJson<T>(string json, JsonSerializerSettings settings)
+		{
+			return JsonConvert.DeserializeObject<T>(json, settings);
+		}
+	}
 }
