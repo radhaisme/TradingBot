@@ -1192,12 +1192,12 @@
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
-          "E:\\Projects\\TradingBot\\Common\\Common.csproj": "1.0.0",
           "Microsoft.EntityFrameworkCore": "2.0.1",
           "Microsoft.EntityFrameworkCore.Design": "2.0.1",
           "Microsoft.EntityFrameworkCore.Sqlite": "2.0.1",
           "System.Configuration.ConfigurationManager": "4.4.1",
-          "TradingBot.Core": "1.0.0"
+          "TradingBot.Core": "1.0.0",
+          "e:\\Projects\\TradingBot\\Common\\Common.csproj": "1.0.0"
         },
         "compile": {
           "bin/placeholder/TradingBot.Data.dll": {}
@@ -1212,7 +1212,8 @@
         "dependencies": {
           "Newtonsoft.Json": "10.0.3",
           "TradingBot.Core": "1.0.0",
-          "TradingBot.Data": "1.0.0"
+          "TradingBot.Data": "1.0.0",
+          "e:\\Projects\\TradingBot\\Common\\Common.csproj": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Yobit.Api.dll": {}
@@ -4481,7 +4482,7 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Roman\\.nuget\\packages\\": {},
+    "C:\\Users\\moxno\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
@@ -4490,17 +4491,17 @@
       "hideWarningsAndErrors": true
     },
     "restore": {
-      "projectUniqueName": "E:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\TradingBot.CommandPrompt.csproj",
+      "projectUniqueName": "e:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\TradingBot.CommandPrompt.csproj",
       "projectName": "TradingBot.CommandPrompt",
-      "projectPath": "E:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\TradingBot.CommandPrompt.csproj",
-      "packagesPath": "C:\\Users\\Roman\\.nuget\\packages\\",
-      "outputPath": "E:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\obj\\",
+      "projectPath": "e:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\TradingBot.CommandPrompt.csproj",
+      "packagesPath": "C:\\Users\\moxno\\.nuget\\packages\\",
+      "outputPath": "e:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\Roman\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\moxno\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -4513,11 +4514,11 @@
       "frameworks": {
         "netcoreapp2.0": {
           "projectReferences": {
-            "E:\\Projects\\TradingBot\\TradingBot.Data\\TradingBot.Data.csproj": {
-              "projectPath": "E:\\Projects\\TradingBot\\TradingBot.Data\\TradingBot.Data.csproj"
+            "e:\\Projects\\TradingBot\\TradingBot.Data\\TradingBot.Data.csproj": {
+              "projectPath": "e:\\Projects\\TradingBot\\TradingBot.Data\\TradingBot.Data.csproj"
             },
-            "E:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj": {
-              "projectPath": "E:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj"
+            "e:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj": {
+              "projectPath": "e:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj"
             }
           }
         }
@@ -4549,8 +4550,8 @@
     {
       "code": "NU1105",
       "level": "Error",
-      "message": "Unable to find project information for 'E:\\Projects\\TradingBot\\Common\\Common.csproj'. The project file may be invalid or missing targets required for restore.",
-      "libraryId": "E:\\Projects\\TradingBot\\Common\\Common.csproj",
+      "message": "Не удалось найти сведения о проекте для \"e:\\Projects\\TradingBot\\Common\\Common.csproj\". Возможно, в файле проекта есть ошибки или отсутствуют цели, необходимые для восстановления.",
+      "libraryId": "e:\\Projects\\TradingBot\\Common\\Common.csproj",
       "targetGraphs": [
         ".NETCoreApp,Version=v2.0"
       ]
