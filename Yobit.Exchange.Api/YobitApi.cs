@@ -68,7 +68,7 @@ namespace Yobit.Exchange.Api
 
         public override PairsResponse<T> GetPairs<T>()
         {
-            var result = GetPairsAsync().Result;
+            var result = GetPairs();
             return result as PairsResponse<T>;
         }
 

@@ -6,7 +6,7 @@ namespace TradingBot.Core
     using System.Net.Http;
     using TradingBot.Domain;
 
-    public abstract class PairsResponse<T>
+    public class PairsResponse<T>
     {
         public bool IsSuccess { get; set; }
 
@@ -27,7 +27,14 @@ namespace TradingBot.Core
         }
     }
 
-	public abstract class ExchangeApi : IDisposable
+    public class BasePairsResponse : PairsResponse<object>
+    {
+        public BasePairsResponse(object data) : base(data)
+        {
+        }
+    }
+
+    public abstract class ExchangeApi : IDisposable
 	{
         public AccountTypeEnum Type { get; protected set; }
 

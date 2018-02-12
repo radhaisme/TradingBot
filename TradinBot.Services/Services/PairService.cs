@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using TradingBot.Core;
 using TradingBot.Domain;
 using TradingBot.Domain.Base;
+using Yobit.Exchange.Api;
 using Yobit.Exchange.Api.Entities;
 
 namespace TradingBot.Services
@@ -67,17 +69,34 @@ namespace TradingBot.Services
             return item;
         }
 
-        public PairsResponse<T> PullPairs<T>(ExchangeApi api)
+        public dynamic PullPairs(ExchangeApi api)
         {
-            var result = api.GetPairs<T>();
+            Type type = null;
+          
+            switch (api.Type)
+            {
+                case AccountTypeEnum.Yobit:
+                    type = typeof(YobitPairsResponse);
+                    break;
+                default:
+                    break;
+            }
+
+            if (type == null)
+                return new BasePairsResponse("Method is not implemented");
+
+            var method = typeof(ExchangeApi).GetMethod("GetPairs");
+            var generic = method.MakeGenericMethod(type.BaseType.GenericTypeArguments[0].GetTypeInfo());
+            dynamic result = generic.Invoke(api, null);
+
             if (result.IsSuccess)
             {
                 switch (api.Type)
                 {
                     case AccountTypeEnum.Yobit:
                         {
-                            var data = result.Data as Dictionary<string, Pair>;
-                            foreach (var pair in data)
+                            var data = result as YobitPairsResponse;
+                            foreach (var pair in data.Data)
                             {
                                 var pairInfo = pair.Value;
                                 AddOrUpdate(new PairInfo

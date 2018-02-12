@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using TradingBot.Core;
@@ -171,33 +172,32 @@ namespace TradingBot.Cmd
             }
 
             var eType = (AccountTypeEnum)type;
-            switch (eType)
+            if (!ExchangeInfo.Exchanges.ContainsKey(eType))
             {
-                case AccountTypeEnum.Yobit:
-                    using (var api = new YobitApi(ExchangeInfo.Exchanges[eType].BasicUrl))
-                    {
-                        try
-                        {
-                            PairsResponse<Dictionary<string, Pair>> result = null;
-                            using (var pairService = new PairService())
-                            {
-                                result = pairService.PullPairs<Dictionary<string, Pair>>(api);
-                            }
-                            if (result.IsSuccess)
-                                Console.WriteLine("Pairs info received, you can use /tickerInfo [tickerCode] to get appropriate info");
-                            else
-                                Console.WriteLine(string.Format("Error when pull pairs: {0}", result));
-                        }
-                        catch
-                        {
-                            Console.WriteLine("Unexpected error");
-                        }
-                    }
-                    break;
-                default:
-                    Console.WriteLine("It's not implemented Exchange type");
-                    break;
+                Console.WriteLine("It's not implemented Exchange type");
+                return;
             }
+
+            var exchange = ExchangeInfo.Exchanges[eType];
+            using (ExchangeApi api = exchange.Api)
+            {
+                try
+                {
+                    dynamic result = null;
+                    using (var pairService = new PairService())
+                    {
+                        result = pairService.PullPairs(api);
+                    }
+                    if (result != null && result.IsSuccess)
+                        Console.WriteLine("Pairs info received, you can use /tickerInfo [tickerCode] to get appropriate info");
+                    else
+                        Console.WriteLine(string.Format("Error when pull pairs: {0}", result));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Unexpected error");
+                }
+            }        
         }
     }
 }

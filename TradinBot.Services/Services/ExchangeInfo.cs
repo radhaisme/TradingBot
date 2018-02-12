@@ -27,18 +27,26 @@ namespace TradingBot.Core
         static ExchangeInfo()
         {
             Exchanges = new Dictionary<AccountTypeEnum, ExchangeInfo>();
-            Exchanges.Add(AccountTypeEnum.Yobit, new ExchangeInfo(AccountTypeEnum.Yobit, "https://yobit.net/api/3/"));
-            Exchanges.Add(AccountTypeEnum.Bitfinex, new ExchangeInfo(AccountTypeEnum.Bitfinex, "https://api.bitfinex.com/v2/"));
+            Exchanges.Add(AccountTypeEnum.Yobit, new ExchangeInfo(AccountTypeEnum.Yobit, "https://yobit.net/api/3/", typeof(Yobit.Exchange.Api.YobitApi)));
+            Exchanges.Add(AccountTypeEnum.Bitfinex, new ExchangeInfo(AccountTypeEnum.Bitfinex, "https://api.bitfinex.com/v2/", typeof(Yobit.Exchange.Api.YobitApi)));
         }
 
         public AccountTypeEnum Type { get; set; }
         
         public string BasicUrl { get; set; }
 
-        public ExchangeInfo(AccountTypeEnum type, string basicUrl)
+        public Type ExcangeApi { get; set; } 
+
+        public ExchangeApi Api
+        {
+            get { return (ExchangeApi)Activator.CreateInstance(ExcangeApi, new[] { BasicUrl }); }
+        }
+
+        public ExchangeInfo(AccountTypeEnum type, string basicUrl, Type excangeApi)
         {
             Type = type;
             BasicUrl = basicUrl;
+            ExcangeApi = excangeApi;
         }
     }
 
