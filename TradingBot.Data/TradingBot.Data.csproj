@@ -5,8 +5,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Enums\**" />
 	  <Compile Remove="Repositories\**" />
+	  <EmbeddedResource Remove="Enums\**" />
 	  <EmbeddedResource Remove="Repositories\**" />
+	  <None Remove="Enums\**" />
 	  <None Remove="Repositories\**" />
 	</ItemGroup>
 	<ItemGroup>
@@ -18,9 +21,6 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\Common\Common.csproj" />
 	  <ProjectReference Include="..\TradingBot.Core\TradingBot.Core.csproj" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Enums\" />
 	</ItemGroup>
 
 </Project>

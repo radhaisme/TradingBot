@@ -17,6 +17,7 @@
 		<ProjectReference Include="..\Exchange.API\Yobit.Api\Yobit.Api.csproj" />
 		<ProjectReference Include="..\TradinBot.Services\TradinBot.Services.csproj" />
 		<ProjectReference Include="..\TradingBot.Data\TradingBot.Data.csproj" />
+		<ProjectReference Include="..\TradingBot.Services\TradingBot.Services.csproj" />
 	</ItemGroup>
 
 </Project>

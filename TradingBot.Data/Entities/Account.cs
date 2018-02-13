@@ -3,7 +3,7 @@ namespace TradingBot.Data.Entities
 {
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using TradingBot.Common;
+    using Common;
     using TradingBot.Core.Enums;
 
     public class YobitSettings

@@ -1177,6 +1177,10 @@
       },
       "Common/1.0.0": {
         "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "dependencies": {
+          "Newtonsoft.Json": "10.0.3"
+        },
         "compile": {
           "bin/placeholder/Common.dll": {}
         },
@@ -1187,9 +1191,6 @@
       "TradingBot.Core/1.0.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
-        "dependencies": {
-          "Newtonsoft.Json": "10.0.3"
-        },
         "compile": {
           "bin/placeholder/TradingBot.Core.dll": {}
         },
@@ -1215,12 +1216,26 @@
           "bin/placeholder/TradingBot.Data.dll": {}
         }
       },
+      "TradingBot.Services/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "dependencies": {
+          "TradingBot.Core": "1.0.0",
+          "TradingBot.Data": "1.0.0",
+          "Yobit.Api": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/TradingBot.Services.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/TradingBot.Services.dll": {}
+        }
+      },
       "Yobit.Api/1.0.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
           "Common": "1.0.0",
-          "Newtonsoft.Json": "10.0.3",
           "TradingBot.Core": "1.0.0",
           "TradingBot.Data": "1.0.0"
         },
@@ -4482,6 +4497,11 @@
       "path": "../TradingBot.Data/TradingBot.Data.csproj",
       "msbuildProject": "../TradingBot.Data/TradingBot.Data.csproj"
     },
+    "TradingBot.Services/1.0.0": {
+      "type": "project",
+      "path": "../TradingBot.Services/TradingBot.Services.csproj",
+      "msbuildProject": "../TradingBot.Services/TradingBot.Services.csproj"
+    },
     "Yobit.Api/1.0.0": {
       "type": "project",
       "path": "../Exchange.API/Yobit.Api/Yobit.Api.csproj",
@@ -4490,13 +4510,16 @@
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.0": [
+      "Common >= 1.0.0",
       "Microsoft.NETCore.App >= 2.0.0",
       "TradingBot.Data >= 1.0.0",
+      "TradingBot.Services >= 1.0.0",
       "Yobit.Api >= 1.0.0"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Roman\\.nuget\\packages\\": {},
+    "C:\\Users\\v-roasei\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
@@ -4505,34 +4528,43 @@
       "hideWarningsAndErrors": true
     },
     "restore": {
-      "projectUniqueName": "E:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\TradingBot.CommandPrompt.csproj",
+      "projectUniqueName": "d:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\TradingBot.CommandPrompt.csproj",
       "projectName": "TradingBot.CommandPrompt",
-      "projectPath": "E:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\TradingBot.CommandPrompt.csproj",
-      "packagesPath": "C:\\Users\\Roman\\.nuget\\packages\\",
-      "outputPath": "E:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\obj\\",
+      "projectPath": "d:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\TradingBot.CommandPrompt.csproj",
+      "packagesPath": "C:\\Users\\v-roasei\\.nuget\\packages\\",
+      "outputPath": "d:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\",
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\Roman\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\v-roasei\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.Fallback.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp2.0"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "https://api.nuget.org/v3/index.json": {}
+        "https://api.nuget.org/v3/index.json": {},
+        "https://dynamicscrm.pkgs.visualstudio.com/_packaging/XrmSolutions/nuget/v3/index.json": {}
       },
       "frameworks": {
         "netcoreapp2.0": {
           "projectReferences": {
-            "E:\\Projects\\TradingBot\\TradingBot.Data\\TradingBot.Data.csproj": {
-              "projectPath": "E:\\Projects\\TradingBot\\TradingBot.Data\\TradingBot.Data.csproj"
+            "d:\\Projects\\TradingBot\\TradingBot.Services\\TradingBot.Services.csproj": {
+              "projectPath": "d:\\Projects\\TradingBot\\TradingBot.Services\\TradingBot.Services.csproj"
             },
-            "E:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj": {
-              "projectPath": "E:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj"
+            "d:\\Projects\\TradingBot\\TradingBot.Data\\TradingBot.Data.csproj": {
+              "projectPath": "d:\\Projects\\TradingBot\\TradingBot.Data\\TradingBot.Data.csproj"
+            },
+            "d:\\Projects\\TradingBot\\Common\\Common.csproj": {
+              "projectPath": "d:\\Projects\\TradingBot\\Common\\Common.csproj"
+            },
+            "d:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj": {
+              "projectPath": "d:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj"
             }
           }
         }

@@ -2,7 +2,6 @@
 namespace TradingBot.Common
 {
 	using Newtonsoft.Json;
-	using Newtonsoft.Json.Converters;
 
 	public static class JsonHelper
 	{
