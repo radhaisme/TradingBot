@@ -12535,8 +12535,7 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\v-roasei\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\": {},
+    "C:\\Users\\moxno\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
@@ -12545,28 +12544,25 @@
       "hideWarningsAndErrors": true
     },
     "restore": {
-      "projectUniqueName": "d:\\Projects\\TradingBot\\TradingBot.Web\\TradingBot.Web.csproj",
+      "projectUniqueName": "E:\\Projects\\TradingBot\\TradingBot.Web\\TradingBot.Web.csproj",
       "projectName": "TradingBot.Web",
-      "projectPath": "d:\\Projects\\TradingBot\\TradingBot.Web\\TradingBot.Web.csproj",
-      "packagesPath": "C:\\Users\\v-roasei\\.nuget\\packages\\",
-      "outputPath": "d:\\Projects\\TradingBot\\TradingBot.Web\\obj\\",
+      "projectPath": "E:\\Projects\\TradingBot\\TradingBot.Web\\TradingBot.Web.csproj",
+      "packagesPath": "C:\\Users\\moxno\\.nuget\\packages\\",
+      "outputPath": "E:\\Projects\\TradingBot\\TradingBot.Web\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\",
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\v-roasei\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.Fallback.config"
+        "C:\\Users\\moxno\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp2.0"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "https://api.nuget.org/v3/index.json": {},
-        "https://dynamicscrm.pkgs.visualstudio.com/_packaging/XrmSolutions/nuget/v3/index.json": {}
+        "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "netcoreapp2.0": {

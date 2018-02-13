@@ -6,6 +6,7 @@ namespace TradingBot.CommandPrompt
     using System.Linq;
     using System.Threading.Tasks;
     using TradingBot.Core;
+    using TradingBot.Services;
     using Yobit.Api;
 
     public enum CommandEnum
