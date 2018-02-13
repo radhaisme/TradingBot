@@ -1,19 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Yobit.Api</AssemblyName>
-    <RootNamespace>Yobit.Api</RootNamespace>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<AssemblyName>Yobit.Api</AssemblyName>
+		<RootNamespace>Yobit.Api</RootNamespace>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Common\Common.csproj" />
-    <ProjectReference Include="..\..\TradingBot.Core\TradingBot.Core.csproj" />
-    <ProjectReference Include="..\..\TradingBot.Data\TradingBot.Data.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\TradingBot.Core\TradingBot.Core.csproj" />
+		<ProjectReference Include="..\..\TradingBot.Data\TradingBot.Data.csproj" />
+	</ItemGroup>
 
 </Project>

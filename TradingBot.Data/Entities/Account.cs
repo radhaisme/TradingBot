@@ -1,12 +1,12 @@
 ﻿
 namespace TradingBot.Data.Entities
 {
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using Common;
-    using TradingBot.Core.Enums;
+	using Common;
+	using Core.Enums;
+	using System.ComponentModel.DataAnnotations;
+	using System.ComponentModel.DataAnnotations.Schema;
 
-    public class YobitSettings
+	public class YobitSettings
     {
         public string Secret { get; set; }
     }
