@@ -198,4 +198,3 @@ namespace TradingBot.CommandPrompt
 		}
 	}
 }
-
