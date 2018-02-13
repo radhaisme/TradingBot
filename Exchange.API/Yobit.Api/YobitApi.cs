@@ -25,14 +25,14 @@ namespace Yobit.Api
 
 	public class YobitApi : ExchangeApi
 	{
-        private static string paramsTemplate = "?{0}nonce={1}";
+        private static string paramsTemplate = "?method={0}&{1}nonce={2}";
 
-        public YobitApi(string baseAddress) : base(baseAddress)
+        public YobitApi(string publicEndpoint, string privateEndpoint) : base(publicEndpoint, privateEndpoint)
 		{
 			Type = AccountType.Yobit;
 		}
 
-		public async Task<object> GetActiveOrdersOfUserAsync(string pair, Account account)
+		public async Task<dynamic> GetActiveOrdersOfUserAsync(string pair, Account account)
 		{
             if(account == null || account.YobitSettings == null)
             {
@@ -61,21 +61,22 @@ namespace Yobit.Api
             var h = new HashAlgorithm(account.YobitSettings.Secret);
 
             var parameters = string.Format("pair={0}&", pair);
-            string postData = String.Format(paramsTemplate, parameters, counter);
+            string postData = String.Format(paramsTemplate, "activeOrders", parameters, counter);
 
 			string sign = Convert.ToBase64String(h.ComputeHash(Encoding.Default.GetBytes(postData)));
 			HttpClient.DefaultRequestHeaders.Add("Key", account.ApiKey);
 			HttpClient.DefaultRequestHeaders.Add("Sign", sign);
 
+            var url = new Uri(PrivateEndpoint);
             var httpContext = new StringContent(postData);
-			var response = await HttpClient.PostAsync(new Uri(HttpClient.BaseAddress + "activeorders"), httpContext);
+			var response = await HttpClient.PostAsync(url, httpContext);
 
             var data = await HttpHelper.AcquireContentAsync<dynamic>(response);
 
             return data;
 		}
 
-		public object GetActiveOrdersOfUser(string pair, Account account)
+		public dynamic GetActiveOrdersOfUser(string pair, Account account)
 		{
 			return GetActiveOrdersOfUserAsync(pair, account).Result;
 		}
@@ -83,7 +84,7 @@ namespace Yobit.Api
         public async Task<YobitPairsResponse> GetPairsAsync()
         {
             YobitPairsResponse result;
-            var response = await HttpClient.GetAsync(new Uri(HttpClient.BaseAddress + "info"));
+            var response = await HttpClient.GetAsync(new Uri(PublicEndpoint + "info"));
 
             try
             {
@@ -119,7 +120,7 @@ namespace Yobit.Api
 				throw new ArgumentNullException(nameof(pair));
 			}
 
-			HttpResponseMessage response = await HttpClient.GetAsync(new Uri(String.Format(HttpClient.BaseAddress + "ticker/{0}", pair)));
+			HttpResponseMessage response = await HttpClient.GetAsync(new Uri(String.Format(PublicEndpoint + "ticker/{0}", pair)));
 			var result = await HttpHelper.AcquireContentAsync<dynamic>(response);
 			var model = new PairData
 			{
@@ -149,8 +150,8 @@ namespace Yobit.Api
 			}
 
 			string queryString = limit.HasValue
-				? String.Format(HttpClient.BaseAddress + "depth/{0}?limit={1}", pair, limit.Value)
-				: String.Format(HttpClient.BaseAddress + "depth/{0}", pair);
+				? String.Format(PublicEndpoint + "depth/{0}?limit={1}", pair, limit.Value)
+				: String.Format(PublicEndpoint + "depth/{0}", pair);
 
 			HttpResponseMessage response = await HttpClient.GetAsync(new Uri(queryString));
 			var result = await HttpHelper.AcquireContentAsync<dynamic>(response);

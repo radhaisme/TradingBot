@@ -38,11 +38,16 @@ namespace TradingBot.Core
 		public AccountType Type { get; protected set; }
 
 		protected readonly HttpClient HttpClient = new HttpClient();
+        
+        protected string PublicEndpoint { get; private set; }
+        protected string PrivateEndpoint { get; private set; }
 
-        protected ExchangeApi(string baseAddress)
+        protected ExchangeApi(string publicEndpoint, string privateEndpoint)
 	    {
-			HttpClient.BaseAddress = new Uri(baseAddress);
-			HttpClient.DefaultRequestHeaders.ConnectionClose = false;
+            PublicEndpoint = publicEndpoint;
+            PrivateEndpoint = privateEndpoint;
+
+            HttpClient.DefaultRequestHeaders.ConnectionClose = false;
 	    }
 
 	    protected virtual void Dispose(bool disposing)

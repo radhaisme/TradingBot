@@ -240,8 +240,8 @@ namespace TradingBot.CommandPrompt
                                 var yobitApi = api as YobitApi;
                                 var result = yobitApi.GetActiveOrdersOfUser(pair, account);
 
-                                if (result == null)
-                                    Console.WriteLine("Something wrong");
+                                if (result == null || result.success != 1)
+                                    Console.WriteLine(string.Format("Something wrong: {0}", result.error));
                                 else
                                 {
                                     var yobitSettings = account.YobitSettings;
