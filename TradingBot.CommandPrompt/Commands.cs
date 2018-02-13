@@ -19,8 +19,10 @@ namespace TradingBot.CommandPrompt
         Logout,
         AddAccount,
         RemoveAccount,
+        GetAccounts,
         GetPairs,
         GetPairInfo,
+        GetActiveOrders,
     }
 
     public class Command
@@ -95,13 +97,21 @@ namespace TradingBot.CommandPrompt
                 new Command(CommandEnum.Logout, new List<string> { "logout", "signoff", "signout", "lock" }, false, "Allow you to sign out, you will not have access to private functionality")
             );
 
-            //Commands.Add(
-            //    new Command(CommandEnum.AddAccount, new List<string> { "addaccount", "add-account" }, false, "Allow you to add private Api key")
-            //);
+            Commands.Add(
+                new Command(CommandEnum.AddAccount, new List<string> { "addaccount", "add-account" }, false, "Allow you to add private Api key")
+            );
+
+            Commands.Add(
+               new Command(CommandEnum.GetAccounts, new List<string> { "my-accounts", "get-accounts" }, false, "Allow you to view all your accounts (for example to know which accountId you should use when run private commands)")
+           );
 
             //Commands.Add(
-            //    new Command(CommandEnum.RemoveAccount, new List<string> { "removeaccount", "remove-account" , "rem-account", "del-account", "delete-account" }, false, "Allow you to remove private Api key")
+            //    new Command(CommandEnum.RemoveAccount, new List<string> { "removeaccount", "remove-account", "rem-account", "del-account", "delete-account" }, false, "Allow you to remove private Api key")
             //);
+
+            Commands.Add(
+                new Command(CommandEnum.GetActiveOrders, new List<string> { "get-orders", "orders"}, false, "Allow you to get your active orders")
+            );
 
             Commands.Add(
               new Command(CommandEnum.GetPairs, new List<string> { "getpairs", "all", "info" },

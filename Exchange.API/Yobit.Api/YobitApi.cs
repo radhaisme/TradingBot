@@ -10,8 +10,9 @@ namespace Yobit.Api
 	using TradingBot.Common;
 	using TradingBot.Core;
 	using TradingBot.Core.Enums;
+    using TradingBot.Data.Entities;
 
-	public class YobitPairsResponse : PairsResponse<Dictionary<string, Pair>>
+    public class YobitPairsResponse : PairsResponse<Dictionary<string, Pair>>
 	{
 		public YobitPairsResponse(string error) : base(error)
 		{
@@ -24,46 +25,59 @@ namespace Yobit.Api
 
 	public class YobitApi : ExchangeApi
 	{
-		private readonly int _requestCount;
+        private static string paramsTemplate = "?{0}nonce={1}";
 
-		public YobitApi(string baseAddress) : base(baseAddress)
+        public YobitApi(string baseAddress) : base(baseAddress)
 		{
 			Type = AccountType.Yobit;
-			_requestCount = 0;
 		}
 
-		public async Task<object> GetActiveOrdersOfUserAsync(string pair, string key, string secret)
+		public async Task<object> GetActiveOrdersOfUserAsync(string pair, Account account)
 		{
-			if (String.IsNullOrEmpty(pair))
+            if(account == null || account.YobitSettings == null)
+            {
+                throw new ArgumentNullException(nameof(account));
+            }
+
+            if (String.IsNullOrEmpty(pair))
 			{
 				throw new ArgumentNullException(nameof(pair));
 			}
 
-			if (String.IsNullOrEmpty(key))
+			if (String.IsNullOrEmpty(account.ApiKey))
 			{
-				throw new ArgumentNullException(nameof(key));
+				throw new ArgumentNullException("ApiKey");
 			}
 
-			if (String.IsNullOrEmpty(secret))
+			if (String.IsNullOrEmpty(account.YobitSettings.Secret))
 			{
-				throw new ArgumentNullException(nameof(secret));
+				throw new ArgumentNullException("Secret");
 			}
 
-			var h = new HashAlgorithm(secret);
-			string q = String.Format("?pair={0}&nonce={1}", pair, _requestCount);
-			string sign = Convert.ToBase64String(h.ComputeHash(Encoding.Default.GetBytes(q)));
-			HttpClient.DefaultRequestHeaders.Add("Key", key);
+            var counter = account.YobitSettings.Counter;
+            if (counter == 0)
+                counter++;
+
+            var h = new HashAlgorithm(account.YobitSettings.Secret);
+
+            var parameters = string.Format("pair={0}&", pair);
+            string postData = String.Format(paramsTemplate, parameters, counter);
+
+			string sign = Convert.ToBase64String(h.ComputeHash(Encoding.Default.GetBytes(postData)));
+			HttpClient.DefaultRequestHeaders.Add("Key", account.ApiKey);
 			HttpClient.DefaultRequestHeaders.Add("Sign", sign);
-			HttpResponseMessage response = await HttpClient.PostAsync(new Uri(HttpClient.BaseAddress + "activeorders" + q), null);
 
+            var httpContext = new StringContent(postData);
+			var response = await HttpClient.PostAsync(new Uri(HttpClient.BaseAddress + "activeorders"), httpContext);
 
+            var data = await HttpHelper.AcquireContentAsync<dynamic>(response);
 
-			return null;
+            return data;
 		}
 
-		public object GetActiveOrdersOfUser(string pair, string key, string secret)
+		public object GetActiveOrdersOfUser(string pair, Account account)
 		{
-			return GetActiveOrdersOfUserAsync(pair, key, secret).Result;
+			return GetActiveOrdersOfUserAsync(pair, account).Result;
 		}
 
         public async Task<YobitPairsResponse> GetPairsAsync()

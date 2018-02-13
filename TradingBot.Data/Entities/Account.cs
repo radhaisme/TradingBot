@@ -9,6 +9,7 @@ namespace TradingBot.Data.Entities
 	public class YobitSettings
     {
         public string Secret { get; set; }
+        public int Counter { get; set; }
     }
 
     public class Account : Entity
@@ -22,6 +23,8 @@ namespace TradingBot.Data.Entities
         public string ApiKey { get; set; }
 
         public string Settings { get; set; }
+
+        public int UserId { get; set; }
 
         public virtual User User { get; set; }
 

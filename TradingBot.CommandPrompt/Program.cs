@@ -8,8 +8,9 @@ namespace TradingBot.CommandPrompt
 	using Core.Enums;
 	using Data.Entities;
 	using Services;
+    using Yobit.Api;
 
-	class Program
+    class Program
 	{
 		static Program()
 		{
@@ -27,13 +28,13 @@ namespace TradingBot.CommandPrompt
 			do
 			{
 				Console.Write(string.Format("{0}> ", CurrentUser == null ? "Anonymous" : CurrentUser.Username));
-				input = Console.ReadLine().ToLowerInvariant().Trim();
+				input = Console.ReadLine().Trim();
 				if (input.Length < 1 || input[0] != '/')
 					continue;
 				input = input.Substring(1);
 				var parts = input.Split(' ');
 
-				command = Command.Commands.FirstOrDefault(m => m.Aliases.Contains(parts[0]));
+				command = Command.Commands.FirstOrDefault(m => m.Aliases.Contains(parts[0].Trim()));
 				if (command == null)
 					command = Command.None;
 
@@ -57,13 +58,23 @@ namespace TradingBot.CommandPrompt
 						case CommandEnum.Logout:
 							CurrentUser = LogoutUser();
 							break;
-						case CommandEnum.GetPairs:
+                        case CommandEnum.AddAccount:
+                            AddAccount(parameters);
+                            break;
+                        case CommandEnum.GetAccounts:
+                            GetAccounts();
+                            break;
+                        case CommandEnum.GetPairs:
 							GetPairs(parameters);
 							break;
 						case CommandEnum.GetPairInfo:
 							GetPairInfo(parameters);
 							break;
-					}
+                        case CommandEnum.GetActiveOrders:
+                            GetActiveOrders(parameters);
+                            break; 
+
+                    }
 			}
 			while (command.Type != CommandEnum.Exit);
 
@@ -123,10 +134,139 @@ namespace TradingBot.CommandPrompt
 			if (CurrentUser == null)
 				Console.WriteLine("You are not authorized");
 
-			return null;
-		}
+            return null;
+        }
 
-		private static void GetPairInfo(params string[] list)
+        private static void GetAccounts()
+        {
+            if (CurrentUser == null)
+                Console.WriteLine("You are not authorized");
+
+            using (var accService = new AccountService())
+            {
+                var result = accService.GetAccounts(CurrentUser.Id);
+
+                Console.WriteLine(string.Format("Your Account(s):\n\r {0}",
+                    string.Join("\n\r * ", result.Select(m => JsonHelper.ToJson(m)))));
+            }
+            return;
+        }
+
+        private static void AddAccount(params string[] list)
+        {
+            if (CurrentUser == null)
+                Console.WriteLine("You are not authorized");
+
+            if (list.Length < 3)
+            {
+                Console.WriteLine("You must enter: any name, exchange type, api key and settings according your exchange type");
+                return;
+            }
+
+            int type;
+            string settings;
+
+            if(!int.TryParse(list[1], out type))
+            {
+                Console.WriteLine(string.Format("You must enter valid Exchange type: {0}", ExchangeInfo.GetAccountTypes));
+                return;
+            }
+            var typeEnum = (AccountType)type;
+
+            switch(typeEnum)
+            {
+                case AccountType.Yobit:
+                    if (list.Length != 4)
+                    {
+                        Console.WriteLine("For Yobit you must to enter Secret as 4th parameter");
+                        return;
+                    }
+                    settings = JsonHelper.ToJson(new YobitSettings
+                    {
+                        Secret = list[3]
+                    });
+                    break;
+                default:
+                    settings = "";
+                    break;
+            }
+
+            using (var accService = new AccountService())
+            {            
+                var result = accService.CreateOrUpdate(CurrentUser.Id, list[0], typeEnum, list[2], settings);
+
+                Console.WriteLine(string.Format("Account successfully added: {0}", JsonHelper.ToJson(result)));
+            }
+            return;
+        }
+
+        private static void GetActiveOrders(params string[] list)
+        {
+            if (CurrentUser == null)
+                Console.WriteLine("You are not authorized");
+
+            if (list.Length != 2 || string.IsNullOrWhiteSpace(list[1]))
+            {
+                Console.WriteLine("You must enter your account Id/Name and pair code");
+                return;
+            }
+
+            var pair = list[1].ToLowerInvariant();
+            int accId = 0;
+            string accName = "";
+
+            if (!int.TryParse(list[0], out accId))
+            {
+                accId = 0;
+                accName = list[0].ToLowerInvariant();
+            }
+
+            using (var accService = new AccountService())
+            {
+                var account = accId > 0 ? accService.GetById(accId) : accService.GetByName(CurrentUser.Id, accName);
+                if (account == null)
+                {
+                    Console.WriteLine("Can't find such account");
+                    return;
+                }
+                //todo requires refactoring
+                var exchange = ExchangeInfo.Exchanges[account.Type];
+                switch (account.Type)
+                {
+                    case AccountType.Yobit:
+                        {
+                            using (var api = exchange.Api)
+                            {
+                                var yobitApi = api as YobitApi;
+                                var result = yobitApi.GetActiveOrdersOfUser(pair, account);
+
+                                if (result == null)
+                                    Console.WriteLine("Something wrong");
+                                else
+                                {
+                                    var yobitSettings = account.YobitSettings;
+                                    if (yobitSettings.Counter == 0)
+                                        yobitSettings.Counter = 1;
+                                    else
+                                        yobitSettings.Counter++;
+
+                                    accService.UpdateSettings(account.Id, JsonHelper.ToJson(yobitSettings));
+
+                                    Console.WriteLine("Done: " + JsonHelper.ToJson(result));
+                                }
+                            }
+                        }
+                        break;
+                    default:
+                        Console.WriteLine("Is not supported yet.");
+                        break;
+                }
+            }
+
+            return;
+        }
+
+        private static void GetPairInfo(params string[] list)
 		{
 			if (list.Length != 2)
 			{

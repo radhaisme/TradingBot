@@ -6,11 +6,11 @@ namespace Yobit.Api
 
 	public class HashAlgorithm : IHashAlgorithm
 	{
-		private readonly HMACSHA1 _hmac;
+		private readonly HMACSHA512 _hmac;
 
 		public HashAlgorithm(string secret)
 		{
-			_hmac = new HMACSHA1(Encoding.Default.GetBytes(secret));
+			_hmac = new HMACSHA512(Encoding.Default.GetBytes(secret));
 		}
 
 		public byte[] ComputeHash(byte[] buffer)
