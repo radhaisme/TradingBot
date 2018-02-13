@@ -20,7 +20,7 @@ namespace TradingBot.Services
         {
             tickerCode = (tickerCode ?? "").Trim();
             var key = tickerCode.ToLowerInvariant();
-            var item = UnitOfWork.PairInfos.Query().FirstOrDefault(m => m.AccountType == type && m.Name == key);
+            var item = Context.PairInfos.Query().FirstOrDefault(m => m.AccountType == type && m.Name == key);
             return item;
         }
 
@@ -59,10 +59,10 @@ namespace TradingBot.Services
                     MinTotal = info.MinTotal,
                     UpdatedDt = info.UpdatedDt
                 };
-                UnitOfWork.PairInfos.Add(item);
+                Context.PairInfos.Add(item);
             }
             if (commit)
-                UnitOfWork.SaveChanges();
+                Context.SaveChanges();
 
             return item;
         }
@@ -113,7 +113,7 @@ namespace TradingBot.Services
                                     MinTotal = pairInfo.MinTotal
                                 });
                             }
-                            UnitOfWork.SaveChanges();
+                            Context.SaveChanges();
                         }
                         break;
                     default:

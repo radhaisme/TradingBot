@@ -8,7 +8,7 @@ namespace TradingBot.Data
 	using System.Linq;
 	using System.Linq.Expressions;
 
-	public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
+	public sealed class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
 	{
 		private readonly IDataContext _context;
 		private readonly DbSet<TEntity> _set;

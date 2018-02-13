@@ -1,76 +1,72 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using TradingBot.Common;
-using TradingBot.Core.Enums;
-using TradingBot.Data.Entities;
-
+﻿
 namespace TradingBot.Services
 {
-    public class AccountService: BaseService
-    {
-        public AccountService()
-        {
-        }
+	using System;
+	using Core.Enums;
+	using Data.Entities;
+	using System.Collections.Generic;
+	using System.Linq;
 
-        public Account GetById(int accountId)
-        {
-            return UnitOfWork.Accounts.Query().FirstOrDefault(m => m.Id == accountId);
-        }
+	public class AccountService : BaseService
+	{
+		public Account GetById(int id)
+		{
+			return Context.Accounts.Find(id);
+		}
 
-        public Account GetByName(int userId, string accountName)
-        {
-            accountName = (accountName ?? "").Trim().ToLowerInvariant();
-            return UnitOfWork.Accounts.Query().FirstOrDefault(m => m.Name.ToLower() == accountName);
-        }
+		public Account GetByName(int userId, string name)
+		{
+			string accountName = String.Empty;
 
-        public List<Account> GetAccounts(int userId)
-        {
-            return UnitOfWork.Accounts.Query().Where(m => m.UserId == userId).ToList();
-        }
+			if (!String.IsNullOrEmpty(name))
+			{
+				accountName = name;
+			}
 
-        public Account CreateOrUpdate(int userId, string name, AccountType type, string apiKey, string jsonSettings, int? id = null)
-        {
-            var item = GetById(id ?? 0);
-            if (item == null)
-            {
-                item = new Account
-                {
-                    ApiKey = apiKey,
-                    Name = name,
-                    Type = type,
-                    UserId = userId,
-                    Settings = jsonSettings
-                };
-                UnitOfWork.Accounts.Add(item);
-            }
-            else
-            {
-                item.ApiKey = apiKey;
-                item.Settings = jsonSettings;
-                item.Name = name;
-                item.Type = type;
-                UnitOfWork.Accounts.Update(item);
-            }
+			name = accountName.Trim().ToLowerInvariant();
 
-            UnitOfWork.SaveChanges();
+			return Context.Accounts.Query().FirstOrDefault(m => m.Name.ToLower() == name); //Сомнительное заявление, проверять его я конечно не буду. Нет гарантии, что получишь акк именно с твой ибо имен много а стина одна!
+		}
 
-            return item;
-        }
+		public List<Account> GetAccounts(int userId)
+		{
+			return Context.Accounts.Get(x => x.UserId == userId).ToList();
+		}
 
-        public Account UpdateSettings(int accountId, string jsonSettings)
-        {
-            var item = GetById(accountId);
-            if (item != null)
-            {
-                item.Settings = jsonSettings;
-                UnitOfWork.Accounts.Update(item);
-                UnitOfWork.SaveChanges();
-            }
-            return item;
-        }
+		public Account CreateOrUpdate(int userId, string name, AccountType type, string key, string jsonSettings, int? id = null)
+		{
+			var account = id.HasValue ? GetById(id.Value) : new Account();
+			account.ApiSettings = jsonSettings;
 
-    }
+			if (account.IsNew())
+			{
+				account.Name = name;
+				account.Type = type;
+				account.UserId = userId;
+				Context.Accounts.Add(account);
+			}
+			else
+			{
+				Context.Accounts.Update(account);
+			}
+
+			Context.SaveChanges();
+
+			return account;
+		}
+
+		public Account UpdateSettings(int accountId, string jsonSettings)
+		{
+			Account account = GetById(accountId);
+
+			if (account != null)
+			{
+				account.ApiSettings = jsonSettings;
+				Context.Accounts.Update(account);
+				Context.SaveChanges();
+			}
+
+			return account;
+		}
+	}
 }

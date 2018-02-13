@@ -51,7 +51,7 @@ namespace TradingBot.Services
         {
             username = (username ?? "").Trim();
             var key = username.ToLowerInvariant();
-            var row = UnitOfWork.Users.Query().FirstOrDefault(m => m.Username.ToLower() == key);
+            var row = Context.Users.Query().FirstOrDefault(m => m.Username.ToLower() == key);
             return row;
         }
 
@@ -73,8 +73,8 @@ namespace TradingBot.Services
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt
             };
-            UnitOfWork.Users.Add(user);
-            UnitOfWork.SaveChanges();
+            Context.Users.Add(user);
+            Context.SaveChanges();
 
             return user;
         }

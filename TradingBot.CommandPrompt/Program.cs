@@ -3,29 +3,19 @@ namespace TradingBot.CommandPrompt
 {
 	using System;
 	using System.Linq;
-	using Common;
-	using Core;
-	using Core.Enums;
-	using Data.Entities;
-	using Services;
-    using Yobit.Api;
 
-    class Program
+	public class Program
 	{
-		static Program()
-		{
-
-		}
-
-		static void Main(string[] args)
+		private static void Main(string[] args)
 		{
 			Console.WriteLine("Use help to get list of commands");
-			var input = "";
+			var input = String.Empty;
 
             var commandsHelper = new CommandsHelper();
 
             var command = CommandsHelper.None;
-            do
+
+			do
             {
                 Console.Write(string.Format("{0}> ", commandsHelper.CurrentUser == null ? "Anonymous" : commandsHelper.CurrentUser.Username));
                 input = Console.ReadLine().Trim();
@@ -50,7 +40,5 @@ namespace TradingBot.CommandPrompt
 			Console.Write("You are finished. Thanks");
 			Console.ReadLine();
 		}
-
-      
 	}
 }

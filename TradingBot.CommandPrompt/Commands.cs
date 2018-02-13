@@ -311,13 +311,13 @@ namespace TradingBot.CommandPrompt
                             using (var api = exchange.Api)
                             {
                                 var yobitApi = api as YobitApi;
-                                var result = yobitApi.GetActiveOrdersOfUser(pair, account);
+                                var result = yobitApi.GetActiveOrdersOfUser(pair);
 
                                 if (result == null || result.success != 1)
                                     Console.WriteLine(string.Format("Something wrong: {0}", result.error));
                                 else
                                 {
-                                    var yobitSettings = account.YobitSettings;
+                                    var yobitSettings = new YobitSettings();
                                     if (yobitSettings.Counter == 0)
                                         yobitSettings.Counter = 1;
                                     else
