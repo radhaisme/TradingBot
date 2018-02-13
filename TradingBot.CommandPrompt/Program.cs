@@ -22,16 +22,15 @@ namespace TradingBot.CommandPrompt
 
 		static void Main(string[] args)
 		{
-			Console.WriteLine("Use /help to get list of commands");
+			Console.WriteLine("Use help to get list of commands");
 			var input = "";
 			var command = Command.None;
 			do
 			{
 				Console.Write(string.Format("{0}> ", CurrentUser == null ? "Anonymous" : CurrentUser.Username));
 				input = Console.ReadLine().Trim();
-				if (input.Length < 1 || input[0] != '/')
+				if (input.Length < 1)
 					continue;
-				input = input.Substring(1);
 				var parts = input.Split(' ');
 
 				command = Command.Commands.FirstOrDefault(m => m.Aliases.Contains(parts[0].Trim()));
@@ -45,24 +44,22 @@ namespace TradingBot.CommandPrompt
 					switch (command.Type)
 					{
 						case CommandEnum.Help:
-							Console.WriteLine("\n\rAvailable commands:\n\r\n\r" +
-								string.Join("\n\r", Command.Commands.Where(m => m.Type != CommandEnum.None)
-								.Select(m => m.Info)));
-							break;
+                            Help(parameters);
+                            break;
 						case CommandEnum.RegisterUser:
 							CurrentUser = RegisterUser(parameters);
 							break;
 						case CommandEnum.Login:
-							CurrentUser = LoginUser(parameters);
+							CurrentUser = Login(parameters);
 							break;
 						case CommandEnum.Logout:
-							CurrentUser = LogoutUser();
+							CurrentUser = Logout(parameters);
 							break;
                         case CommandEnum.AddAccount:
                             AddAccount(parameters);
                             break;
                         case CommandEnum.GetAccounts:
-                            GetAccounts();
+                            GetAccounts(parameters);
                             break;
                         case CommandEnum.GetPairs:
 							GetPairs(parameters);
@@ -82,8 +79,14 @@ namespace TradingBot.CommandPrompt
 			Console.ReadLine();
 		}
 
+        private static void Help(params string[] list)
+        {
+            Console.WriteLine("\n\rAvailable commands:\n\r\n\r" +
+                string.Join("\n\r", Command.Commands.Where(m => m.Type != CommandEnum.None)
+                .Select(m => m.Info)));
+        }
 
-		private static User RegisterUser(params string[] list)
+        private static User RegisterUser(params string[] list)
 		{
 			if (list.Length != 2)
 			{
@@ -106,7 +109,7 @@ namespace TradingBot.CommandPrompt
 			}
 		}
 
-		private static User LoginUser(params string[] list)
+		private static User Login(params string[] list)
 		{
 			if (list.Length != 2)
 			{
@@ -129,7 +132,7 @@ namespace TradingBot.CommandPrompt
 			}
 		}
 
-		private static User LogoutUser()
+		private static User Logout(params string[] list)
 		{
 			if (CurrentUser == null)
 				Console.WriteLine("You are not authorized");
@@ -137,7 +140,7 @@ namespace TradingBot.CommandPrompt
             return null;
         }
 
-        private static void GetAccounts()
+        private static void GetAccounts(params string[] list)
         {
             if (CurrentUser == null)
                 Console.WriteLine("You are not authorized");

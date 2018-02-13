@@ -44,7 +44,7 @@ namespace TradingBot.CommandPrompt
             get
             {
                 return string.Format("{3}- Command '{0}', aliases: {1}, Info: {2}\n\r", Type.ToString(),
-                    string.Join(", ", Aliases.Select(m => string.Format("/{0}", m))), Description, AllowAnonymous ? "" : "[ONLY WHEN AUTHORIZED] ");
+                    string.Join(", ", Aliases.Select(m => string.Format("{0}", m))), Description, AllowAnonymous ? "" : "[ONLY WHEN AUTHORIZED] ");
             }
         }
 
@@ -69,7 +69,6 @@ namespace TradingBot.CommandPrompt
             Description = description;
             AllowAnonymous = allowAnonym;
         }
-
 
         static Command()
         {
@@ -123,7 +122,8 @@ namespace TradingBot.CommandPrompt
               new Command(CommandEnum.GetPairInfo, new List<string> { "getpairinfo", "tickerinfo", "get-ticker-info", "get-pair-info", "pair-info", "ticker-info" },
               string.Format("Get basic ticker info. It uses info stored from last 'getpairs'. Parameters (* - required): exchangeType* ({0}), tickerCode* ", ExchangeInfo.GetAccountTypes))
             );
-
         }
+
+
     }
 }
