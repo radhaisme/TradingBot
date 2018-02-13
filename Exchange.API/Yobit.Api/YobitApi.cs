@@ -67,14 +67,28 @@ namespace Yobit.Api
 			return GetActiveOrdersOfUserAsync(pair, key, secret).Result;
 		}
 
-		public async Task<PairsInfo> GetPairsAsync()
-		{
-			HttpResponseMessage response = await HttpClient.GetAsync(new Uri(HttpClient.BaseAddress + "info"));
+        public async Task<YobitPairsResponse> GetPairsAsync()
+        {
+            YobitPairsResponse result;
+            var response = await HttpClient.GetAsync(new Uri(HttpClient.BaseAddress + "info"));
 
-			return await AcquireContentAsync<PairsInfo>(response);
-		}
+            try
+            {
+                var data = await HttpHelper.AcquireContentAsync<PairsInfo>(response);
+                if (data == null)
+                    result = new YobitPairsResponse("GetPairs response is not success");
+                else
+                    result = new YobitPairsResponse(data.Pairs);
+            }
+            catch (Exception ex)
+            {
+                result = new YobitPairsResponse(string.Format("Can't parse GetPairs response: {0}", ex.Message));
+            }
 
-		public PairsInfo GetPairs()
+            return result;
+        }
+
+		public YobitPairsResponse GetPairs()
 		{
 			return GetPairsAsync().Result;
 		}
@@ -93,7 +107,7 @@ namespace Yobit.Api
 			}
 
 			HttpResponseMessage response = await HttpClient.GetAsync(new Uri(String.Format(HttpClient.BaseAddress + "ticker/{0}", pair)));
-			var result = await AcquireContentAsync<dynamic>(response);
+			var result = await HttpHelper.AcquireContentAsync<dynamic>(response);
 			var model = new PairData
 			{
 				High = result[pair].high,
@@ -126,7 +140,7 @@ namespace Yobit.Api
 				: String.Format(HttpClient.BaseAddress + "depth/{0}", pair);
 
 			HttpResponseMessage response = await HttpClient.GetAsync(new Uri(queryString));
-			var result = await AcquireContentAsync<dynamic>(response);
+			var result = await HttpHelper.AcquireContentAsync<dynamic>(response);
 			var model = new PairOrders();
 
 			foreach (dynamic order in result[pair].asks)
@@ -146,23 +160,5 @@ namespace Yobit.Api
 		{
 			return GetPairOrdersAsync(pair, limit).Result;
 		}
-
-		#region Private methods
-
-		private async Task<TModel> AcquireContentAsync<TModel>(HttpResponseMessage message)
-		{
-			if (message.IsSuccessStatusCode)
-			{
-				byte[] buffer = await message.Content.ReadAsByteArrayAsync();
-				string json = Encoding.Default.GetString(buffer);
-				var result = JsonHelper.FromJson<TModel>(json);
-				
-				return result;
-			}
-
-			return default;
-		}
-
-		#endregion
 	}
 }
