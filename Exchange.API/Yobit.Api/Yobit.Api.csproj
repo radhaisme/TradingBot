@@ -11,10 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\Common\Common.csproj" />
     <ProjectReference Include="..\..\TradingBot.Core\TradingBot.Core.csproj" />
     <ProjectReference Include="..\..\TradingBot.Data\TradingBot.Data.csproj" />
