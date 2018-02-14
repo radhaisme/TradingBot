@@ -5,7 +5,9 @@ namespace Yobit.Api
 	using System;
 	using System.Collections.Generic;
 	using System.Net.Http;
+	using System.Text;
 	using System.Threading.Tasks;
+	using TradingBot.Common;
 	using TradingBot.Core;
 	using TradingBot.Core.Enums;
 
@@ -36,13 +38,8 @@ namespace Yobit.Api
 			Type = AccountType.Yobit;
 		}
 
-		public async Task<dynamic> GetActiveOrdersOfUserAsync(string pair)
+		public async Task<dynamic> GetActiveOrdersOfUserAsync(string pair, int counter)
 		{
-			if (String.IsNullOrEmpty(pair))
-			{
-				throw new ArgumentNullException(nameof(pair));
-			}
-
 			if (String.IsNullOrEmpty(_settings.PublicKey))
 			{
 				throw new ArgumentNullException(nameof(_settings.PublicKey));
@@ -53,34 +50,23 @@ namespace Yobit.Api
 				throw new ArgumentNullException(nameof(_settings.Secret));
 			}
 
-			//var counter = account.YobitSettings.Counter;
+			var hash = new HashAlgorithm(_settings.Secret);
+			var parameters = String.Format("pair={0}&", pair);
+			string postData = String.Format(paramsTemplate, "activeOrders", parameters, counter);
+			string sign = Convert.ToBase64String(hash.ComputeHash(Encoding.Default.GetBytes(postData)));
+			Client.DefaultRequestHeaders.Add("Key", _settings.PublicKey);
+			Client.DefaultRequestHeaders.Add("Sign", sign);
 
-			//if (counter == 0)
-			//{
-			//	counter++;
-			//}
+			var url = new Uri(String.Empty);
+			var content = new StringContent(postData);
+			HttpResponseMessage response = await Client.PostAsync(url, content);
 
-			//var h = new HashAlgorithm(_settings.Secret);
+			if (!response.IsSuccessStatusCode)
+			{
+				throw new YobitException(true, await HttpHelper.AcquireStringAsync(response));
+			}
 
-			//var parameters = string.Format("pair={0}&", pair);
-			//string postData = String.Format(paramsTemplate, "activeOrders", parameters, counter);
-
-			//string sign = Convert.ToBase64String(h.ComputeHash(Encoding.Default.GetBytes(postData)));
-			//Client.DefaultRequestHeaders.Add("Key", _settings.PublicKey);
-			//Client.DefaultRequestHeaders.Add("Sign", sign);
-
-			//var url = new Uri(PrivateEndpoint);
-			//var content = new StringContent(postData);
-			//var response = await Client.PostAsync(url, content);
-
-			//var content = await HttpHelper.AcquireContentAsync<dynamic>(response);
-
-			return null;
-		}
-
-		public dynamic GetActiveOrdersOfUser(string pair)
-		{
-			return GetActiveOrdersOfUserAsync(pair).Result;
+			return response;
 		}
 
 		public async Task<HttpResponseMessage> GetPairsAsync()

@@ -310,23 +310,23 @@ namespace TradingBot.CommandPrompt
                         {
                             using (var api = exchange.Api)
                             {
-                                var yobitApi = api as YobitApi;
-                                var result = yobitApi.GetActiveOrdersOfUser(pair);
+                                //var yobitApi = api as YobitApi;
+                                //var result = yobitApi.GetActiveOrdersOfUser(pair);
 
-                                if (result == null || result.success != 1)
-                                    Console.WriteLine(string.Format("Something wrong: {0}", result.error));
-                                else
-                                {
-                                    var yobitSettings = new YobitSettings();
-                                    if (yobitSettings.Counter == 0)
-                                        yobitSettings.Counter = 1;
-                                    else
-                                        yobitSettings.Counter++;
+                                //if (result == null || result.success != 1)
+                                //    Console.WriteLine(string.Format("Something wrong: {0}", result.error));
+                                //else
+                                //{
+                                //    var yobitSettings = new YobitSettings();
+                                //    if (yobitSettings.Counter == 0)
+                                //        yobitSettings.Counter = 1;
+                                //    else
+                                //        yobitSettings.Counter++;
 
-                                    accService.UpdateSettings(account.Id, JsonHelper.ToJson(yobitSettings));
+                                //    accService.UpdateSettings(account.Id, JsonHelper.ToJson(yobitSettings));
 
-                                    Console.WriteLine("Done: " + JsonHelper.ToJson(result));
-                                }
+                                //    Console.WriteLine("Done: " + JsonHelper.ToJson(result));
+                                //}
                             }
                         }
                         break;

@@ -109,5 +109,32 @@ namespace Yobit.Api
 		{
 			return GetPairOrdersAsync(pair, limit).Result;
 		}
+
+		public async Task<dynamic> GetActiveOrdersOfUserAsync(string pair)
+		{
+			if (String.IsNullOrEmpty(pair))
+			{
+				throw new ArgumentNullException(nameof(pair));
+			}
+
+			try
+			{
+				_settings.Counter++;
+				HttpResponseMessage response = await _api.GetActiveOrdersOfUserAsync(pair, _settings.Counter);
+				var model = await HttpHelper.AcquireContentAsync<YobitResponse>(response);
+				
+				return null;
+			}
+			catch (YobitException ex)
+			{
+				var model = JsonHelper.FromJson<YobitResponse>(ex.Message);
+				throw new HttpRequestException(model.Error, ex);
+			}
+		}
+
+		public dynamic GetActiveOrdersOfUser(string pair)
+		{
+			return GetActiveOrdersOfUserAsync(pair).Result;
+		}
 	}
 }
