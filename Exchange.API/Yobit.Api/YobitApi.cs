@@ -5,12 +5,9 @@ namespace Yobit.Api
 	using System;
 	using System.Collections.Generic;
 	using System.Net.Http;
-	using System.Text;
 	using System.Threading.Tasks;
-	using TradingBot.Common;
 	using TradingBot.Core;
 	using TradingBot.Core.Enums;
-	using TradingBot.Data.Entities;
 
 	public class YobitPairsResponse : PairsResponse<Dictionary<string, Pair>>
 	{
@@ -18,7 +15,7 @@ namespace Yobit.Api
 		{
 		}
 
-		public YobitPairsResponse(Dictionary<string, Pair> data) : base(data)
+		public YobitPairsResponse(Dictionary<string, Pair> content) : base(content)
 		{
 		}
 	}
@@ -32,7 +29,7 @@ namespace Yobit.Api
 		{
 			if (settings == null)
 			{
-				throw new ArgumentNullException(nameof(settings), String.Format("The api settings are not provided."));
+				throw new ArgumentNullException(nameof(settings), "The api settings are not provided.");
 			}
 
 			_settings = settings;
@@ -76,7 +73,7 @@ namespace Yobit.Api
 			//var content = new StringContent(postData);
 			//var response = await Client.PostAsync(url, content);
 
-			//var data = await HttpHelper.AcquireContentAsync<dynamic>(response);
+			//var content = await HttpHelper.AcquireContentAsync<dynamic>(response);
 
 			return null;
 		}
@@ -86,98 +83,44 @@ namespace Yobit.Api
 			return GetActiveOrdersOfUserAsync(pair).Result;
 		}
 
-		public async Task<YobitPairsResponse> GetPairsAsync()
+		public async Task<HttpResponseMessage> GetPairsAsync()
 		{
-			YobitPairsResponse result;
-			var response = await Client.GetAsync(new Uri(Client.BaseAddress + "info"));
+			HttpResponseMessage response = await Client.GetAsync(new Uri(Client.BaseAddress + "api/3/info?ignore_invalid=1"));
 
-			try
+			if (!response.IsSuccessStatusCode)
 			{
-				var data = await HttpHelper.AcquireContentAsync<PairsInfo>(response);
-				if (data == null)
-					result = new YobitPairsResponse("GetPairs response is not success");
-				else
-					result = new YobitPairsResponse(data.Pairs);
-			}
-			catch (Exception ex)
-			{
-				result = new YobitPairsResponse(string.Format("Can't parse GetPairs response: {0}", ex.Message));
+				throw new YobitException("Occurs some error...");
 			}
 
-			return result;
+			return response;
 		}
 
-		public YobitPairsResponse GetPairs()
+		public async Task<HttpResponseMessage> GetPairDataAsync(string pair)
 		{
-			return GetPairsAsync().Result;
-		}
+			HttpResponseMessage response = await Client.GetAsync(new Uri(String.Format(Client.BaseAddress + "api/3/ticker/{0}?ignore_invalid=1", pair)));
 
-		public override PairsResponse<T> GetPairs<T>()
-		{
-			var result = GetPairs();
-			return result as PairsResponse<T>;
-		}
-
-		public async Task<PairData> GetPairDataAsync(string pair)
-		{
-			if (String.IsNullOrEmpty(pair))
+			if (!response.IsSuccessStatusCode)
 			{
-				throw new ArgumentNullException(nameof(pair));
+				throw new YobitException("Occurs some error...");
 			}
 
-			HttpResponseMessage response = await Client.GetAsync(new Uri(String.Format(Client.BaseAddress + "ticker/{0}", pair)));
-			var result = await HttpHelper.AcquireContentAsync<dynamic>(response);
-			var model = new PairData
-			{
-				High = result[pair].high,
-				Low = result[pair].low,
-				Avg = result[pair].avg,
-				Vol = result[pair].vol,
-				VolCur = result[pair].vol_cur,
-				Last = result[pair].last,
-				Buy = result[pair].buy,
-				Sell = result[pair].sell
-			};
-
-			return model;
+			return response;
 		}
 
-		public PairData GetPairData(string pair)
+		public async Task<HttpResponseMessage> GetPairOrdersAsync(string pair, uint? limit = null)
 		{
-			return GetPairDataAsync(pair).Result;
-		}
-
-		public async Task<PairOrders> GetPairOrdersAsync(string pair, uint? limit = null)
-		{
-			if (String.IsNullOrEmpty(pair))
-			{
-				throw new ArgumentNullException(nameof(pair));
-			}
-
 			string queryString = limit.HasValue
-				? String.Format(Client.BaseAddress + "depth/{0}?limit={1}", pair, limit.Value)
-				: String.Format(Client.BaseAddress + "depth/{0}", pair);
+				? String.Format(Client.BaseAddress + "api/3/depth/{0}?limit={1}&ignore_invalid=1", pair, limit.Value)
+				: String.Format(Client.BaseAddress + "api/3/depth/{0}?ignore_invalid=1", pair);
 
 			HttpResponseMessage response = await Client.GetAsync(new Uri(queryString));
-			var result = await HttpHelper.AcquireContentAsync<dynamic>(response);
-			var model = new PairOrders();
 
-			foreach (dynamic order in result[pair].asks)
+			if (!response.IsSuccessStatusCode)
 			{
-				model.Asks.Add(new Order { Rate = order[0], Amount = order[1] });
+				throw new YobitException("Occurs some error...");
 			}
 
-			foreach (dynamic order in result[pair].bids)
-			{
-				model.Bids.Add(new Order { Rate = order[0], Amount = order[1] });
-			}
-
-			return model;
-		}
-
-		public PairOrders GetPairOrders(string pair, uint? limit = null)
-		{
-			return GetPairOrdersAsync(pair, limit).Result;
+			return response;
 		}
 	}
 }

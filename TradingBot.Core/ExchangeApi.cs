@@ -1,22 +1,20 @@
 ﻿
 namespace TradingBot.Core
 {
+	using Enums;
 	using System;
 	using System.Net.Http;
-	using Enums;
 
 	public class PairsResponse<T>
 	{
 		public bool IsSuccess { get; set; }
-
 		public string Error { get; set; }
+		public T Content { get; set; }
 
-		public T Data { get; set; }
-
-		public PairsResponse(T data)
+		public PairsResponse(T content)
 		{
 			IsSuccess = true;
-			Data = data;
+			Content = content;
 		}
 
 		public PairsResponse(string error)
@@ -26,9 +24,20 @@ namespace TradingBot.Core
 		}
 	}
 
+	public class ApiResponse<T>
+	{
+		public bool IsSuccess { get; private set; }
+		public T Content { get; set; }
+
+		public ApiResponse()
+		{
+			IsSuccess = true;
+		}
+	}
+
 	public class BasePairsResponse : PairsResponse<object>
 	{
-		public BasePairsResponse(object data) : base(data)
+		public BasePairsResponse(object content) : base(content)
 		{
 		}
 	}
@@ -58,6 +67,6 @@ namespace TradingBot.Core
 			GC.SuppressFinalize(this);
 		}
 
-		public abstract PairsResponse<T> GetPairs<T>();
+		//public abstract PairsResponse<T> GetPairs<T>();
 	}
 }

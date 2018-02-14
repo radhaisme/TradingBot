@@ -1,25 +1,31 @@
 ﻿
 namespace TradingBot.Common
 {
-	using Newtonsoft.Json;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Net.Http;
+	using System.Net.Http;
+	using System.Text;
+	using System.Threading.Tasks;
 
-    public static class HttpHelper
+	public static class HttpHelper
 	{
-        public static async Task<TModel> AcquireContentAsync<TModel>(HttpResponseMessage message)
-        {
-            if (message.IsSuccessStatusCode)
-            {
-                byte[] buffer = await message.Content.ReadAsByteArrayAsync();
-                string json = Encoding.Default.GetString(buffer);
-                var result = JsonHelper.FromJson<TModel>(json);
+		public static async Task<TModel> AcquireContentAsync<TModel>(HttpResponseMessage message)
+		{
+			//if (!message.IsSuccessStatusCode)
+			//{
+			//	throw new HttpRequestException(await AcquireStringAsync(message));
+			//}
 
-                return result;
-            }
+			string json = await AcquireStringAsync(message);
+			var result = JsonHelper.FromJson<TModel>(json);
 
-            return default;
-        }
-    }
+			return result;
+		}
+
+		public static async Task<string> AcquireStringAsync(HttpResponseMessage message)
+		{
+			byte[] buffer = await message.Content.ReadAsByteArrayAsync();
+			string json = Encoding.Default.GetString(buffer);
+
+			return json;
+		}
+	}
 }

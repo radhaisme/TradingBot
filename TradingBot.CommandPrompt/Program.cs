@@ -2,42 +2,49 @@
 namespace TradingBot.CommandPrompt
 {
 	using System;
-	using System.Linq;
+	using Yobit.Api;
 
 	public class Program
 	{
 		private static void Main(string[] args)
 		{
-			Console.WriteLine("Use help to get list of commands");
-			var input = String.Empty;
+			var settings = new YobitSettings();
+			settings.BaseAddress = "https://yobit.net";
+			settings.ApiPrefix = "";
+			var client = new YobitClient(settings);
+			var r = client.GetPairOrders("ltc_btc");
 
-            var commandsHelper = new CommandsHelper();
 
-            var command = CommandsHelper.None;
+			//Console.WriteLine("Use help to get list of commands");
+			//var input = String.Empty;
 
-			do
-            {
-                Console.Write(string.Format("{0}> ", commandsHelper.CurrentUser == null ? "Anonymous" : commandsHelper.CurrentUser.Username));
-                input = Console.ReadLine().Trim();
-                if (input.Length < 1)
-                    continue;
-                var parts = input.Split(' ');
+   //         var commandsHelper = new CommandsHelper();
 
-                command = CommandsHelper.List.FirstOrDefault(m => m.Aliases.Contains(parts[0].Trim()));
-                if (command == null)
-                    command = CommandsHelper.None;
+   //         var command = CommandsHelper.None;
 
-                var parameters = parts.Skip(1).ToArray();
-                if (!command.AllowAnonymous && commandsHelper.CurrentUser == null)
-                    Console.WriteLine("You are not authorized");
-                else
-                {
-                    commandsHelper.ExecuteCommand(command.Type, parameters);
-                }
-            }
-            while (command.Type != CommandEnum.Exit);
+			//do
+   //         {
+   //             Console.Write(string.Format("{0}> ", commandsHelper.CurrentUser == null ? "Anonymous" : commandsHelper.CurrentUser.Username));
+   //             input = Console.ReadLine().Trim();
+   //             if (input.Length < 1)
+   //                 continue;
+   //             var parts = input.Split(' ');
 
-			Console.Write("You are finished. Thanks");
+   //             command = CommandsHelper.List.FirstOrDefault(m => m.Aliases.Contains(parts[0].Trim()));
+   //             if (command == null)
+   //                 command = CommandsHelper.None;
+
+   //             var parameters = parts.Skip(1).ToArray();
+   //             if (!command.AllowAnonymous && commandsHelper.CurrentUser == null)
+   //                 Console.WriteLine("You are not authorized");
+   //             else
+   //             {
+   //                 commandsHelper.ExecuteCommand(command.Type, parameters);
+   //             }
+   //         }
+   //         while (command.Type != CommandEnum.Exit);
+
+			//Console.Write("You are finished. Thanks");
 			Console.ReadLine();
 		}
 	}

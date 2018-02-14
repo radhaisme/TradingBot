@@ -94,7 +94,7 @@ namespace TradingBot.Services
                     case AccountType.Yobit:
                         {
                             var data = result as YobitPairsResponse;
-                            foreach (var pair in data.Data)
+                            foreach (var pair in data.Content)
                             {
                                 var pairInfo = pair.Value;
                                 AddOrUpdate(new PairInfo
