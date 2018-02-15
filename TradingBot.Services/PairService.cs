@@ -9,6 +9,7 @@ namespace TradingBot.Services
 	using System.Reflection;
 	using Core;
 	using Yobit.Api;
+	using Yobit.Api.Entities;
 
 	public class PairService : BaseService
     {
@@ -67,60 +68,45 @@ namespace TradingBot.Services
             return item;
         }
 
-        public dynamic PullPairs(ExchangeApi api)
+        public dynamic PullPairs(object api)
         {
-            Type type = null;
+	        var method = api.GetType().GetMethod("GetPairs");
+	        var result = (PairsInfo)method.Invoke(api, null);
+			string[] names = Enum.GetNames(typeof(AccountType));
+	        var name = names.Single(x => api.GetType().Name.StartsWith(x));
+	        var type = (AccountType)Enum.Parse(typeof(AccountType), name);
 
-            switch (api.Type)
-            {
-                case AccountType.Yobit:
-                    type = typeof(YobitPairsResponse);
-                    break;
-                default:
-                    break;
-            }
-
-            if (type == null)
-                return new BasePairsResponse("Method is not implemented");
-
-            var method = typeof(ExchangeApi).GetMethod("GetPairs");
-            var generic = method.MakeGenericMethod(type.BaseType.GenericTypeArguments[0].GetTypeInfo());
-            dynamic result = generic.Invoke(api, null);
-
-            if (result.IsSuccess)
-            {
-                switch (api.Type)
-                {
-                    case AccountType.Yobit:
-                        {
-                            var data = result as YobitPairsResponse;
-                            foreach (var pair in data.Content)
-                            {
-                                var pairInfo = pair.Value;
-                                AddOrUpdate(new PairInfo
-                                {
-                                    AccountType = api.Type,
-                                    UpdatedDt = DateTime.UtcNow,
-                                    Name = pair.Key,
-                                    DecimalPlaces = pairInfo.DecimalPlaces,
-                                    Fee = pairInfo.Fee,
-                                    FeeBuyer = pairInfo.FeeBuyer,
-                                    FeeSeller = pairInfo.FeeSeller,
-                                    IsHidden = pairInfo.IsHidden,
-                                    MaxPrice = pairInfo.MaxPrice,
-                                    MinAmount = pairInfo.MinAmount,
-                                    MinPrice = pairInfo.MinPrice,
-                                    MinTotal = pairInfo.MinTotal
-                                });
-                            }
-                            Context.SaveChanges();
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
-            return result;
+			switch (type)
+			{
+				case AccountType.Yobit:
+				{
+					foreach (var pair in result.Pairs)
+					{
+						var pairInfo = pair.Value;
+						AddOrUpdate(new PairInfo
+						{
+							AccountType = type,
+							UpdatedDt = DateTime.UtcNow,
+							Name = pair.Key,
+							DecimalPlaces = pairInfo.DecimalPlaces,
+							Fee = pairInfo.Fee,
+							FeeBuyer = pairInfo.FeeBuyer,
+							FeeSeller = pairInfo.FeeSeller,
+							IsHidden = pairInfo.IsHidden,
+							MaxPrice = pairInfo.MaxPrice,
+							MinAmount = pairInfo.MinAmount,
+							MinPrice = pairInfo.MinPrice,
+							MinTotal = pairInfo.MinTotal
+						}, false);
+					}
+					Context.SaveChanges();
+				}
+					break;
+				default:
+					break;
+			}
+			
+			return result;
         }
     }
 }

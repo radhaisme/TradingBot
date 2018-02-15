@@ -6,6 +6,5 @@ namespace Yobit.Api
 		public string PublicKey { get; set; }
 		public string Secret { get; set; }
 		public string BaseAddress { get; set; }
-		public int Counter { get; set; }
 	}
 }

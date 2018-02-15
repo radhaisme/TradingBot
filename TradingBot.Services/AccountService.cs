@@ -1,9 +1,9 @@
 ﻿
 namespace TradingBot.Services
 {
-	using System;
 	using Core.Enums;
 	using Data.Entities;
+	using System;
 	using System.Collections.Generic;
 	using System.Linq;
 
@@ -30,11 +30,11 @@ namespace TradingBot.Services
 		{
 			var account = id.HasValue ? GetById(id.Value) : new Account();
 			account.ApiSettings = jsonSettings;
+			account.Name = name.ToLower();
+			account.Type = type;
 
 			if (account.IsNew())
 			{
-				account.Name = name;
-				account.Type = type;
 				account.UserId = userId;
 				Context.Accounts.Add(account);
 			}
