@@ -5,6 +5,7 @@
 	using System.Linq;
 	using Core;
 	using Core.Enums;
+	using Yobit.Api;
 
 	public class ExchangeInfo
     {
@@ -26,8 +27,8 @@
         static ExchangeInfo()
         {
             Exchanges = new Dictionary<AccountType, ExchangeInfo>();
-            Exchanges.Add(AccountType.Yobit, new ExchangeInfo(AccountType.Yobit, "https://yobit.net/api/3/", "https://yobit.net/tapi", typeof(Yobit.Api.YobitApi)));
-            Exchanges.Add(AccountType.Bitfinex, new ExchangeInfo(AccountType.Bitfinex, "https://api.bitfinex.com/v2/", "https://api.bitfinex.com/v2/", typeof(Yobit.Api.YobitApi)));
+            //Exchanges.Add(AccountType.Yobit, new ExchangeInfo(AccountType.Yobit, "https://yobit.net/api/3/", "https://yobit.net/tapi", typeof(Yobit.Api.YobitApi)));
+            //Exchanges.Add(AccountType.Bitfinex, new ExchangeInfo(AccountType.Bitfinex, "https://api.bitfinex.com/v2/", "https://api.bitfinex.com/v2/", typeof(Yobit.Api.YobitApi)));
         }
 
         public AccountType Type { get; set; }
@@ -42,6 +43,17 @@
         {
             get { return (ExchangeApi)Activator.CreateInstance(ExcangeApi, new[] { PublicEndpoint, PrivateEndpoint }); }
         }
+
+	    public static YobitClient Client //Пока шо так, до тех пор пока нет точного набора методов с бирж, их описания и сущностей с абстракциями
+	    {
+		    get
+		    {
+			    var settings = new YobitSettings();
+			    settings.BaseAddress = "https://yobit.net";
+			    
+				return new YobitClient(settings);
+		    }
+	    }
 
         public ExchangeInfo(AccountType type, string publicEndpoint, string privateEndpoint, Type excangeApi)
         {

@@ -1,25 +1,54 @@
 ﻿
 namespace TradingBot.Common
 {
-	using Newtonsoft.Json;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Net.Http;
+	using System;
+	using System.Collections.Generic;
+	using System.Net.Http;
+	using System.Text;
+	using System.Threading.Tasks;
 
-    public static class HttpHelper
+	public static class HttpHelper
 	{
-        public static async Task<TModel> AcquireContentAsync<TModel>(HttpResponseMessage message)
-        {
-            if (message.IsSuccessStatusCode)
-            {
-                byte[] buffer = await message.Content.ReadAsByteArrayAsync();
-                string json = Encoding.Default.GetString(buffer);
-                var result = JsonHelper.FromJson<TModel>(json);
+		public static async Task<TModel> AcquireContentAsync<TModel>(HttpResponseMessage message)
+		{
+			string json = await AcquireStringAsync(message);
+			var result = JsonHelper.FromJson<TModel>(json);
 
-                return result;
-            }
+			return result;
+		}
 
-            return default;
-        }
-    }
+		public static async Task<string> AcquireStringAsync(HttpResponseMessage message)
+		{
+			byte[] buffer = await message.Content.ReadAsByteArrayAsync();
+			string json = Encoding.Default.GetString(buffer);
+
+			return json;
+		}
+
+		public static string QueryString(IDictionary<string, string> items, bool skip = false)
+		{
+			var sb = new StringBuilder();
+
+			if (!skip)
+			{
+				sb.Append("?");
+			}
+
+			int count = 0;
+
+			foreach (KeyValuePair<string, string> item in items)
+			{
+				sb.Append(String.Format("{0}={1}", item.Key, item.Value));
+
+				if (count < items.Count - 1)
+				{
+					sb.Append("&");
+				}
+
+				count++;
+			}
+
+			return sb.ToString();
+		}
+	}
 }

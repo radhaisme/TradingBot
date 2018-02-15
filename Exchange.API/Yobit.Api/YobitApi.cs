@@ -5,12 +5,12 @@ namespace Yobit.Api
 	using System;
 	using System.Collections.Generic;
 	using System.Net.Http;
+	using System.Net.Http.Headers;
 	using System.Text;
 	using System.Threading.Tasks;
 	using TradingBot.Common;
 	using TradingBot.Core;
 	using TradingBot.Core.Enums;
-	using TradingBot.Data.Entities;
 
 	public class YobitPairsResponse : PairsResponse<Dictionary<string, Pair>>
 	{
@@ -18,7 +18,7 @@ namespace Yobit.Api
 		{
 		}
 
-		public YobitPairsResponse(Dictionary<string, Pair> data) : base(data)
+		public YobitPairsResponse(Dictionary<string, Pair> content) : base(content)
 		{
 		}
 	}
@@ -32,20 +32,15 @@ namespace Yobit.Api
 		{
 			if (settings == null)
 			{
-				throw new ArgumentNullException(nameof(settings), String.Format("The api settings are not provided."));
+				throw new ArgumentNullException(nameof(settings), "The api settings are not provided.");
 			}
 
 			_settings = settings;
 			Type = AccountType.Yobit;
 		}
 
-		public async Task<dynamic> GetActiveOrdersOfUserAsync(string pair)
+		public async Task<HttpResponseMessage> GetActiveOrdersOfUserAsync(string pair, int counter)
 		{
-			if (String.IsNullOrEmpty(pair))
-			{
-				throw new ArgumentNullException(nameof(pair));
-			}
-
 			if (String.IsNullOrEmpty(_settings.PublicKey))
 			{
 				throw new ArgumentNullException(nameof(_settings.PublicKey));
@@ -56,128 +51,110 @@ namespace Yobit.Api
 				throw new ArgumentNullException(nameof(_settings.Secret));
 			}
 
-			//var counter = account.YobitSettings.Counter;
+			string queryString = HttpHelper.QueryString(new Dictionary<string, string> { { "method", "ActiveOrders" }, { "pair", pair }, { "nonce", ((int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds).ToString() } }, true);
+			var hash = new HashAlgorithm(_settings.Secret);
+			string sign = BitConverter.ToString(hash.ComputeHash(Encoding.UTF8.GetBytes(queryString)));
+			sign = sign.Replace("-", "");
+			Client.DefaultRequestHeaders.Add("Key", _settings.PublicKey);
+			Client.DefaultRequestHeaders.Add("Sign", sign);
+			Client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
 
-			//if (counter == 0)
+			//public void GetInfo()
 			//{
-			//	counter++;
+
+			//	string parameters = $"method=getInfo&nonce=" + (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+
+			//	string address = $"{tapi}/";
+
+			//	var keyByte = Encoding.UTF8.GetBytes(secret);
+
+			//	string sign1 = string.Empty;
+			//	byte[] inputBytes = Encoding.UTF8.GetBytes(parameters);
+			//	using (var hmac = new HMACSHA512(keyByte))
+			//	{
+			//		byte[] hashValue = hmac.ComputeHash(inputBytes);
+
+			//		StringBuilder hex1 = new StringBuilder(hashValue.Length * 2);
+			//		foreach (byte b in hashValue)
+			//		{
+			//			hex1.AppendFormat("{0:x2}", b);
+			//		}
+			//		sign1 = hex1.ToString();
+			//	}
+
+			//	WebRequest webRequest = (HttpWebRequest)System.Net.WebRequest.Create(address);
+			//	if (webRequest != null)
+			//	{
+			//		webRequest.Method = "POST";
+			//		webRequest.Timeout = 20000;
+			//		webRequest.ContentType = "application/x-www-form-urlencoded";
+			//		webRequest.Headers.Add("Key", key);
+			//		webRequest.Headers.Add("Sign", sign1);
+
+			//		webRequest.ContentLength = parameters.Length;
+			//		using (var dataStream = webRequest.GetRequestStream())
+			//		{
+			//			dataStream.Write(inputBytes, 0, parameters.Length);
+			//		}
+
+			//		using (System.IO.Stream s = webRequest.GetResponse().GetResponseStream())
+			//		{
+			//			using (System.IO.StreamReader sr = new System.IO.StreamReader(s))
+			//			{
+			//				var jsonResponse = sr.ReadToEnd();
+			//				Console.WriteLine(String.Format("Response: {0}", jsonResponse));
+			//			}
+			//		}
+			//	}
+
 			//}
 
-			//var h = new HashAlgorithm(_settings.Secret);
 
-			//var parameters = string.Format("pair={0}&", pair);
-			//string postData = String.Format(paramsTemplate, "activeOrders", parameters, counter);
+			ByteArrayContent ar = new ByteArrayContent(Encoding.UTF8.GetBytes(queryString));
 
-			//string sign = Convert.ToBase64String(h.ComputeHash(Encoding.Default.GetBytes(postData)));
-			//Client.DefaultRequestHeaders.Add("Key", _settings.PublicKey);
-			//Client.DefaultRequestHeaders.Add("Sign", sign);
-
-			//var url = new Uri(PrivateEndpoint);
-			//var content = new StringContent(postData);
-			//var response = await Client.PostAsync(url, content);
-
-			//var data = await HttpHelper.AcquireContentAsync<dynamic>(response);
-
-			return null;
+			HttpResponseMessage response = await Client.PostAsync(new Uri(Client.BaseAddress + "tapi/"), new StringContent(queryString, Encoding.UTF8, "application/x-www-form-urlencoded"));
+			
+			return response;
 		}
 
-		public dynamic GetActiveOrdersOfUser(string pair)
+		public async Task<HttpResponseMessage> GetPairsAsync()
 		{
-			return GetActiveOrdersOfUserAsync(pair).Result;
-		}
+			HttpResponseMessage response = await Client.GetAsync(new Uri(Client.BaseAddress + "api/3/info?ignore_invalid=1"));
 
-		public async Task<YobitPairsResponse> GetPairsAsync()
-		{
-			YobitPairsResponse result;
-			var response = await Client.GetAsync(new Uri(Client.BaseAddress + "info"));
-
-			try
+			if (!response.IsSuccessStatusCode)
 			{
-				var data = await HttpHelper.AcquireContentAsync<PairsInfo>(response);
-				if (data == null)
-					result = new YobitPairsResponse("GetPairs response is not success");
-				else
-					result = new YobitPairsResponse(data.Pairs);
-			}
-			catch (Exception ex)
-			{
-				result = new YobitPairsResponse(string.Format("Can't parse GetPairs response: {0}", ex.Message));
+				throw new YobitException("Occurs some error...");
 			}
 
-			return result;
+			return response;
 		}
 
-		public YobitPairsResponse GetPairs()
+		public async Task<HttpResponseMessage> GetPairDataAsync(string pair)
 		{
-			return GetPairsAsync().Result;
-		}
+			HttpResponseMessage response = await Client.GetAsync(new Uri(String.Format(Client.BaseAddress + "api/3/ticker/{0}?ignore_invalid=1", pair)));
 
-		public override PairsResponse<T> GetPairs<T>()
-		{
-			var result = GetPairs();
-			return result as PairsResponse<T>;
-		}
-
-		public async Task<PairData> GetPairDataAsync(string pair)
-		{
-			if (String.IsNullOrEmpty(pair))
+			if (!response.IsSuccessStatusCode)
 			{
-				throw new ArgumentNullException(nameof(pair));
+				throw new YobitException("Occurs some error...");
 			}
 
-			HttpResponseMessage response = await Client.GetAsync(new Uri(String.Format(Client.BaseAddress + "ticker/{0}", pair)));
-			var result = await HttpHelper.AcquireContentAsync<dynamic>(response);
-			var model = new PairData
-			{
-				High = result[pair].high,
-				Low = result[pair].low,
-				Avg = result[pair].avg,
-				Vol = result[pair].vol,
-				VolCur = result[pair].vol_cur,
-				Last = result[pair].last,
-				Buy = result[pair].buy,
-				Sell = result[pair].sell
-			};
-
-			return model;
+			return response;
 		}
 
-		public PairData GetPairData(string pair)
+		public async Task<HttpResponseMessage> GetPairOrdersAsync(string pair, uint? limit = null)
 		{
-			return GetPairDataAsync(pair).Result;
-		}
-
-		public async Task<PairOrders> GetPairOrdersAsync(string pair, uint? limit = null)
-		{
-			if (String.IsNullOrEmpty(pair))
-			{
-				throw new ArgumentNullException(nameof(pair));
-			}
-
 			string queryString = limit.HasValue
-				? String.Format(Client.BaseAddress + "depth/{0}?limit={1}", pair, limit.Value)
-				: String.Format(Client.BaseAddress + "depth/{0}", pair);
+				? String.Format(Client.BaseAddress + "api/3/depth/{0}?limit={1}&ignore_invalid=1", pair, limit.Value)
+				: String.Format(Client.BaseAddress + "api/3/depth/{0}?ignore_invalid=1", pair);
 
 			HttpResponseMessage response = await Client.GetAsync(new Uri(queryString));
-			var result = await HttpHelper.AcquireContentAsync<dynamic>(response);
-			var model = new PairOrders();
 
-			foreach (dynamic order in result[pair].asks)
+			if (!response.IsSuccessStatusCode)
 			{
-				model.Asks.Add(new Order { Rate = order[0], Amount = order[1] });
+				throw new YobitException("Occurs some error...");
 			}
 
-			foreach (dynamic order in result[pair].bids)
-			{
-				model.Bids.Add(new Order { Rate = order[0], Amount = order[1] });
-			}
-
-			return model;
-		}
-
-		public PairOrders GetPairOrders(string pair, uint? limit = null)
-		{
-			return GetPairOrdersAsync(pair, limit).Result;
+			return response;
 		}
 	}
 }
