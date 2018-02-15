@@ -27,7 +27,7 @@
         static ExchangeInfo()
         {
             Exchanges = new Dictionary<AccountType, ExchangeInfo>();
-            //Exchanges.Add(AccountType.Yobit, new ExchangeInfo(AccountType.Yobit, "https://yobit.net/api/3/", "https://yobit.net/tapi", typeof(Yobit.Api.YobitApi)));
+            Exchanges.Add(AccountType.Yobit, new ExchangeInfo(AccountType.Yobit, "https://yobit.net/api/3/", "https://yobit.net/tapi", typeof(Yobit.Api.YobitApi)));
             //Exchanges.Add(AccountType.Bitfinex, new ExchangeInfo(AccountType.Bitfinex, "https://api.bitfinex.com/v2/", "https://api.bitfinex.com/v2/", typeof(Yobit.Api.YobitApi)));
         }
 

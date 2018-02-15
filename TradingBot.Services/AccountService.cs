@@ -1,9 +1,9 @@
 ﻿
 namespace TradingBot.Services
 {
-	using System;
 	using Core.Enums;
 	using Data.Entities;
+	using System;
 	using System.Collections.Generic;
 	using System.Linq;
 
@@ -25,7 +25,7 @@ namespace TradingBot.Services
 
 			name = accountName.Trim().ToLowerInvariant();
 
-			return Context.Accounts.Query().FirstOrDefault(m => m.Name.ToLower() == name); //Сомнительное заявление, проверять его я конечно не буду. Нет гарантии, что получишь акк именно с твой ибо имен много а стина одна!
+			return Context.Accounts.Query().FirstOrDefault(x => x.Name == name && x.UserId == userId);
 		}
 
 		public List<Account> GetAccounts(int userId)
@@ -37,11 +37,11 @@ namespace TradingBot.Services
 		{
 			var account = id.HasValue ? GetById(id.Value) : new Account();
 			account.ApiSettings = jsonSettings;
+			account.Name = name.ToLower();
+			account.Type = type;
 
 			if (account.IsNew())
 			{
-				account.Name = name;
-				account.Type = type;
 				account.UserId = userId;
 				Context.Accounts.Add(account);
 			}

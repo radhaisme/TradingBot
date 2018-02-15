@@ -5,7 +5,6 @@ namespace Yobit.Api
 	using System;
 	using System.Collections.Generic;
 	using System.Net.Http;
-	using System.Net.Http.Headers;
 	using System.Text;
 	using System.Threading.Tasks;
 	using TradingBot.Common;
@@ -25,7 +24,8 @@ namespace Yobit.Api
 
 	public sealed class YobitApi : ExchangeApi
 	{
-		private static string paramsTemplate = "?method={0}&{1}nonce={2}";
+		private readonly Uri _privateUrl;
+		private readonly Uri _publicUrl;
 		private readonly IYobitSettings _settings;
 
 		public YobitApi(IYobitSettings settings) : base(settings.BaseAddress)
@@ -35,11 +35,13 @@ namespace Yobit.Api
 				throw new ArgumentNullException(nameof(settings), "The api settings are not provided.");
 			}
 
+			_privateUrl = new Uri(Client.BaseAddress + "tapi/");
+			_publicUrl = new Uri(Client.BaseAddress + "api/3/");
 			_settings = settings;
 			Type = AccountType.Yobit;
 		}
 
-		public async Task<HttpResponseMessage> GetActiveOrdersOfUserAsync(string pair, int counter)
+		public async Task<HttpResponseMessage> GetActiveOrdersOfUserAsync(string pair)
 		{
 			if (String.IsNullOrEmpty(_settings.PublicKey))
 			{
@@ -57,18 +59,18 @@ namespace Yobit.Api
 			string sign = BitConverter.ToString(hash.ComputeHash(Encoding.UTF8.GetBytes(queryString)));
 			Client.DefaultRequestHeaders.Add("Key", _settings.PublicKey);
 			Client.DefaultRequestHeaders.Add("Sign", sign.Replace("-", "").ToLower());
-			HttpResponseMessage response = await Client.PostAsync(new Uri(Client.BaseAddress + "tapi/"), new StringContent(queryString, Encoding.UTF8, "application/x-www-form-urlencoded"));
+			HttpResponseMessage response = await Client.PostAsync(_privateUrl, new StringContent(queryString, Encoding.UTF8, "application/x-www-form-urlencoded"));
 
 			return response;
 		}
 
 		public async Task<HttpResponseMessage> GetPairsAsync()
 		{
-			HttpResponseMessage response = await Client.GetAsync(new Uri(Client.BaseAddress + "api/3/info?ignore_invalid=1"));
+			HttpResponseMessage response = await Client.GetAsync(new Uri(_publicUrl + "info?ignore_invalid=1"));
 
 			if (!response.IsSuccessStatusCode)
 			{
-				throw new YobitException("Occurs some error...");
+				throw new YobitException("Occured some error...");
 			}
 
 			return response;
@@ -76,11 +78,11 @@ namespace Yobit.Api
 
 		public async Task<HttpResponseMessage> GetPairDataAsync(string pair)
 		{
-			HttpResponseMessage response = await Client.GetAsync(new Uri(String.Format(Client.BaseAddress + "api/3/ticker/{0}?ignore_invalid=1", pair)));
+			HttpResponseMessage response = await Client.GetAsync(new Uri(String.Format(_publicUrl + "ticker/{0}?ignore_invalid=1", pair)));
 
 			if (!response.IsSuccessStatusCode)
 			{
-				throw new YobitException("Occurs some error...");
+				throw new YobitException("Occured some error...");
 			}
 
 			return response;
@@ -89,14 +91,14 @@ namespace Yobit.Api
 		public async Task<HttpResponseMessage> GetPairOrdersAsync(string pair, uint? limit = null)
 		{
 			string queryString = limit.HasValue
-				? String.Format(Client.BaseAddress + "api/3/depth/{0}?limit={1}&ignore_invalid=1", pair, limit.Value)
-				: String.Format(Client.BaseAddress + "api/3/depth/{0}?ignore_invalid=1", pair);
+				? String.Format(_publicUrl + "depth/{0}?limit={1}&ignore_invalid=1", pair, limit.Value)
+				: String.Format(_publicUrl + "depth/{0}?ignore_invalid=1", pair);
 
 			HttpResponseMessage response = await Client.GetAsync(new Uri(queryString));
 
 			if (!response.IsSuccessStatusCode)
 			{
-				throw new YobitException("Occurs some error...");
+				throw new YobitException("Occured some error...");
 			}
 
 			return response;

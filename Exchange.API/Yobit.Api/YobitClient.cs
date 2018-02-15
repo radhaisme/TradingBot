@@ -11,12 +11,10 @@ namespace Yobit.Api
 	public sealed class YobitClient : IExchangeClient
 	{
 		private readonly YobitApi _api;
-		private IYobitSettings _settings;
-		private int _counter;
-
+		private readonly IYobitSettings _settings;
+		
 		public YobitClient(IYobitSettings settings)
 		{
-			_counter = settings.Counter;
 			_settings = settings;
 			_api = new YobitApi(settings);
 		}
@@ -119,8 +117,7 @@ namespace Yobit.Api
 
 			try
 			{
-				_settings.Counter++;
-				HttpResponseMessage response = await _api.GetActiveOrdersOfUserAsync(pair, _settings.Counter);
+				HttpResponseMessage response = await _api.GetActiveOrdersOfUserAsync(pair);
 				var model = await HttpHelper.AcquireContentAsync<YobitResponse>(response);
 
 				if (!model.Success)
@@ -128,7 +125,7 @@ namespace Yobit.Api
 					throw new YobitException(model.Error); //Hack because private API always returns 200 status code.
 				}
 
-				return null;
+				return new object();
 			}
 			catch (YobitException ex)
 			{

@@ -249,14 +249,16 @@ namespace TradingBot.CommandPrompt
 			switch (typeEnum)
 			{
 				case AccountType.Yobit:
-					if (list.Length != 4)
+					if (list.Length != 5)
 					{
 						Console.WriteLine("For Yobit you must to enter Secret as 4th parameter");
 						return;
 					}
 					settings = JsonHelper.ToJson(new YobitSettings
 					{
-						Secret = list[3]
+						PublicKey = list[2],
+						Secret = list[3],
+						BaseAddress = list[4]
 					});
 					break;
 				default:
@@ -314,13 +316,9 @@ namespace TradingBot.CommandPrompt
 								Console.WriteLine(string.Format("Something wrong: {0}", result.error));
 							else
 							{
-								var yobitSettings = new YobitSettings();
-								if (yobitSettings.Counter == 0)
-									yobitSettings.Counter = 1;
-								else
-									yobitSettings.Counter++;
-
-								accService.UpdateSettings(account.Id, JsonHelper.ToJson(yobitSettings));
+								var settings = JsonHelper.FromJson<YobitSettings>(account.ApiSettings);
+								settings.BaseAddress = "https://yobit.io";
+								accService.UpdateSettings(account.Id, JsonHelper.ToJson(settings));
 
 								Console.WriteLine("Done: " + JsonHelper.ToJson(result));
 							}
@@ -392,9 +390,9 @@ namespace TradingBot.CommandPrompt
 				dynamic result = null;
 				using (var pairService = new PairService())
 				{
-					result = pairService.PullPairs(null);
+					result = pairService.PullPairs(exchange);
 				}
-				if (result != null && result.IsSuccess)
+				if (result != null)
 					Console.WriteLine("Pairs info received, you can use /tickerInfo [tickerCode] to get appropriate info");
 				else
 					Console.WriteLine(string.Format("Error when pull pairs: {0}", result));
