@@ -19,7 +19,7 @@ namespace TradingBot.CommandPrompt
 			settings.BaseAddress = "https://yobit.net";
 			settings.PublicKey = "1A3EB44FEDA024D8B65C5BEE374D628C";
 			settings.Secret = "e21731f4c25156fe871962a2571fb40c";
-			settings.Counter = 0;
+			settings.Counter = 1;
 			var client = new YobitClient(settings);
 			var r = client.GetActiveOrdersOfUser("ltc_btc");
 
