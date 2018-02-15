@@ -16,16 +16,9 @@ namespace TradingBot.Services
 
 		public Account GetByName(int userId, string name)
 		{
-			string accountName = String.Empty;
+            var accountName = (name ?? "").Trim().ToLowerInvariant();
 
-			if (!String.IsNullOrEmpty(name))
-			{
-				accountName = name;
-			}
-
-			name = accountName.Trim().ToLowerInvariant();
-
-			return Context.Accounts.Query().FirstOrDefault(m => m.Name.ToLower() == name); //Сомнительное заявление, проверять его я конечно не буду. Нет гарантии, что получишь акк именно с твой ибо имен много а стина одна!
+			return Context.Accounts.Query().FirstOrDefault(m => m.UserId == userId && m.Name.ToLower() == accountName); 
 		}
 
 		public List<Account> GetAccounts(int userId)
