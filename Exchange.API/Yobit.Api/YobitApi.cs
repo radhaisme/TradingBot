@@ -51,69 +51,14 @@ namespace Yobit.Api
 				throw new ArgumentNullException(nameof(_settings.Secret));
 			}
 
-			string queryString = HttpHelper.QueryString(new Dictionary<string, string> { { "method", "ActiveOrders" }, { "pair", pair }, { "nonce", ((int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds).ToString() } }, true);
+			int nonce = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+			string queryString = HttpHelper.QueryString(new Dictionary<string, string> { { "method", "ActiveOrders" }, { "pair", pair }, { "nonce", nonce.ToString() } }, true);
 			var hash = new HashAlgorithm(_settings.Secret);
 			string sign = BitConverter.ToString(hash.ComputeHash(Encoding.UTF8.GetBytes(queryString)));
-			sign = sign.Replace("-", "");
 			Client.DefaultRequestHeaders.Add("Key", _settings.PublicKey);
-			Client.DefaultRequestHeaders.Add("Sign", sign);
-			Client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
-
-			//public void GetInfo()
-			//{
-
-			//	string parameters = $"method=getInfo&nonce=" + (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
-
-			//	string address = $"{tapi}/";
-
-			//	var keyByte = Encoding.UTF8.GetBytes(secret);
-
-			//	string sign1 = string.Empty;
-			//	byte[] inputBytes = Encoding.UTF8.GetBytes(parameters);
-			//	using (var hmac = new HMACSHA512(keyByte))
-			//	{
-			//		byte[] hashValue = hmac.ComputeHash(inputBytes);
-
-			//		StringBuilder hex1 = new StringBuilder(hashValue.Length * 2);
-			//		foreach (byte b in hashValue)
-			//		{
-			//			hex1.AppendFormat("{0:x2}", b);
-			//		}
-			//		sign1 = hex1.ToString();
-			//	}
-
-			//	WebRequest webRequest = (HttpWebRequest)System.Net.WebRequest.Create(address);
-			//	if (webRequest != null)
-			//	{
-			//		webRequest.Method = "POST";
-			//		webRequest.Timeout = 20000;
-			//		webRequest.ContentType = "application/x-www-form-urlencoded";
-			//		webRequest.Headers.Add("Key", key);
-			//		webRequest.Headers.Add("Sign", sign1);
-
-			//		webRequest.ContentLength = parameters.Length;
-			//		using (var dataStream = webRequest.GetRequestStream())
-			//		{
-			//			dataStream.Write(inputBytes, 0, parameters.Length);
-			//		}
-
-			//		using (System.IO.Stream s = webRequest.GetResponse().GetResponseStream())
-			//		{
-			//			using (System.IO.StreamReader sr = new System.IO.StreamReader(s))
-			//			{
-			//				var jsonResponse = sr.ReadToEnd();
-			//				Console.WriteLine(String.Format("Response: {0}", jsonResponse));
-			//			}
-			//		}
-			//	}
-
-			//}
-
-
-			ByteArrayContent ar = new ByteArrayContent(Encoding.UTF8.GetBytes(queryString));
-
+			Client.DefaultRequestHeaders.Add("Sign", sign.Replace("-", "").ToLower());
 			HttpResponseMessage response = await Client.PostAsync(new Uri(Client.BaseAddress + "tapi/"), new StringContent(queryString, Encoding.UTF8, "application/x-www-form-urlencoded"));
-			
+
 			return response;
 		}
 
