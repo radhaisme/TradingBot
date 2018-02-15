@@ -41,6 +41,21 @@ namespace Yobit.Api
 			Type = AccountType.Yobit;
 		}
 
+		public async Task<HttpResponseMessage> GetTradesAsync(string pair, uint? limit = null)
+		{
+			string queryString = limit.HasValue
+				? String.Format("trades/{0}?limit={1}&ignore_invalid", pair, limit.Value)
+				: String.Format("trades/{0}", pair);
+			HttpResponseMessage response = await Client.GetAsync(_publicUrl + queryString);
+
+			if (!response.IsSuccessStatusCode)
+			{
+				throw new YobitException("Ocurred some error...");
+			}
+
+			return response;
+		}
+
 		public async Task<HttpResponseMessage> GetActiveOrdersOfUserAsync(string pair)
 		{
 			if (String.IsNullOrEmpty(_settings.PublicKey))

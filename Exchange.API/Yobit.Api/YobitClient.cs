@@ -19,6 +19,40 @@ namespace Yobit.Api
 			_api = new YobitApi(settings);
 		}
 
+		public async Task<TradeInfo> GetTraddesAsync(string pair, uint limit = 150)
+		{
+			try
+			{
+				HttpResponseMessage response = await _api.GetTradesAsync(pair, limit);
+				var result = await HttpHelper.AcquireContentAsync<dynamic>(response);
+				var model = new TradeInfo();
+
+				foreach (dynamic item in result[pair])
+				{
+					var trade = new Trade
+					{
+						Type = (TradeType) Enum.Parse(typeof(TradeType), (string) item.type, true),
+						Price = item.price,
+						Amount = item.amount,
+						Tid = item.tid,
+						Timestamp = DateTimeOffset.FromUnixTimeSeconds((long) item.timestamp)
+					};
+					model.Trades.Add(trade);
+				}
+
+				return model;
+			}
+			catch (YobitException ex)
+			{
+				throw new HttpRequestException(ex.Message, ex);
+			}
+		}
+
+		public TradeInfo GetTrades(string pair, uint limit = 150)
+		{
+			return GetTraddesAsync(pair, limit).Result;
+		}
+
 		public async Task<PairsInfo> GetPairsAsync()
 		{
 			try

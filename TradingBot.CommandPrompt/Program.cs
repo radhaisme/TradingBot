@@ -3,6 +3,7 @@ namespace TradingBot.CommandPrompt
 {
 	using System;
 	using System.Linq;
+	using Yobit.Api;
 
 	public class Program
 	{
@@ -17,8 +18,7 @@ namespace TradingBot.CommandPrompt
 			//settings.Secret = "e21731f4c25156fe871962a2571fb40c";
 			//settings.Counter = 1;
 			//var client = new YobitClient(settings);
-			//var r = client.GetActiveOrdersOfUser("ltc_btc");
-
+			//var r = client.GetTrades("ltc_btc");
 
 			Console.WriteLine("Use help to get list of commands");
 			var input = String.Empty;
