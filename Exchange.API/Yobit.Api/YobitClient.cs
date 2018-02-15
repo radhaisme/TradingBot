@@ -122,13 +122,17 @@ namespace Yobit.Api
 				_settings.Counter++;
 				HttpResponseMessage response = await _api.GetActiveOrdersOfUserAsync(pair, _settings.Counter);
 				var model = await HttpHelper.AcquireContentAsync<YobitResponse>(response);
-				
+
+				if (!model.Success)
+				{
+					throw new YobitException(model.Error); //Hack because private API always returns 200 status code.
+				}
+
 				return null;
 			}
 			catch (YobitException ex)
 			{
-				var model = JsonHelper.FromJson<YobitResponse>(ex.Message);
-				throw new HttpRequestException(model.Error, ex);
+				throw new HttpRequestException(ex.Message, ex);
 			}
 		}
 

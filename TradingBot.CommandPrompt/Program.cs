@@ -2,6 +2,8 @@
 namespace TradingBot.CommandPrompt
 {
 	using System;
+	using System.Collections.Generic;
+	using Common;
 	using Core;
 	using Core.Enums;
 	using Yobit.Api;
@@ -10,15 +12,16 @@ namespace TradingBot.CommandPrompt
 	{
 		private static void Main(string[] args)
 		{
-			var factory = new ClientFactory();
-			var client = factory.Create(AccountType.Yobit);
-			
+			//var factory = new ClientFactory();
+			//var client = factory.Create(AccountType.Yobit);
 
-			//var settings = new YobitSettings();
-			//settings.BaseAddress = "https://yobit.net";
-			//settings.ApiPrefix = "";
-			//var client = new YobitClient(settings);
-			//var r = client.GetPairOrders("ltc_btc");
+			var settings = new YobitSettings();
+			settings.BaseAddress = "https://yobit.net";
+			settings.PublicKey = "1A3EB44FEDA024D8B65C5BEE374D628C";
+			settings.Secret = "e21731f4c25156fe871962a2571fb40c";
+			settings.Counter = 0;
+			var client = new YobitClient(settings);
+			var r = client.GetActiveOrdersOfUser("ltc_btc");
 
 
 			//Console.WriteLine("Use help to get list of commands");

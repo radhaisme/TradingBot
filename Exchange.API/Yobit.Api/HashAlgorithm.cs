@@ -1,6 +1,7 @@
 ﻿
 namespace Yobit.Api
 {
+	using System;
 	using System.Text;
 	using System.Security.Cryptography;
 
@@ -10,7 +11,9 @@ namespace Yobit.Api
 
 		public HashAlgorithm(string secret)
 		{
-			_hmac = new HMACSHA512(Encoding.Default.GetBytes(secret));
+			
+
+			_hmac = new HMACSHA512(Encoding.UTF8.GetBytes(secret));
 		}
 
 		public byte[] ComputeHash(byte[] buffer)

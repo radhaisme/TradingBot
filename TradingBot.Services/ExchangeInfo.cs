@@ -50,8 +50,7 @@
 		    {
 			    var settings = new YobitSettings();
 			    settings.BaseAddress = "https://yobit.net";
-			    settings.ApiPrefix = "";
-
+			    
 				return new YobitClient(settings);
 		    }
 	    }

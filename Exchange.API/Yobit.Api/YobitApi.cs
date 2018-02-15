@@ -38,7 +38,7 @@ namespace Yobit.Api
 			Type = AccountType.Yobit;
 		}
 
-		public async Task<dynamic> GetActiveOrdersOfUserAsync(string pair, int counter)
+		public async Task<HttpResponseMessage> GetActiveOrdersOfUserAsync(string pair, int counter)
 		{
 			if (String.IsNullOrEmpty(_settings.PublicKey))
 			{
@@ -50,22 +50,13 @@ namespace Yobit.Api
 				throw new ArgumentNullException(nameof(_settings.Secret));
 			}
 
+			string queryString = HttpHelper.QueryString(new Dictionary<string, string> { { "method", "ActiveOrders" }, { "pair", pair }, { "nonce", counter.ToString() } });
 			var hash = new HashAlgorithm(_settings.Secret);
-			var parameters = String.Format("pair={0}&", pair);
-			string postData = String.Format(paramsTemplate, "activeOrders", parameters, counter);
-			string sign = Convert.ToBase64String(hash.ComputeHash(Encoding.Default.GetBytes(postData)));
+			string sign = Convert.ToBase64String(hash.ComputeHash(Encoding.UTF8.GetBytes(queryString)));
 			Client.DefaultRequestHeaders.Add("Key", _settings.PublicKey);
 			Client.DefaultRequestHeaders.Add("Sign", sign);
-
-			var url = new Uri(String.Empty);
-			var content = new StringContent(postData);
-			HttpResponseMessage response = await Client.PostAsync(url, content);
-
-			if (!response.IsSuccessStatusCode)
-			{
-				throw new YobitException(true, await HttpHelper.AcquireStringAsync(response));
-			}
-
+			HttpResponseMessage response = await Client.PostAsync(new Uri(Client.BaseAddress + "tapi/"), new StringContent(queryString, Encoding.UTF8, "application/x-www-form-urlencoded"));
+			
 			return response;
 		}
 
