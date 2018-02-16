@@ -12,14 +12,46 @@ namespace Yobit.Api
 	{
 		private readonly YobitApi _api;
 		private readonly IYobitSettings _settings;
-		
+
 		public YobitClient(IYobitSettings settings)
 		{
 			_settings = settings;
 			_api = new YobitApi(settings);
 		}
 
-		public async Task<TradeInfo> GetTraddesAsync(string pair, uint limit = 150)
+		public async Task<dynamic> GetInfoAsync()
+		{
+			try
+			{
+				HttpResponseMessage response = await _api.GetInfoAsync();
+				//var s = await HttpHelper.AcquireStringAsync(response);
+				var model = await HttpHelper.AcquireContentAsync<YobitResponse<Info>>(response);
+				//string json = JsonHelper.ToJson(model["return"]);
+
+
+				//var ss = JsonHelper.FromJson<YobitResponse>(model["return"]);
+
+				if (!model.Success)
+				{
+					throw new YobitException(model.Error); //Hack because private API always returns 200 status code.
+				}
+
+				//var result = JsonHelper.FromJson<dynamic>(model.Content);
+
+				return null;
+			}
+			catch (YobitException ex)
+			{
+				throw new HttpRequestException(ex.Message, ex);
+			}
+		}
+
+		public dynamic GetInfo()
+		{
+			return GetInfoAsync().Result;
+		}
+
+		public async Task<TradeInfo> GetTradesAsync(string pair, uint limit = 150)
 		{
 			try
 			{
@@ -31,11 +63,11 @@ namespace Yobit.Api
 				{
 					var trade = new Trade
 					{
-						Type = (TradeType) Enum.Parse(typeof(TradeType), (string) item.type, true),
+						Type = (TradeType)Enum.Parse(typeof(TradeType), (string)item.type, true),
 						Price = item.price,
 						Amount = item.amount,
 						Tid = item.tid,
-						Timestamp = DateTimeOffset.FromUnixTimeSeconds((long) item.timestamp)
+						Timestamp = DateTimeOffset.FromUnixTimeSeconds((long)item.timestamp)
 					};
 					model.Trades.Add(trade);
 				}
@@ -50,7 +82,7 @@ namespace Yobit.Api
 
 		public TradeInfo GetTrades(string pair, uint limit = 150)
 		{
-			return GetTraddesAsync(pair, limit).Result;
+			return GetTradesAsync(pair, limit).Result;
 		}
 
 		public async Task<PairsInfo> GetPairsAsync()
@@ -152,14 +184,16 @@ namespace Yobit.Api
 			try
 			{
 				HttpResponseMessage response = await _api.GetActiveOrdersOfUserAsync(pair);
-				var model = await HttpHelper.AcquireContentAsync<YobitResponse>(response);
+				var model = await HttpHelper.AcquireContentAsync<YobitResponse<dynamic>>(response);
 
 				if (!model.Success)
 				{
 					throw new YobitException(model.Error); //Hack because private API always returns 200 status code.
 				}
 
-				return new object();
+				var result = JsonHelper.FromJson<dynamic>(model.Content);
+
+				return result;
 			}
 			catch (YobitException ex)
 			{

@@ -17,7 +17,7 @@ namespace TradingBot.Common
 
 		public static T FromJson<T>(string json)
 		{
-			return JsonConvert.DeserializeObject<T>(json, new JsonSerializerSettings());
+			return JsonConvert.DeserializeObject<T>(json);
 		}
 
 		public static T FromJson<T>(string json, JsonSerializerSettings settings)

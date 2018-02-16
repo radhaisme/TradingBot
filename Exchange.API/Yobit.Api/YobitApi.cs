@@ -56,6 +56,20 @@ namespace Yobit.Api
 			return response;
 		}
 
+		public async Task<HttpResponseMessage> GetInfoAsync()
+		{
+			int nonce = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+			var parameters = new Dictionary<string, string> { { "method", "getInfo" }, { "nonce", nonce.ToString() } };
+			string queryString = HttpHelper.QueryString(parameters, true);
+			var hash = new HashAlgorithm(_settings.Secret);
+			string sign = BitConverter.ToString(hash.ComputeHash(Encoding.UTF8.GetBytes(queryString)));
+			Client.DefaultRequestHeaders.Add("Key", _settings.PublicKey);
+			Client.DefaultRequestHeaders.Add("Sign", sign.Replace("-", "").ToLower());
+			HttpResponseMessage response = await Client.PostAsync(_privateUrl, new StringContent(queryString, Encoding.UTF8, "application/x-www-form-urlencoded"));
+
+			return response;
+		}
+
 		public async Task<HttpResponseMessage> GetActiveOrdersOfUserAsync(string pair)
 		{
 			if (String.IsNullOrEmpty(_settings.PublicKey))
