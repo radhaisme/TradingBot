@@ -15,6 +15,7 @@ namespace TradingBot.CommandPrompt
 	public enum CommandEnum
 	{
 		None,
+        Test,
 		Exit,
 		Help,
 		RegisterUser,
@@ -83,7 +84,11 @@ namespace TradingBot.CommandPrompt
 
 			List.Add(None);
 
-			List.Add(
+            List.Add(
+                new Command(CommandEnum.Test, new List<string> { "test" }, "Any Roma's test method")
+            );
+
+            List.Add(
 				new Command(CommandEnum.Exit, new List<string> { "exit", "e", "finish", "esc" }, "Finish the program, amazing?")
 			);
 
@@ -108,7 +113,7 @@ namespace TradingBot.CommandPrompt
 			);
 
 			List.Add(
-			   new Command(CommandEnum.GetAccounts, new List<string> { "my-accounts", "get-accounts" }, false, "Allow you to view all your accounts (for example to know which accountId you should use when run private commands)")
+			   new Command(CommandEnum.GetAccounts, new List<string> { "getaccounts", "accounts", "my-accounts", "get-accounts" }, false, "Allow you to view all your accounts (for example to know which accountId you should use when run private commands)")
 		   );
 
 			//Commands.Add(
@@ -122,12 +127,12 @@ namespace TradingBot.CommandPrompt
 			List.Add(
 			  new Command(CommandEnum.GetPairs, new List<string> { "getpairs", "all", "info" },
 			  string.Format("Get all list of tickers with basic statistics. Parameters (* - required): exchangeType* ({0})",
-			  ExchangeInfo.GetAccountTypes))
+			  ClientFactory.GetExchanges))
 			);
 
 			List.Add(
 			  new Command(CommandEnum.GetPairInfo, new List<string> { "getpairinfo", "tickerinfo", "get-ticker-info", "get-pair-info", "pair-info", "ticker-info" },
-			  string.Format("Get basic ticker info. It uses info stored from last 'getpairs'. Parameters (* - required): exchangeType* ({0}), tickerCode* ", ExchangeInfo.GetAccountTypes))
+			  string.Format("Get basic ticker info. It uses info stored from last 'getpairs'. Parameters (* - required): exchangeType* ({0}), tickerCode* ", ClientFactory.GetExchanges))
 			);
 		}
 
@@ -139,8 +144,7 @@ namespace TradingBot.CommandPrompt
 
 		public void ExecuteCommand(CommandEnum command, params string[] list)
 		{
-			var com = command.ToString();
-			var method = typeof(CommandsHelper).GetMethod(com);
+			var method = typeof(CommandsHelper).GetMethod(command.ToString());
 			if (method == null)
 			{
 				Console.WriteLine("Such method is not supported");
@@ -241,7 +245,7 @@ namespace TradingBot.CommandPrompt
 
 			if (!int.TryParse(list[1], out type))
 			{
-				Console.WriteLine(string.Format("You must enter valid Exchange type: {0}", ExchangeInfo.GetAccountTypes));
+				Console.WriteLine(string.Format("You must enter valid Exchange type: {0}", ClientFactory.GetExchanges));
 				return;
 			}
 			var typeEnum = (AccountType)type;
@@ -249,17 +253,19 @@ namespace TradingBot.CommandPrompt
 			switch (typeEnum)
 			{
 				case AccountType.Yobit:
-					if (list.Length != 5)
+					if (list.Length != 4)
 					{
 						Console.WriteLine("For Yobit you must to enter Secret as 4th parameter");
 						return;
 					}
-					settings = JsonHelper.ToJson(new YobitSettings
-					{
-						PublicKey = list[2],
-						Secret = list[3],
-						BaseAddress = list[4]
-					});
+                    var sets = new YobitSettings
+                    {
+                        ApiKey = list[2],
+                        Secret = list[3],
+                        CreatedOn = DateTime.UtcNow
+                    };
+
+                    settings = JsonHelper.ToJson(sets);
 					break;
 				default:
 					settings = "";
@@ -268,7 +274,7 @@ namespace TradingBot.CommandPrompt
 
 			using (var accService = new AccountService())
 			{
-				var result = accService.CreateOrUpdate(CurrentUser.Id, list[0], typeEnum, list[2], settings);
+				var result = accService.CreateOrUpdate(CurrentUser.Id, list[0], typeEnum, settings);
 
 				Console.WriteLine(string.Format("Account successfully added: {0}", JsonHelper.ToJson(result)));
 			}
@@ -304,24 +310,27 @@ namespace TradingBot.CommandPrompt
 					Console.WriteLine("Can't find such account");
 					return;
 				}
-				//todo requires refactoring
-				var exchange = ExchangeInfo.Client;
-				switch (account.Type)
+                
+                if (!ClientFactory.Clients.ContainsKey(account.Type))
+                {
+                    Console.WriteLine("It's not implemented Exchange type");
+                    return;
+                }
+
+                //todo requires refactoring
+                switch (account.Type)
 				{
 					case AccountType.Yobit:
-						{
-							var result = exchange.GetActiveOrdersOfUser(pair);
+                        {
+                            var apiSettings = JsonHelper.FromJson<YobitSettings>(account.ApiSettings);
+                            var exchange = new ClientFactory().Create(account.Type, apiSettings);
+
+                            var result = exchange.GetActiveOrdersOfUser(pair);
 
 							if (result == null || result.success != 1)
 								Console.WriteLine(string.Format("Something wrong: {0}", result.error));
 							else
-							{
-								var settings = JsonHelper.FromJson<YobitSettings>(account.ApiSettings);
-								settings.BaseAddress = "https://yobit.io";
-								accService.UpdateSettings(account.Id, JsonHelper.ToJson(settings));
-
 								Console.WriteLine("Done: " + JsonHelper.ToJson(result));
-							}
 						}
 						break;
 					default:
@@ -345,7 +354,7 @@ namespace TradingBot.CommandPrompt
 			int type;
 			if (!int.TryParse(param, out type))
 			{
-				Console.WriteLine(string.Format("You must enter valid Exchange type: {0}", ExchangeInfo.GetAccountTypes));
+				Console.WriteLine(string.Format("You must enter valid Exchange type: {0}", ClientFactory.GetExchanges));
 				return;
 			}
 
@@ -371,19 +380,19 @@ namespace TradingBot.CommandPrompt
 			int type = 0;
 			if (!int.TryParse(param, out type))
 			{
-				Console.WriteLine(string.Format("You must enter valid Exchange type: {0}", ExchangeInfo.GetAccountTypes));
+				Console.WriteLine(string.Format("You must enter valid Exchange type: {0}", ClientFactory.GetExchanges));
 				return;
 			}
 
 			var eType = (AccountType)type;
-			if (!ExchangeInfo.Exchanges.ContainsKey(eType))
+			if (!ClientFactory.Clients.ContainsKey(eType))
 			{
 				Console.WriteLine("It's not implemented Exchange type");
 				return;
 			}
 
 			//todo requires refactoring
-			var exchange = ExchangeInfo.Client;
+			var exchange = new ClientFactory().Create(eType, null);
 
 			try
 			{
@@ -402,5 +411,14 @@ namespace TradingBot.CommandPrompt
 				Console.WriteLine("Unexpected error");
 			}
 		}
+
+        /// <summary>
+        /// This is just a test method for Roman
+        /// </summary>
+        /// <param name="list"></param>
+        public void Test(params string[] list)
+        {
+
+        }
 	}
 }

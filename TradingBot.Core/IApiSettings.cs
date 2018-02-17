@@ -3,8 +3,7 @@ namespace TradingBot.Core
 {
 	public interface IApiSettings
     {
-		string PublicKey { get; set; }
+		string ApiKey { get; set; }
 	    string Secret { get; set; }
-	    string BaseAddress { get; set; }
 	}
 }

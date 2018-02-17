@@ -13,17 +13,17 @@ namespace Yobit.Api
 		private readonly YobitApi _api;
 		private readonly IYobitSettings _settings;
 
-		public YobitClient(IYobitSettings settings)
+		public YobitClient(string publicEndpoint, string privateEndpoint, IYobitSettings settings)
 		{
 			_settings = settings;
-			_api = new YobitApi(settings);
+			_api = new YobitApi(publicEndpoint, privateEndpoint);
 		}
 
 		public async Task<dynamic> GetInfoAsync()
 		{
 			try
 			{
-				HttpResponseMessage response = await _api.GetInfoAsync();
+				HttpResponseMessage response = await _api.GetInfoAsync(_settings);
 				//var s = await HttpHelper.AcquireStringAsync(response);
 				var model = await HttpHelper.AcquireContentAsync<YobitResponse<Info>>(response);
 				//string json = JsonHelper.ToJson(model["return"]);
@@ -183,13 +183,17 @@ namespace Yobit.Api
 
 			try
 			{
-				HttpResponseMessage response = await _api.GetActiveOrdersOfUserAsync(pair);
+				HttpResponseMessage response = await _api.GetActiveOrdersOfUserAsync(_settings, pair);
 				var model = await HttpHelper.AcquireContentAsync<YobitResponse<dynamic>>(response);
 
 				if (!model.Success)
 				{
 					throw new YobitException(model.Error); //Hack because private API always returns 200 status code.
 				}
+
+                //todo need refactoring
+                if (model.Content == null)
+                    return null; 
 
 				var result = JsonHelper.FromJson<dynamic>(model.Content);
 

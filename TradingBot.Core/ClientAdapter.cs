@@ -15,7 +15,7 @@ namespace TradingBot.Core
 
 		public void SwitchAccount(AccountType type)
 		{
-			_client = _factory.Create(type);
+			_client = _factory.Create(type, null);
 		}
 	}
 }

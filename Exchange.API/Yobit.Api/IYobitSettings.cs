@@ -1,8 +1,11 @@
 ﻿
 namespace Yobit.Api
 {
-	using TradingBot.Core;
+    using System;
+    using TradingBot.Core;
 
 	public interface IYobitSettings : IApiSettings
-	{ }
+	{
+        DateTime CreatedOn { get; set; }
+    }
 }

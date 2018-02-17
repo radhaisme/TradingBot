@@ -19,8 +19,7 @@ namespace TradingBot.Services
 
         public PairInfo GetPair(AccountType type, string tickerCode)
         {
-            tickerCode = (tickerCode ?? "").Trim();
-            var key = tickerCode.ToLowerInvariant();
+            var key = (tickerCode ?? "").Trim().ToLowerInvariant();
             var item = Context.PairInfos.Query().FirstOrDefault(m => m.AccountType == type && m.Name == key);
             return item;
         }

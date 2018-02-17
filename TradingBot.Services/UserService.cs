@@ -49,17 +49,16 @@ namespace TradingBot.Services
 
         public User GetUser(string username)
         {
-            username = (username ?? "").Trim();
-            var key = username.ToLowerInvariant();
+            var key = (username ?? "").Trim().ToLowerInvariant();
             var row = Context.Users.Query().FirstOrDefault(m => m.Username.ToLower() == key);
             return row;
         }
 
         public User RegisterUser(string username, string password)
         {
-            username = (username ?? "").Trim();
+            var name = (username ?? "").Trim();
 
-            var user = GetUser(username);
+            var user = GetUser(name);
             if (user != null)
                 return null;
 
@@ -69,7 +68,7 @@ namespace TradingBot.Services
 
             user = new User
             {
-                Username = username,
+                Username = name,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt
             };

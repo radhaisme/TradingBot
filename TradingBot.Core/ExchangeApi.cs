@@ -4,8 +4,9 @@ namespace TradingBot.Core
 	using Enums;
 	using System;
 	using System.Net.Http;
+    using System.Threading.Tasks;
 
-	public class PairsResponse<T>
+    public class PairsResponse<T>
 	{
 		public bool IsSuccess { get; set; }
 		public string Error { get; set; }
@@ -45,19 +46,23 @@ namespace TradingBot.Core
 	public abstract class ExchangeApi : IDisposable
 	{
 		public AccountType Type { get; protected set; }
-		protected readonly HttpClient Client = new HttpClient();
+		protected readonly HttpClient HttpClient = new HttpClient();
 
-		protected ExchangeApi(string baseAddress)
+        protected readonly Uri _privateUrl;
+        protected readonly Uri _publicUrl;
+
+        protected ExchangeApi(string publicEndpoint, string privateEndpoint)
 		{
-			Client.BaseAddress = new Uri(baseAddress);
-			Client.DefaultRequestHeaders.ConnectionClose = false;
+            _privateUrl = new Uri(privateEndpoint);
+            _publicUrl = new Uri(publicEndpoint);
+            HttpClient.DefaultRequestHeaders.ConnectionClose = false;
 		}
 
 		protected virtual void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
-				Client.Dispose();
+				HttpClient.Dispose();
 			}
 		}
 
@@ -67,6 +72,6 @@ namespace TradingBot.Core
 			GC.SuppressFinalize(this);
 		}
 
-		//public abstract PairsResponse<T> GetPairs<T>();
-	}
+
+    }
 }
