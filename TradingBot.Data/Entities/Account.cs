@@ -6,7 +6,7 @@ namespace TradingBot.Data.Entities
 	public class Account : Entity
 	{
         public string Name { get; set; }
-        public AccountType Type { get; set; }
+        public Exchange Exchange { get; set; }
         public string ApiSettings { get; set; }
         public int UserId { get; set; }
         public virtual User User { get; set; }

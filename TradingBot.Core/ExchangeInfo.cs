@@ -8,7 +8,7 @@
 
 	public class ExchangeInfo
     {
-        public AccountType Type { get; set; }
+        public Exchange Type { get; set; }
         
         public string PublicEndpoint { get; set; }
 
@@ -16,7 +16,7 @@
 
         public Type ExchangeApi { get; set; } 
 
-        public ExchangeInfo(AccountType type, string publicEndpoint, string privateEndpoint, Type excangeApi)
+        public ExchangeInfo(Exchange type, string publicEndpoint, string privateEndpoint, Type excangeApi)
         {
             Type = type;
             PrivateEndpoint = privateEndpoint;

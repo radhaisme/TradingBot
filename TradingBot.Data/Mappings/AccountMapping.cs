@@ -12,7 +12,7 @@ namespace TradingBot.Data.Mappings
 			builder.ToTable("Accounts");
 			builder.HasKey(_ => _.Id);
 			builder.Property(_ => _.Name).IsRequired().HasMaxLength(128);
-			builder.Property(_ => _.Type).IsRequired();
+			builder.Property(_ => _.Exchange).IsRequired();
 			builder.Property(_ => _.UserId).IsRequired();
 			builder.Property(_ => _.ApiSettings).IsRequired(false);
 		}

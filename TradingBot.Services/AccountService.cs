@@ -26,12 +26,12 @@ namespace TradingBot.Services
 			return Context.Accounts.Get(x => x.UserId == userId).ToList();
 		}
 
-		public Account CreateOrUpdate(int userId, string name, AccountType type, string jsonSettings, int? id = null)
+		public Account CreateOrUpdate(int userId, string name, Exchange exchange, string jsonSettings, int? id = null)
 		{
 			var account = id.HasValue ? GetById(id.Value) : new Account();
 			account.ApiSettings = jsonSettings;
             account.Name = (name ?? "").Trim();
-			account.Type = type;
+			account.Exchange = exchange;
 
 			if (account.IsNew())
 			{

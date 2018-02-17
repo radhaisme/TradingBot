@@ -142,7 +142,18 @@ namespace TradingBot.CommandPrompt
 		{
 		}
 
-		public void ExecuteCommand(CommandEnum command, params string[] list)
+        private IApiSettings GetAccountSettings(Account account)
+        {
+            if (account != null)
+                switch (account.Exchange)
+                {
+                    case Exchange.Yobit:
+                        return JsonHelper.FromJson<YobitSettings>(account.ApiSettings);
+                }
+            throw new ArgumentException("Such Exchange is not implemented");
+        }
+
+        public void ExecuteCommand(CommandEnum command, params string[] list)
 		{
 			var method = typeof(CommandsHelper).GetMethod(command.ToString());
 			if (method == null)
@@ -248,11 +259,11 @@ namespace TradingBot.CommandPrompt
 				Console.WriteLine(string.Format("You must enter valid Exchange type: {0}", ClientFactory.GetExchanges));
 				return;
 			}
-			var typeEnum = (AccountType)type;
+			var typeEnum = (Exchange)type;
 
 			switch (typeEnum)
 			{
-				case AccountType.Yobit:
+				case Exchange.Yobit:
 					if (list.Length != 4)
 					{
 						Console.WriteLine("For Yobit you must to enter Secret as 4th parameter");
@@ -311,33 +322,22 @@ namespace TradingBot.CommandPrompt
 					return;
 				}
                 
-                if (!ClientFactory.Clients.ContainsKey(account.Type))
+                if (!ClientFactory.IsRegistered(account.Exchange))
                 {
-                    Console.WriteLine("It's not implemented Exchange type");
+                    Console.WriteLine("It's not registered Exchange");
                     return;
                 }
 
-                //todo requires refactoring
-                switch (account.Type)
-				{
-					case AccountType.Yobit:
-                        {
-                            var apiSettings = JsonHelper.FromJson<YobitSettings>(account.ApiSettings);
-                            var exchange = new ClientFactory().Create(account.Type, apiSettings);
+                var apiSettings = GetAccountSettings(account);
+                var exchange = new ClientFactory().Create(account.Exchange, apiSettings);
 
-                            var result = exchange.GetActiveOrdersOfUser(pair);
+                var result = exchange.GetActiveOrdersOfUser(pair);
 
-							if (result == null || result.success != 1)
-								Console.WriteLine(string.Format("Something wrong: {0}", result.error));
-							else
-								Console.WriteLine("Done: " + JsonHelper.ToJson(result));
-						}
-						break;
-					default:
-						Console.WriteLine("Is not supported yet.");
-						break;
-				}
-			}
+                if (result == null || result.success != 1)
+                    Console.WriteLine(string.Format("Something wrong: {0}", result.error));
+                else
+                    Console.WriteLine("Done: " + JsonHelper.ToJson(result));
+            }
 
 			return;
 		}
@@ -360,7 +360,7 @@ namespace TradingBot.CommandPrompt
 
 			using (var pairService = new PairService())
 			{
-				var info = pairService.GetPair((AccountType)type, tickerCode);
+				var info = pairService.GetPair((Exchange)type, tickerCode);
 				if (info == null)
 					Console.WriteLine("Nothing found");
 				else
@@ -384,10 +384,10 @@ namespace TradingBot.CommandPrompt
 				return;
 			}
 
-			var eType = (AccountType)type;
-			if (!ClientFactory.Clients.ContainsKey(eType))
+			var eType = (Exchange)type;
+			if (!ClientFactory.IsRegistered(eType))
 			{
-				Console.WriteLine("It's not implemented Exchange type");
+				Console.WriteLine("It's not registered Exchange");
 				return;
 			}
 

@@ -26,7 +26,7 @@ namespace Yobit.Api
 	{
 		public YobitApi(string publicEndpoint, string privateEndpoint) : base(publicEndpoint, privateEndpoint)
 		{
-            Type = AccountType.Yobit;
+            Type = Exchange.Yobit;
 		}
 
 		public async Task<HttpResponseMessage> GetTradesAsync(string pair, uint? limit = null)
@@ -75,7 +75,7 @@ namespace Yobit.Api
 
 		public async Task<HttpResponseMessage> GetInfoAsync(IYobitSettings settings)
         {
-            int nonce = (int)(DateTime.UtcNow - new DateTime(2018, 1, 1)).TotalSeconds;
+            int nonce = (int)(DateTime.UtcNow - settings.CreatedOn).TotalSeconds;
             string queryString = HttpHelper.QueryString(new Dictionary<string, string> { { "method", "getInfo" }, { "nonce", nonce.ToString() } }, true);
 
             GeneratePrivateHeaders(settings, queryString);

@@ -10,7 +10,7 @@ namespace TradingBot.Data.Entities
 
         public DateTime? UpdatedDt { get; set; }
 
-        public AccountType AccountType { get; set; }
+        public Exchange AccountType { get; set; }
 
         public byte? DecimalPlaces { get; set; }
         

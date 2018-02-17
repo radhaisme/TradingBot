@@ -5,6 +5,6 @@ namespace TradingBot.Core
 
 	public interface IClientFactory
 	{
-		IExchangeClient Create(AccountType type, IApiSettings settings = null);
+		IExchangeClient Create(Exchange type, IApiSettings settings = null);
 	}
 }

@@ -17,7 +17,7 @@ namespace TradingBot.Services
         {
         }
 
-        public PairInfo GetPair(AccountType type, string tickerCode)
+        public PairInfo GetPair(Exchange type, string tickerCode)
         {
             var key = (tickerCode ?? "").Trim().ToLowerInvariant();
             var item = Context.PairInfos.Query().FirstOrDefault(m => m.AccountType == type && m.Name == key);
@@ -71,13 +71,13 @@ namespace TradingBot.Services
         {
 	        var method = api.GetType().GetMethod("GetPairs");
 	        var result = (PairsInfo)method.Invoke(api, null);
-			string[] names = Enum.GetNames(typeof(AccountType));
+			string[] names = Enum.GetNames(typeof(Exchange));
 	        var name = names.Single(x => api.GetType().Name.StartsWith(x));
-	        var type = (AccountType)Enum.Parse(typeof(AccountType), name);
+	        var type = (Exchange)Enum.Parse(typeof(Exchange), name);
 
 			switch (type)
 			{
-				case AccountType.Yobit:
+				case Exchange.Yobit:
 				{
 					foreach (var pair in result.Pairs)
 					{

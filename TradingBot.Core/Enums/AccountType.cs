@@ -1,7 +1,7 @@
 ﻿
 namespace TradingBot.Core.Enums
 {
-	public enum AccountType
+	public enum Exchange
 	{
 		Bitfinex,
 		Bitstamp,

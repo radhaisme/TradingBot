@@ -18,22 +18,29 @@ namespace TradingBot.Core
             {
                 if (string.IsNullOrWhiteSpace(exchanges))
                 {
-                    exchanges = string.Join(", ", Clients.Select(m => string.Format("{0}-{1}", (int)m.Key, m.Key.ToString())));
+                    exchanges = string.Join(", ", _clients.Select(m => string.Format("{0}-{1}", (int)m.Key, m.Key.ToString())));
                 }
                 return exchanges;
             }
         }
 
-        public static Dictionary<AccountType, ExchangeInfo> Clients { get; private set; }
+        private static Dictionary<Exchange, ExchangeInfo> _clients { get; set; }
 
-		static ClientFactory()
+        static ClientFactory()
 		{
 			RegisterClientTypes();
 		}
 
-        public IExchangeClient Create(AccountType type, IApiSettings settings = null)
+        public static bool IsRegistered(Exchange exchange)
         {
-            var client = Clients[type];
+            return _clients.ContainsKey(exchange);
+        }
+
+        public IExchangeClient Create(Exchange type, IApiSettings settings = null)
+        {
+            if (!IsRegistered(type))
+                throw new ArgumentOutOfRangeException("Such Exchange is not registered.");
+            var client = _clients[type];
             return (IExchangeClient)Activator.CreateInstance(client.ExchangeApi, new object[] { client.PublicEndpoint, client.PrivateEndpoint, settings });
         }
 
@@ -41,7 +48,7 @@ namespace TradingBot.Core
 
 		private static void RegisterClientTypes()
 		{
-            Clients = new Dictionary<AccountType, ExchangeInfo>();
+            _clients = new Dictionary<Exchange, ExchangeInfo>();
             //NameValueCollection settings = ConfigurationManager.AppSettings;
 
             //foreach (string key in settings.Keys)
@@ -56,8 +63,8 @@ namespace TradingBot.Core
 
             var asm = Assembly.Load("Yobit.Api");
             Type clientType = asm.GetType("Yobit.Api.YobitClient");
-            Clients.Add(AccountType.Yobit, 
-                new ExchangeInfo(AccountType.Yobit, "https://yobit.net/api/3/", "https://yobit.net/tapi", clientType));
+            _clients.Add(Exchange.Yobit, 
+                new ExchangeInfo(Exchange.Yobit, "https://yobit.net/api/3/", "https://yobit.net/tapi", clientType));
         }
 
         #endregion

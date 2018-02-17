@@ -11,9 +11,6 @@ namespace TradingBot.CommandPrompt
 	{
 		private static void Main(string[] args)
 		{
-            var factory = new ClientFactory();
-            //factory.Create()
-
             Console.WriteLine("Use help to get list of commands");
             var input = String.Empty;
 

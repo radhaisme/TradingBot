@@ -45,7 +45,7 @@ namespace TradingBot.Core
 
 	public abstract class ExchangeApi : IDisposable
 	{
-		public AccountType Type { get; protected set; }
+		public Exchange Type { get; protected set; }
 		protected readonly HttpClient HttpClient = new HttpClient();
 
         protected readonly Uri _privateUrl;
