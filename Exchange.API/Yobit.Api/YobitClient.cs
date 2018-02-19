@@ -19,6 +19,114 @@ namespace Yobit.Api
 			_api = new YobitApi(publicEndpoint, privateEndpoint);
 		}
 
+		public async Task<dynamic> GetOrderInfoAsync(int orderId)
+		{
+			if (orderId <= 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(orderId));
+			}
+
+			try
+			{
+				HttpResponseMessage response = await _api.GetOrderInfoAsync(orderId, _settings);
+				//var s = await HttpHelper.AcquireStringAsync(response);
+				var model = await HttpHelper.AcquireContentAsync<YobitResponse<dynamic>>(response);
+				//string json = JsonHelper.ToJson(model["return"]);
+
+				//var ss = JsonHelper.FromJson<YobitResponse>(model["return"]);
+
+				if (!model.Success)
+				{
+					throw new YobitException(model.Error); //Hack because private API always returns 200 status code.
+				}
+
+				//var result = JsonHelper.FromJson<dynamic>(model.Content);
+
+				return null;
+			}
+			catch (YobitException ex)
+			{
+				throw new HttpRequestException(ex.Message, ex);
+			}
+		}
+
+		public dynamic GetOrderInfo(int orderId)
+		{
+			return GetOrderInfoAsync(orderId).Result;
+		}
+
+		public async Task<dynamic> CancelOrderAsync(int orderId)
+		{
+			if (orderId <= 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(orderId));
+			}
+
+			try
+			{
+				HttpResponseMessage response = await _api.CancelTradeAsync(orderId, _settings);
+				//var s = await HttpHelper.AcquireStringAsync(response);
+				var model = await HttpHelper.AcquireContentAsync<YobitResponse<dynamic>>(response);
+				//string json = JsonHelper.ToJson(model["return"]);
+
+				//var ss = JsonHelper.FromJson<YobitResponse>(model["return"]);
+
+				if (!model.Success)
+				{
+					throw new YobitException(model.Error); //Hack because private API always returns 200 status code.
+				}
+
+				//var result = JsonHelper.FromJson<dynamic>(model.Content);
+
+				return null;
+			}
+			catch (YobitException ex)
+			{
+				throw new HttpRequestException(ex.Message, ex);
+			}
+		}
+
+		public dynamic CancelOrder(int orderId)
+		{
+			return CancelOrderAsync(orderId).Result;
+		}
+
+		public async Task<dynamic> CreateOrderAsync(string pair, OrderType type, decimal price, decimal amount)
+		{
+			if (String.IsNullOrEmpty(pair))
+			{
+				throw new ArgumentNullException(nameof(pair));
+			}
+			
+			try
+			{
+				HttpResponseMessage response = await _api.CreateOrderAsync(pair, type, price, amount, _settings);
+				//var s = await HttpHelper.AcquireStringAsync(response);
+				var model = await HttpHelper.AcquireContentAsync<YobitResponse<dynamic>>(response);
+				//string json = JsonHelper.ToJson(model["return"]);
+				
+				//var ss = JsonHelper.FromJson<YobitResponse>(model["return"]);
+
+				if (!model.Success)
+				{
+					throw new YobitException(model.Error); //Hack because private API always returns 200 status code.
+				}
+
+				//var result = JsonHelper.FromJson<dynamic>(model.Content);
+
+				return null;
+			}
+			catch (YobitException ex)
+			{
+				throw new HttpRequestException(ex.Message, ex);
+			}
+		}
+
+		public dynamic CreateOrder(string pair, OrderType type, decimal price, decimal amount)
+		{
+			return CreateOrderAsync(pair, type, price, amount).Result;
+		}
+
 		public async Task<dynamic> GetInfoAsync()
 		{
 			try

@@ -27,6 +27,16 @@ namespace Yobit.Api
 		public YobitApi(string publicEndpoint, string privateEndpoint) : base(publicEndpoint, privateEndpoint)
 		{ }
 
+		internal async Task<HttpResponseMessage> GetOrderInfoAsync(int orderId, IYobitSettings settings)
+		{
+			int nonce = (int)(DateTime.UtcNow - settings.CreatedOn).TotalSeconds;
+			string queryString = HttpHelper.QueryString(new Dictionary<string, string> { { "method", "OrderInfo" }, { "order_id", orderId.ToString() }, { "nonce", nonce.ToString() } }, true);
+			GeneratePrivateHeaders(settings, queryString);
+			HttpResponseMessage response = await HttpClient.PostAsync(PrivateUrl, new StringContent(queryString, Encoding.UTF8, "application/x-www-form-urlencoded"));
+
+			return response;
+		}
+
 		internal async Task<HttpResponseMessage> GetTradesAsync(string pair, uint? limit = null)
 		{
 			string queryString = limit.HasValue
@@ -38,6 +48,34 @@ namespace Yobit.Api
 			{
 				throw new YobitException("Ocurred some error...");
 			}
+
+			return response;
+		}
+
+		internal async Task<HttpResponseMessage> CancelTradeAsync(int orderId, IYobitSettings settings)
+		{
+			int nonce = (int)(DateTime.UtcNow - settings.CreatedOn).TotalSeconds;
+			string queryString = HttpHelper.QueryString(new Dictionary<string, string> { { "method", "CancelOrder" }, { "order_id", orderId.ToString() }, { "nonce", nonce.ToString() } }, true);
+			GeneratePrivateHeaders(settings, queryString);
+			HttpResponseMessage response = await HttpClient.PostAsync(PrivateUrl, new StringContent(queryString, Encoding.UTF8, "application/x-www-form-urlencoded"));
+
+			return response;
+		}
+
+		internal async Task<HttpResponseMessage> CreateOrderAsync(string pair, OrderType type, decimal price, decimal amount, IYobitSettings settings)
+		{
+			int nonce = (int)(DateTime.UtcNow - settings.CreatedOn).TotalSeconds;
+			string queryString = HttpHelper.QueryString(new Dictionary<string, string>
+			{
+				{"method", "Trade"},
+				{"pair", pair},
+				{"type", OrderType.Buy.ToString()},
+				{"rate", price.ToString()},
+				{"amount", amount.ToString()},
+				{"nonce", nonce.ToString()}
+			}, true);
+			GeneratePrivateHeaders(settings, queryString);
+			HttpResponseMessage response = await HttpClient.PostAsync(PrivateUrl, new StringContent(queryString, Encoding.UTF8, "application/x-www-form-urlencoded"));
 
 			return response;
 		}
