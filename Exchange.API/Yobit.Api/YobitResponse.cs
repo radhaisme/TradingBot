@@ -3,11 +3,12 @@ namespace Yobit.Api
 {
 	using Newtonsoft.Json;
 
-	public class YobitResponse<TModel>
+	[JsonConverter(typeof(YobitResponseConverter))]
+	public class YobitResponse
     {
-		public bool Success { get; set; }
+	    public bool Success { get; set; }
 	    [JsonProperty(PropertyName = "@return")]
-		public TModel Content { get; set; }
+		public string Content { get; set; }
 		public string Error { get; set; }
     }
 }

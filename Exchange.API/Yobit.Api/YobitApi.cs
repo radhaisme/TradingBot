@@ -34,6 +34,11 @@ namespace Yobit.Api
 			GeneratePrivateHeaders(settings, queryString);
 			HttpResponseMessage response = await HttpClient.PostAsync(PrivateUrl, new StringContent(queryString, Encoding.UTF8, "application/x-www-form-urlencoded"));
 
+			if (!response.IsSuccessStatusCode)
+			{
+				throw new YobitException("Ocurred some error...");
+			}
+
 			return response;
 		}
 
@@ -59,6 +64,11 @@ namespace Yobit.Api
 			GeneratePrivateHeaders(settings, queryString);
 			HttpResponseMessage response = await HttpClient.PostAsync(PrivateUrl, new StringContent(queryString, Encoding.UTF8, "application/x-www-form-urlencoded"));
 
+			if (!response.IsSuccessStatusCode)
+			{
+				throw new YobitException("Ocurred some error...");
+			}
+
 			return response;
 		}
 
@@ -77,6 +87,11 @@ namespace Yobit.Api
 			GeneratePrivateHeaders(settings, queryString);
 			HttpResponseMessage response = await HttpClient.PostAsync(PrivateUrl, new StringContent(queryString, Encoding.UTF8, "application/x-www-form-urlencoded"));
 
+			if (!response.IsSuccessStatusCode)
+			{
+				throw new YobitException("Ocurred some error...");
+			}
+
 			return response;
 		}
 
@@ -87,6 +102,11 @@ namespace Yobit.Api
 			GeneratePrivateHeaders(settings, queryString);
 			HttpResponseMessage response = await HttpClient.PostAsync(PrivateUrl, new StringContent(queryString, Encoding.UTF8, "application/x-www-form-urlencoded"));
 
+			if (!response.IsSuccessStatusCode)
+			{
+				throw new YobitException("Ocurred some error...");
+			}
+
 			return response;
 		}
 
@@ -96,6 +116,11 @@ namespace Yobit.Api
 			string queryString = HttpHelper.QueryString(new Dictionary<string, string> { { "method", "ActiveOrders" }, { "pair", pair }, { "nonce", nonce.ToString() } }, true);
 			GeneratePrivateHeaders(settings, queryString);
 			HttpResponseMessage response = await HttpClient.PostAsync(PrivateUrl, new StringContent(queryString, Encoding.UTF8, "application/x-www-form-urlencoded"));
+
+			if (!response.IsSuccessStatusCode)
+			{
+				throw new YobitException("Ocurred some error...");
+			}
 
 			return response;
 		}

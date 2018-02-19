@@ -19,7 +19,7 @@ namespace Yobit.Api
 			_api = new YobitApi(publicEndpoint, privateEndpoint);
 		}
 
-		public async Task<dynamic> GetOrderInfoAsync(int orderId)
+		public async Task<OrderDetails> GetOrderInfoAsync(int orderId)
 		{
 			if (orderId <= 0)
 			{
@@ -29,20 +29,31 @@ namespace Yobit.Api
 			try
 			{
 				HttpResponseMessage response = await _api.GetOrderInfoAsync(orderId, _settings);
-				//var s = await HttpHelper.AcquireStringAsync(response);
-				var model = await HttpHelper.AcquireContentAsync<YobitResponse<dynamic>>(response);
-				//string json = JsonHelper.ToJson(model["return"]);
+				var result = await HttpHelper.AcquireContentAsync<dynamic>(response);
 
-				//var ss = JsonHelper.FromJson<YobitResponse>(model["return"]);
-
-				if (!model.Success)
+				if (!result.success)
 				{
-					throw new YobitException(model.Error); //Hack because private API always returns 200 status code.
+					throw new YobitException(result.Error); //Hack because private API always returns 200 status code.
 				}
 
-				//var result = JsonHelper.FromJson<dynamic>(model.Content);
+				var model = new OrderDetails();
 
-				return null;
+				foreach (dynamic item in result.@return)
+				{
+					dynamic value = item.Value;
+					model.Orders.Add((int)item.Key, new OrderInfo
+					{
+						Pair = value.pair,
+						Type = Enum.Parse(typeof(OrderType), value.type, true),
+						StartAmount = value.start_amount,
+						Amount = value.amount,
+						Price = value.rate,
+						CreatedAt = DateTimeOffset.FromUnixTimeSeconds(value.timestamp_created),
+						Status = Enum.Parse(typeof(OrderStatus), value.status)
+					});
+				}
+
+				return model;
 			}
 			catch (YobitException ex)
 			{
@@ -50,7 +61,7 @@ namespace Yobit.Api
 			}
 		}
 
-		public dynamic GetOrderInfo(int orderId)
+		public OrderDetails GetOrderInfo(int orderId)
 		{
 			return GetOrderInfoAsync(orderId).Result;
 		}
@@ -65,11 +76,7 @@ namespace Yobit.Api
 			try
 			{
 				HttpResponseMessage response = await _api.CancelTradeAsync(orderId, _settings);
-				//var s = await HttpHelper.AcquireStringAsync(response);
-				var model = await HttpHelper.AcquireContentAsync<YobitResponse<dynamic>>(response);
-				//string json = JsonHelper.ToJson(model["return"]);
-
-				//var ss = JsonHelper.FromJson<YobitResponse>(model["return"]);
+				var model = await HttpHelper.AcquireContentAsync<YobitResponse>(response);
 
 				if (!model.Success)
 				{
@@ -97,14 +104,14 @@ namespace Yobit.Api
 			{
 				throw new ArgumentNullException(nameof(pair));
 			}
-			
+
 			try
 			{
 				HttpResponseMessage response = await _api.CreateOrderAsync(pair, type, price, amount, _settings);
 				//var s = await HttpHelper.AcquireStringAsync(response);
-				var model = await HttpHelper.AcquireContentAsync<YobitResponse<dynamic>>(response);
+				var model = await HttpHelper.AcquireContentAsync<YobitResponse>(response);
 				//string json = JsonHelper.ToJson(model["return"]);
-				
+
 				//var ss = JsonHelper.FromJson<YobitResponse>(model["return"]);
 
 				if (!model.Success)
@@ -127,26 +134,34 @@ namespace Yobit.Api
 			return CreateOrderAsync(pair, type, price, amount).Result;
 		}
 
-		public async Task<dynamic> GetInfoAsync()
+		public async Task<Balance> GetInfoAsync()
 		{
 			try
 			{
 				HttpResponseMessage response = await _api.GetInfoAsync(_settings);
-				//var s = await HttpHelper.AcquireStringAsync(response);
-				var model = await HttpHelper.AcquireContentAsync<YobitResponse<Info>>(response);
-				//string json = JsonHelper.ToJson(model["return"]);
+				var result = await HttpHelper.AcquireContentAsync<dynamic>(response);
 
-
-				//var ss = JsonHelper.FromJson<YobitResponse>(model["return"]);
-
-				if (!model.Success)
+				if (!(bool)result.success)
 				{
-					throw new YobitException(model.Error); //Hack because private API always returns 200 status code.
+					throw new YobitException(result.Error); //Hack because private API always returns 200 status code.
 				}
 
-				//var result = JsonHelper.FromJson<dynamic>(model.Content);
+				var model = new Balance();
 
-				return null;
+				foreach (dynamic item in result.@return.funds)
+				{
+					model.Funds.Add(item.Name, (decimal)item.Value);
+				}
+
+				foreach (dynamic item in result.@return.funds_incl_orders)
+				{
+					model.FundsIncludeOrders.Add(item.Name, (decimal)item.Value);
+				}
+
+				model.TransactionCount = result.@return.transaction_count;
+				model.OpenOrders = result.@return.open_orders;
+
+				return model;
 			}
 			catch (YobitException ex)
 			{
@@ -154,7 +169,7 @@ namespace Yobit.Api
 			}
 		}
 
-		public dynamic GetInfo()
+		public Balance GetInfo()
 		{
 			return GetInfoAsync().Result;
 		}
@@ -292,7 +307,7 @@ namespace Yobit.Api
 			try
 			{
 				HttpResponseMessage response = await _api.GetActiveOrdersOfUserAsync(_settings, pair);
-				var model = await HttpHelper.AcquireContentAsync<YobitResponse<dynamic>>(response);
+				var model = await HttpHelper.AcquireContentAsync<YobitResponse>(response);
 
 				if (!model.Success)
 				{
