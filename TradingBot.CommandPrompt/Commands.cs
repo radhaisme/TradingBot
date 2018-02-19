@@ -127,12 +127,12 @@ namespace TradingBot.CommandPrompt
 			List.Add(
 			  new Command(CommandEnum.GetPairs, new List<string> { "getpairs", "all", "info" },
 			  string.Format("Get all list of tickers with basic statistics. Parameters (* - required): exchangeType* ({0})",
-			  ClientFactory.GetExchanges))
+			  ClientFactory.GetExchanges().Aggregate((s, n) => s + ", " + n)))
 			);
 
 			List.Add(
 			  new Command(CommandEnum.GetPairInfo, new List<string> { "getpairinfo", "tickerinfo", "get-ticker-info", "get-pair-info", "pair-info", "ticker-info" },
-			  string.Format("Get basic ticker info. It uses info stored from last 'getpairs'. Parameters (* - required): exchangeType* ({0}), tickerCode* ", ClientFactory.GetExchanges))
+			  string.Format("Get basic ticker info. It uses info stored from last 'getpairs'. Parameters (* - required): exchangeType* ({0}), tickerCode* ", ClientFactory.GetExchanges().Aggregate((s, n) => s + ", " + n)))
 			);
 		}
 
@@ -145,9 +145,9 @@ namespace TradingBot.CommandPrompt
         private IApiSettings GetAccountSettings(Account account)
         {
             if (account != null)
-                switch (account.Exchange)
+                switch (account.ExchangeType)
                 {
-                    case Exchange.Yobit:
+                    case ExchangeType.Yobit:
                         return JsonHelper.FromJson<YobitSettings>(account.ApiSettings);
                 }
             throw new ArgumentException("Such Exchange is not implemented");
@@ -256,14 +256,14 @@ namespace TradingBot.CommandPrompt
 
 			if (!int.TryParse(list[1], out type))
 			{
-				Console.WriteLine(string.Format("You must enter valid Exchange type: {0}", ClientFactory.GetExchanges));
+				Console.WriteLine(string.Format("You must enter valid Exchange type: {0}", ClientFactory.GetExchanges().Aggregate((s, n) => s + ", " + n)));
 				return;
 			}
-			var typeEnum = (Exchange)type;
+			var typeEnum = (ExchangeType)type;
 
 			switch (typeEnum)
 			{
-				case Exchange.Yobit:
+				case ExchangeType.Yobit:
 					if (list.Length != 4)
 					{
 						Console.WriteLine("For Yobit you must to enter Secret as 4th parameter");
@@ -322,14 +322,14 @@ namespace TradingBot.CommandPrompt
 					return;
 				}
                 
-                if (!ClientFactory.IsRegistered(account.Exchange))
+                if (!ClientFactory.IsExists(account.ExchangeType))
                 {
                     Console.WriteLine("It's not registered Exchange");
                     return;
                 }
 
                 var apiSettings = GetAccountSettings(account);
-                var exchange = new ClientFactory().Create(account.Exchange, apiSettings);
+                var exchange = new ClientFactory().Create(account.ExchangeType, apiSettings);
 
                 var result = exchange.GetActiveOrdersOfUser(pair);
 
@@ -354,13 +354,13 @@ namespace TradingBot.CommandPrompt
 			int type;
 			if (!int.TryParse(param, out type))
 			{
-				Console.WriteLine(string.Format("You must enter valid Exchange type: {0}", ClientFactory.GetExchanges));
+				Console.WriteLine(string.Format("You must enter valid Exchange type: {0}", ClientFactory.GetExchanges().Aggregate((s, n) => s + ", " + n)));
 				return;
 			}
 
 			using (var pairService = new PairService())
 			{
-				var info = pairService.GetPair((Exchange)type, tickerCode);
+				var info = pairService.GetPair((ExchangeType)type, tickerCode);
 				if (info == null)
 					Console.WriteLine("Nothing found");
 				else
@@ -380,12 +380,12 @@ namespace TradingBot.CommandPrompt
 			int type = 0;
 			if (!int.TryParse(param, out type))
 			{
-				Console.WriteLine(string.Format("You must enter valid Exchange type: {0}", ClientFactory.GetExchanges));
+				Console.WriteLine(string.Format("You must enter valid Exchange type: {0}", ClientFactory.GetExchanges().Aggregate((s, n) => s + ", " + n)));
 				return;
 			}
 
-			var eType = (Exchange)type;
-			if (!ClientFactory.IsRegistered(eType))
+			var eType = (ExchangeType)type;
+			if (!ClientFactory.IsExists(eType))
 			{
 				Console.WriteLine("It's not registered Exchange");
 				return;

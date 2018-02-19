@@ -191,9 +191,11 @@ namespace Yobit.Api
 					throw new YobitException(model.Error); //Hack because private API always returns 200 status code.
 				}
 
-                //todo need refactoring
-                if (model.Content == null)
-                    return null; 
+				//todo need refactoring
+				if (model.Content == null)
+				{
+					return null;
+				}
 
 				var result = JsonHelper.FromJson<dynamic>(model.Content);
 
