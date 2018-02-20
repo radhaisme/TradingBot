@@ -8,8 +8,8 @@ namespace TradingBot.Services
 	using System.Linq;
 	using System.Reflection;
 	using Core;
+	using Core.Entities;
 	using Yobit.Api;
-	using Yobit.Api.Entities;
 
 	public class PairService : BaseService
     {

@@ -1,8 +1,8 @@
 ﻿
-namespace Yobit.Api.Entities
+namespace TradingBot.Core.Entities
 {
 	public class PairData
-    {
+	{
 		public decimal High { get; set; }
 		public decimal Low { get; set; }
 		public decimal Avg { get; set; }
@@ -11,5 +11,5 @@ namespace Yobit.Api.Entities
 		public decimal Last { get; set; }
 		public decimal Buy { get; set; }
 		public decimal Sell { get; set; }
-    }
+	}
 }

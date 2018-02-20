@@ -1,12 +1,12 @@
 ﻿
 namespace Yobit.Api
 {
-	using Entities;
 	using System;
 	using System.Net.Http;
 	using System.Threading.Tasks;
 	using TradingBot.Common;
 	using TradingBot.Core;
+	using TradingBot.Core.Entities;
 
 	public sealed class YobitClient : IExchangeClient
 	{
@@ -347,7 +347,7 @@ namespace Yobit.Api
 			}
 		}
 
-		public dynamic GetActiveOrdersOfUser(string pair)
+		public OrderDetails GetActiveOrdersOfUser(string pair)
 		{
 			return GetActiveOrdersOfUserAsync(pair).Result;
 		}

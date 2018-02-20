@@ -1,14 +1,14 @@
 ﻿
-namespace Yobit.Api.Entities
+namespace TradingBot.Core.Entities
 {
 	using System.Collections.Generic;
 
 	public class Balance
-    {
-	    public Balance()
-	    {
+	{
+		public Balance()
+		{
 			Funds = new Dictionary<string, decimal>();
-		    FundsIncludeOrders = new Dictionary<string, decimal>();
+			FundsIncludeOrders = new Dictionary<string, decimal>();
 		}
 
 		public IDictionary<string, decimal> Funds { get; }

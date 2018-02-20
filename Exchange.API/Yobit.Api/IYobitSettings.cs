@@ -6,6 +6,6 @@ namespace Yobit.Api
 
 	public interface IYobitSettings : IApiSettings
 	{
-		DateTime CreatedOn { get; set; }
+		DateTimeOffset CreatedAt { get; set; }
 	}
 }

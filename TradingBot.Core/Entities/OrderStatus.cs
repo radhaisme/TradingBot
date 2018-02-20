@@ -1,12 +1,12 @@
 ﻿
-namespace Yobit.Api.Entities
+namespace TradingBot.Core.Entities
 {
-    public enum OrderStatus : byte
-    {
+	public enum OrderStatus : byte
+	{
 		Active = 0,
-	    Fulfilled,
+		Fulfilled,
 		Closed = Fulfilled,
-	    Cancelled,
+		Cancelled,
 		CancelledPartiallyFulfilled //Ugly name. Need to think about to change name with the more shortes
 	}
 }

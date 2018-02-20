@@ -1,5 +1,5 @@
 ﻿
-namespace Yobit.Api.Entities
+namespace TradingBot.Core.Entities
 {
 	public enum TradeType : byte
 	{

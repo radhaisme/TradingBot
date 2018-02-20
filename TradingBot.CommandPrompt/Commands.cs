@@ -15,7 +15,7 @@ namespace TradingBot.CommandPrompt
 	public enum CommandEnum
 	{
 		None,
-        Test,
+		Test,
 		Exit,
 		Help,
 		RegisterUser,
@@ -84,11 +84,11 @@ namespace TradingBot.CommandPrompt
 
 			List.Add(None);
 
-            List.Add(
-                new Command(CommandEnum.Test, new List<string> { "test" }, "Any Roma's test method")
-            );
+			List.Add(
+				new Command(CommandEnum.Test, new List<string> { "test" }, "Any Roma's test method")
+			);
 
-            List.Add(
+			List.Add(
 				new Command(CommandEnum.Exit, new List<string> { "exit", "e", "finish", "esc" }, "Finish the program, amazing?")
 			);
 
@@ -142,18 +142,18 @@ namespace TradingBot.CommandPrompt
 		{
 		}
 
-        private IApiSettings GetAccountSettings(Account account)
-        {
-            if (account != null)
-                switch (account.ExchangeType)
-                {
-                    case ExchangeType.Yobit:
-                        return JsonHelper.FromJson<YobitSettings>(account.ApiSettings);
-                }
-            throw new ArgumentException("Such Exchange is not implemented");
-        }
+		private IApiSettings GetAccountSettings(Account account)
+		{
+			if (account != null)
+				switch (account.ExchangeType)
+				{
+					case ExchangeType.Yobit:
+						return JsonHelper.FromJson<YobitSettings>(account.ApiSettings);
+				}
+			throw new ArgumentException("Such Exchange is not implemented");
+		}
 
-        public void ExecuteCommand(CommandEnum command, params string[] list)
+		public void ExecuteCommand(CommandEnum command, params string[] list)
 		{
 			var method = typeof(CommandsHelper).GetMethod(command.ToString());
 			if (method == null)
@@ -269,14 +269,14 @@ namespace TradingBot.CommandPrompt
 						Console.WriteLine("For Yobit you must to enter Secret as 4th parameter");
 						return;
 					}
-                    var sets = new YobitSettings
-                    {
-                        ApiKey = list[2],
-                        Secret = list[3],
-                        CreatedOn = DateTime.UtcNow
-                    };
+					var sets = new YobitSettings
+					{
+						ApiKey = list[2],
+						Secret = list[3],
+						CreatedAt = DateTime.UtcNow
+					};
 
-                    settings = JsonHelper.ToJson(sets);
+					settings = JsonHelper.ToJson(sets);
 					break;
 				default:
 					settings = "";
@@ -321,25 +321,19 @@ namespace TradingBot.CommandPrompt
 					Console.WriteLine("Can't find such account");
 					return;
 				}
-                
-                if (!ClientFactory.IsExists(account.ExchangeType))
-                {
-                    Console.WriteLine("It's not registered Exchange");
-                    return;
-                }
 
-                var apiSettings = GetAccountSettings(account);
-                var exchange = new ClientFactory().Create(account.ExchangeType, apiSettings);
+				if (!ClientFactory.IsExists(account.ExchangeType))
+				{
+					Console.WriteLine("It's not registered Exchange");
+					return;
+				}
 
-                var result = exchange.GetActiveOrdersOfUser(pair);
+				var apiSettings = GetAccountSettings(account);
+				var exchange = new ClientFactory().Create(account.ExchangeType, apiSettings);
 
-                if (result == null || result.success != 1)
-                    Console.WriteLine(string.Format("Something wrong: {0}", result.error));
-                else
-                    Console.WriteLine("Done: " + JsonHelper.ToJson(result));
-            }
-
-			return;
+				var result = exchange.GetActiveOrdersOfUser(pair);
+				Console.WriteLine("Done: " + JsonHelper.ToJson(result));
+			}
 		}
 
 		public void GetPairInfo(params string[] list)
@@ -412,13 +406,13 @@ namespace TradingBot.CommandPrompt
 			}
 		}
 
-        /// <summary>
-        /// This is just a test method for Roman
-        /// </summary>
-        /// <param name="list"></param>
-        public void Test(params string[] list)
-        {
+		/// <summary>
+		/// This is just a test method for Roman
+		/// </summary>
+		/// <param name="list"></param>
+		public void Test(params string[] list)
+		{
 
-        }
+		}
 	}
 }

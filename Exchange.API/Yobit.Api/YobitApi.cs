@@ -1,7 +1,6 @@
 ﻿
 namespace Yobit.Api
 {
-	using Entities;
 	using System;
 	using System.Collections.Generic;
 	using System.Net.Http;
@@ -10,17 +9,7 @@ namespace Yobit.Api
 	using System.Threading.Tasks;
 	using TradingBot.Common;
 	using TradingBot.Core;
-
-	public class YobitPairsResponse : PairsResponse<Dictionary<string, Pair>>
-	{
-		public YobitPairsResponse(string error) : base(error)
-		{
-		}
-
-		public YobitPairsResponse(Dictionary<string, Pair> content) : base(content)
-		{
-		}
-	}
+	using TradingBot.Core.Entities;
 
 	internal sealed class YobitApi : ExchangeApi
 	{
@@ -29,7 +18,7 @@ namespace Yobit.Api
 
 		internal async Task<HttpResponseMessage> GetOrderInfoAsync(int orderId, IYobitSettings settings)
 		{
-			int nonce = (int)(DateTime.UtcNow - settings.CreatedOn).TotalSeconds;
+			int nonce = (int)(DateTime.UtcNow - settings.CreatedAt).TotalSeconds;
 			string queryString = HttpHelper.QueryString(new Dictionary<string, string> { { "method", "OrderInfo" }, { "order_id", orderId.ToString() }, { "nonce", nonce.ToString() } }, true);
 			GeneratePrivateHeaders(settings, queryString);
 			HttpResponseMessage response = await HttpClient.PostAsync(PrivateUrl, new StringContent(queryString, Encoding.UTF8, "application/x-www-form-urlencoded"));
@@ -59,7 +48,7 @@ namespace Yobit.Api
 
 		internal async Task<HttpResponseMessage> CancelTradeAsync(int orderId, IYobitSettings settings)
 		{
-			int nonce = (int)(DateTime.UtcNow - settings.CreatedOn).TotalSeconds;
+			int nonce = (int)(DateTime.UtcNow - settings.CreatedAt).TotalSeconds;
 			string queryString = HttpHelper.QueryString(new Dictionary<string, string> { { "method", "CancelOrder" }, { "order_id", orderId.ToString() }, { "nonce", nonce.ToString() } }, true);
 			GeneratePrivateHeaders(settings, queryString);
 			HttpResponseMessage response = await HttpClient.PostAsync(PrivateUrl, new StringContent(queryString, Encoding.UTF8, "application/x-www-form-urlencoded"));
@@ -74,7 +63,7 @@ namespace Yobit.Api
 
 		internal async Task<HttpResponseMessage> CreateOrderAsync(string pair, OrderType type, decimal price, decimal amount, IYobitSettings settings)
 		{
-			int nonce = (int)(DateTime.UtcNow - settings.CreatedOn).TotalSeconds;
+			int nonce = (int)(DateTime.UtcNow - settings.CreatedAt).TotalSeconds;
 			string queryString = HttpHelper.QueryString(new Dictionary<string, string>
 			{
 				{"method", "Trade"},
@@ -97,7 +86,7 @@ namespace Yobit.Api
 
 		internal async Task<HttpResponseMessage> GetInfoAsync(IYobitSettings settings)
 		{
-			int nonce = (int)(DateTime.UtcNow - settings.CreatedOn).TotalSeconds;
+			int nonce = (int)(DateTime.UtcNow - settings.CreatedAt).TotalSeconds;
 			string queryString = HttpHelper.QueryString(new Dictionary<string, string> { { "method", "getInfo" }, { "nonce", nonce.ToString() } }, true);
 			GeneratePrivateHeaders(settings, queryString);
 			HttpResponseMessage response = await HttpClient.PostAsync(PrivateUrl, new StringContent(queryString, Encoding.UTF8, "application/x-www-form-urlencoded"));
@@ -112,7 +101,7 @@ namespace Yobit.Api
 
 		internal async Task<HttpResponseMessage> GetActiveOrdersOfUserAsync(IYobitSettings settings, string pair)
 		{
-			int nonce = (int)(DateTime.UtcNow - settings.CreatedOn).TotalSeconds; //don't forget to change on: new DateTime(2018, 1, 1) 
+			int nonce = (int)(DateTime.UtcNow - settings.CreatedAt).TotalSeconds; //don't forget to change on: new DateTime(2018, 1, 1) 
 			string queryString = HttpHelper.QueryString(new Dictionary<string, string> { { "method", "ActiveOrders" }, { "pair", pair }, { "nonce", nonce.ToString() } }, true);
 			GeneratePrivateHeaders(settings, queryString);
 			HttpResponseMessage response = await HttpClient.PostAsync(PrivateUrl, new StringContent(queryString, Encoding.UTF8, "application/x-www-form-urlencoded"));

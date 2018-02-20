@@ -1,10 +1,10 @@
 ﻿
-namespace Yobit.Api.Entities
+namespace TradingBot.Core.Entities
 {
 	using System;
 
 	public class OrderInfo
-    {
+	{
 		public string Pair { get; set; }
 		public OrderType Type { get; set; }
 		public decimal StartAmount { get; set; }
@@ -12,5 +12,5 @@ namespace Yobit.Api.Entities
 		public decimal Price { get; set; }
 		public DateTimeOffset CreatedAt { get; set; }
 		public OrderStatus Status { get; set; }
-    }
+	}
 }
