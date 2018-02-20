@@ -66,7 +66,7 @@ namespace Yobit.Api
 			return GetOrderInfoAsync(orderId).Result;
 		}
 
-		public async Task<dynamic> CancelOrderAsync(int orderId)
+		public async Task<CancelOrder> CancelOrderAsync(int orderId)
 		{
 			if (orderId <= 0)
 			{
@@ -76,16 +76,22 @@ namespace Yobit.Api
 			try
 			{
 				HttpResponseMessage response = await _api.CancelTradeAsync(orderId, _settings);
-				var model = await HttpHelper.AcquireContentAsync<YobitResponse>(response);
+				var result = await HttpHelper.AcquireContentAsync<dynamic>(response);
 
-				if (!model.Success)
+				if (!(bool)result.success)
 				{
-					throw new YobitException(model.Error); //Hack because private API always returns 200 status code.
+					throw new YobitException(result.Error); //Hack because private API always returns 200 status code.
 				}
 
-				//var result = JsonHelper.FromJson<dynamic>(model.Content);
+				var model = new CancelOrder();
+				model.OrderId = result.@return.order_id;
 
-				return null;
+				foreach (dynamic item in result.@return.funds)
+				{
+					model.Funds.Add(item.Key, item.Value);
+				}
+
+				return model;
 			}
 			catch (YobitException ex)
 			{
@@ -93,12 +99,12 @@ namespace Yobit.Api
 			}
 		}
 
-		public dynamic CancelOrder(int orderId)
+		public CancelOrder CancelOrder(int orderId)
 		{
 			return CancelOrderAsync(orderId).Result;
 		}
 
-		public async Task<dynamic> CreateOrderAsync(string pair, OrderType type, decimal price, decimal amount)
+		public async Task<CreateOrder> CreateOrderAsync(string pair, OrderType type, decimal price, decimal amount)
 		{
 			if (String.IsNullOrEmpty(pair))
 			{
@@ -108,20 +114,24 @@ namespace Yobit.Api
 			try
 			{
 				HttpResponseMessage response = await _api.CreateOrderAsync(pair, type, price, amount, _settings);
-				//var s = await HttpHelper.AcquireStringAsync(response);
-				var model = await HttpHelper.AcquireContentAsync<YobitResponse>(response);
-				//string json = JsonHelper.ToJson(model["return"]);
+				var result = await HttpHelper.AcquireContentAsync<dynamic>(response);
 
-				//var ss = JsonHelper.FromJson<YobitResponse>(model["return"]);
-
-				if (!model.Success)
+				if (!(bool)result.success)
 				{
-					throw new YobitException(model.Error); //Hack because private API always returns 200 status code.
+					throw new YobitException(result.Error); //Hack because private API always returns 200 status code.
 				}
 
-				//var result = JsonHelper.FromJson<dynamic>(model.Content);
+				var model = new CreateOrder();
+				model.Received = result.received;
+				model.Remains = result.remains;
+				model.OrderId = result.order_id;
 
-				return null;
+				foreach (dynamic item in result.@return.funds)
+				{
+					model.Funds.Add(item.Key, item.Value);
+				}
+
+				return model;
 			}
 			catch (YobitException ex)
 			{
@@ -129,7 +139,7 @@ namespace Yobit.Api
 			}
 		}
 
-		public dynamic CreateOrder(string pair, OrderType type, decimal price, decimal amount)
+		public CreateOrder CreateOrder(string pair, OrderType type, decimal price, decimal amount)
 		{
 			return CreateOrderAsync(pair, type, price, amount).Result;
 		}
@@ -297,7 +307,7 @@ namespace Yobit.Api
 			return GetPairOrdersAsync(pair, limit).Result;
 		}
 
-		public async Task<dynamic> GetActiveOrdersOfUserAsync(string pair)
+		public async Task<OrderDetails> GetActiveOrdersOfUserAsync(string pair)
 		{
 			if (String.IsNullOrEmpty(pair))
 			{
@@ -307,22 +317,29 @@ namespace Yobit.Api
 			try
 			{
 				HttpResponseMessage response = await _api.GetActiveOrdersOfUserAsync(_settings, pair);
-				var model = await HttpHelper.AcquireContentAsync<YobitResponse>(response);
+				var result = await HttpHelper.AcquireContentAsync<dynamic>(response);
 
-				if (!model.Success)
+				if (!(bool)result.success)
 				{
-					throw new YobitException(model.Error); //Hack because private API always returns 200 status code.
+					throw new YobitException(result.Error); //Hack because private API always returns 200 status code.
 				}
 
-				//todo need refactoring
-				if (model.Content == null)
+				var model = new OrderDetails();
+
+				foreach (dynamic item in result.@return)
 				{
-					return null;
+					dynamic value = item.Value;
+					model.Orders.Add((int)item.Key, new OrderInfo
+					{
+						Pair = value.pair,
+						Type = Enum.Parse(typeof(OrderType), value.type, true),
+						Amount = value.amount,
+						Price = value.rate,
+						CreatedAt = DateTimeOffset.FromUnixTimeSeconds(value.timestamp_created)
+					});
 				}
 
-				var result = JsonHelper.FromJson<dynamic>(model.Content);
-
-				return result;
+				return model;
 			}
 			catch (YobitException ex)
 			{
