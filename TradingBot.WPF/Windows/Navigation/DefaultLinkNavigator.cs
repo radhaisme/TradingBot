@@ -1,4 +1,5 @@
-﻿namespace TradingBot.WPF.Windows.Navigation
+﻿
+namespace TradingBot.WPF.Windows.Navigation
 {
 	using System;
 	using System.Diagnostics;
@@ -6,7 +7,6 @@
 	using System.Linq;
 	using System.Windows;
 	using System.Windows.Input;
-	using Windows;
 	using Presentation;
 
 	/// <summary>
@@ -14,8 +14,8 @@
 	/// </summary>
 	public class DefaultLinkNavigator : ILinkNavigator
 	{
-		private CommandDictionary commands = new CommandDictionary();
-		private string[] externalSchemes = new string[] { Uri.UriSchemeHttp, Uri.UriSchemeHttps, Uri.UriSchemeMailto };
+		private CommandDictionary _commands = new CommandDictionary();
+		private string[] _externalSchemes = { Uri.UriSchemeHttp, Uri.UriSchemeHttps, Uri.UriSchemeMailto };
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DefaultLinkNavigator"/> class.
@@ -23,19 +23,19 @@
 		public DefaultLinkNavigator()
 		{
 			// register all ApperanceManager commands
-			this.Commands.Add(new Uri("cmd://accentcolor"), AppearanceManager.Current.AccentColorCommand);
-			this.Commands.Add(new Uri("cmd://darktheme"), AppearanceManager.Current.DarkThemeCommand);
-			this.Commands.Add(new Uri("cmd://largefontsize"), AppearanceManager.Current.LargeFontSizeCommand);
-			this.Commands.Add(new Uri("cmd://lighttheme"), AppearanceManager.Current.LightThemeCommand);
-			this.Commands.Add(new Uri("cmd://settheme"), AppearanceManager.Current.SetThemeCommand);
-			this.Commands.Add(new Uri("cmd://smallfontsize"), AppearanceManager.Current.SmallFontSizeCommand);
+			Commands.Add(new Uri("cmd://accentcolor"), AppearanceManager.Current.AccentColorCommand);
+			Commands.Add(new Uri("cmd://darktheme"), AppearanceManager.Current.DarkThemeCommand);
+			Commands.Add(new Uri("cmd://largefontsize"), AppearanceManager.Current.LargeFontSizeCommand);
+			Commands.Add(new Uri("cmd://lighttheme"), AppearanceManager.Current.LightThemeCommand);
+			Commands.Add(new Uri("cmd://settheme"), AppearanceManager.Current.SetThemeCommand);
+			Commands.Add(new Uri("cmd://smallfontsize"), AppearanceManager.Current.SmallFontSizeCommand);
 
 			// register navigation commands
-			this.commands.Add(new Uri("cmd://browseback"), NavigationCommands.BrowseBack);
-			this.commands.Add(new Uri("cmd://refresh"), NavigationCommands.Refresh);
+			_commands.Add(new Uri("cmd://browseback"), NavigationCommands.BrowseBack);
+			_commands.Add(new Uri("cmd://refresh"), NavigationCommands.Refresh);
 
 			// register application commands
-			this.commands.Add(new Uri("cmd://copy"), ApplicationCommands.Copy);
+			_commands.Add(new Uri("cmd://copy"), ApplicationCommands.Copy);
 		}
 
 		/// <summary>
@@ -46,8 +46,15 @@
 		/// </remarks>
 		public string[] ExternalSchemes
 		{
-			get { return this.externalSchemes; }
-			set { this.externalSchemes = value; }
+			get
+			{
+				return _externalSchemes;
+			}
+
+			set
+			{
+				_externalSchemes = value;
+			}
 		}
 
 		/// <summary>
@@ -55,8 +62,15 @@
 		/// </summary>
 		public CommandDictionary Commands
 		{
-			get { return this.commands; }
-			set { this.commands = value; }
+			get
+			{
+				return _commands;
+			}
+
+			set
+			{
+				_commands = value;
+			}
 		}
 
 		/// <summary>
@@ -69,28 +83,24 @@
 		{
 			if (uri == null)
 			{
-				throw new ArgumentNullException("uri");
+				throw new ArgumentNullException(nameof(uri));
 			}
 
 			// first check if uri refers to a command
 			ICommand command;
-			if (this.commands != null && this.commands.TryGetValue(uri, out command))
+
+			if (_commands != null && _commands.TryGetValue(uri, out command))
 			{
 				// note: not executed within BBCodeBlock context, Hyperlink instance has Command and CommandParameter set
 				if (command.CanExecute(parameter))
 				{
 					command.Execute(parameter);
 				}
-				else
-				{
-					// do nothing
-				}
 			}
-			else if (uri.IsAbsoluteUri && this.externalSchemes != null && this.externalSchemes.Any(s => uri.Scheme.Equals(s, StringComparison.OrdinalIgnoreCase)))
+			else if (uri.IsAbsoluteUri && _externalSchemes != null && _externalSchemes.Any(s => uri.Scheme.Equals(s, StringComparison.OrdinalIgnoreCase)))
 			{
 				// uri is external, load in default browser
 				Process.Start(uri.AbsoluteUri);
-				return;
 			}
 			else
 			{
@@ -102,6 +112,7 @@
 
 				// use optional parameter as navigation target to identify target frame (_self, _parent, _top or named target frame)
 				var frame = NavigationHelper.FindFrame(parameter, source);
+
 				if (frame == null)
 				{
 					throw new ArgumentException(string.Format(CultureInfo.CurrentUICulture, Resources.NavigationFailedFrameNotFound, uri, parameter));

@@ -14,18 +14,22 @@ namespace TradingBot.WPF.Windows.Controls
 		/// Identifies the EllipseDiameter property.
 		/// </summary>
 		public static readonly DependencyProperty EllipseDiameterProperty = DependencyProperty.Register("EllipseDiameter", typeof(double), typeof(ModernButton), new PropertyMetadata(22D));
+		
 		/// <summary>
 		/// Identifies the EllipseStrokeThickness property.
 		/// </summary>
 		public static readonly DependencyProperty EllipseStrokeThicknessProperty = DependencyProperty.Register("EllipseStrokeThickness", typeof(double), typeof(ModernButton), new PropertyMetadata(1D));
+		
 		/// <summary>
 		/// Identifies the IconData property.
 		/// </summary>
 		public static readonly DependencyProperty IconDataProperty = DependencyProperty.Register("IconData", typeof(Geometry), typeof(ModernButton));
+		
 		/// <summary>
 		/// Identifies the IconHeight property.
 		/// </summary>
 		public static readonly DependencyProperty IconHeightProperty = DependencyProperty.Register("IconHeight", typeof(double), typeof(ModernButton), new PropertyMetadata(12D));
+		
 		/// <summary>
 		/// Identifies the IconWidth property.
 		/// </summary>
@@ -36,7 +40,7 @@ namespace TradingBot.WPF.Windows.Controls
 		/// </summary>
 		public ModernButton()
 		{
-			this.DefaultStyleKey = typeof(ModernButton);
+			DefaultStyleKey = typeof(ModernButton);
 		}
 
 		/// <summary>
@@ -44,8 +48,15 @@ namespace TradingBot.WPF.Windows.Controls
 		/// </summary>
 		public double EllipseDiameter
 		{
-			get { return (double)GetValue(EllipseDiameterProperty); }
-			set { SetValue(EllipseDiameterProperty, value); }
+			get
+			{
+				return (double)GetValue(EllipseDiameterProperty);
+			}
+
+			set
+			{
+				SetValue(EllipseDiameterProperty, value);
+			}
 		}
 
 		/// <summary>
@@ -53,8 +64,15 @@ namespace TradingBot.WPF.Windows.Controls
 		/// </summary>
 		public double EllipseStrokeThickness
 		{
-			get { return (double)GetValue(EllipseStrokeThicknessProperty); }
-			set { SetValue(EllipseStrokeThicknessProperty, value); }
+			get
+			{
+				return (double)GetValue(EllipseStrokeThicknessProperty);
+			}
+
+			set
+			{
+				SetValue(EllipseStrokeThicknessProperty, value);
+			}
 		}
 
 		/// <summary>
@@ -65,8 +83,15 @@ namespace TradingBot.WPF.Windows.Controls
 		/// </value>
 		public Geometry IconData
 		{
-			get { return (Geometry)GetValue(IconDataProperty); }
-			set { SetValue(IconDataProperty, value); }
+			get
+			{
+				return (Geometry)GetValue(IconDataProperty);
+			}
+
+			set
+			{
+				SetValue(IconDataProperty, value);
+			}
 		}
 
 		/// <summary>
@@ -77,8 +102,15 @@ namespace TradingBot.WPF.Windows.Controls
 		/// </value>
 		public double IconHeight
 		{
-			get { return (double)GetValue(IconHeightProperty); }
-			set { SetValue(IconHeightProperty, value); }
+			get
+			{
+				return (double)GetValue(IconHeightProperty);
+			}
+
+			set
+			{
+				SetValue(IconHeightProperty, value);
+			}
 		}
 
 		/// <summary>
@@ -89,8 +121,15 @@ namespace TradingBot.WPF.Windows.Controls
 		/// </value>
 		public double IconWidth
 		{
-			get { return (double)GetValue(IconWidthProperty); }
-			set { SetValue(IconWidthProperty, value); }
+			get
+			{
+				return (double)GetValue(IconWidthProperty);
+			}
+
+			set
+			{
+				SetValue(IconWidthProperty, value);
+			}
 		}
 	}
 }

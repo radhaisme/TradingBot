@@ -1,13 +1,13 @@
 ﻿namespace TradingBot.WPF.Windows.Controls
 {
 	using Navigation;
+	using Presentation;
 	using System;
 	using System.Collections.Generic;
 	using System.Collections.Specialized;
 	using System.Linq;
 	using System.Windows;
 	using System.Windows.Controls;
-	using Presentation;
 
 	/// <summary>
 	/// Represents the menu in a Modern UI styled window.
@@ -18,20 +18,24 @@
 		/// Defines the LinkGroups dependency property.
 		/// </summary>
 		public static readonly DependencyProperty LinkGroupsProperty = DependencyProperty.Register("LinkGroups", typeof(LinkGroupCollection), typeof(ModernMenu), new PropertyMetadata(OnLinkGroupsChanged));
+		
 		/// <summary>
 		/// Defines the SelectedLinkGroup dependency property.
 		/// </summary>
 		public static readonly DependencyProperty SelectedLinkGroupProperty = DependencyProperty.Register("SelectedLinkGroup", typeof(LinkGroup), typeof(ModernMenu), new PropertyMetadata(OnSelectedLinkGroupChanged));
+		
 		/// <summary>
 		/// Defines the SelectedLink dependency property.
 		/// </summary>
 		public static readonly DependencyProperty SelectedLinkProperty = DependencyProperty.Register("SelectedLink", typeof(Link), typeof(ModernMenu), new PropertyMetadata(OnSelectedLinkChanged));
+		
 		/// <summary>
 		/// Defines the SelectedSource dependency property.
 		/// </summary>
 		public static readonly DependencyProperty SelectedSourceProperty = DependencyProperty.Register("SelectedSource", typeof(Uri), typeof(ModernMenu), new PropertyMetadata(OnSelectedSourceChanged));
 
 		private static readonly DependencyPropertyKey VisibleLinkGroupsPropertyKey = DependencyProperty.RegisterReadOnly("VisibleLinkGroups", typeof(ReadOnlyLinkGroupCollection), typeof(ModernMenu), null);
+		
 		/// <summary>
 		/// Defines the VisibleLinkGroups dependency property.
 		/// </summary>
@@ -50,8 +54,7 @@
 		/// </summary>
 		public ModernMenu()
 		{
-			this.DefaultStyleKey = typeof(ModernMenu);
-
+			DefaultStyleKey = typeof(ModernMenu);
 			// create a default link groups collection
 			SetCurrentValue(LinkGroupsProperty, new LinkGroupCollection());
 		}
@@ -83,6 +86,7 @@
 			// retrieve the selected link from the group
 			var group = (LinkGroup)e.NewValue;
 			Link selectedLink = null;
+
 			if (group != null)
 			{
 				selectedLink = group.SelectedLink;
@@ -135,7 +139,7 @@
 			Uri oldValueNoFragment = NavigationHelper.RemoveFragment(oldValue);
 			Uri newValueNoFragment = NavigationHelper.RemoveFragment(newValue);
 
-			if (!this.isSelecting)
+			if (!isSelecting)
 			{
 				// if old and new are equal, don't do anything
 				if (newValueNoFragment != null && newValueNoFragment.Equals(oldValueNoFragment))
@@ -147,10 +151,9 @@
 			}
 
 			// raise SelectedSourceChanged event
-			var handler = this.SelectedSourceChanged;
-			if (handler != null)
+			if (SelectedSourceChanged != null)
 			{
-				handler(this, new SourceEventArgs(newValue));
+				SelectedSourceChanged(this, new SourceEventArgs(newValue));
 			}
 		}
 
@@ -160,8 +163,15 @@
 		/// <value>The link groups.</value>
 		public LinkGroupCollection LinkGroups
 		{
-			get { return (LinkGroupCollection)GetValue(LinkGroupsProperty); }
-			set { SetValue(LinkGroupsProperty, value); }
+			get
+			{
+				return (LinkGroupCollection)GetValue(LinkGroupsProperty);
+			}
+
+			set
+			{
+				SetValue(LinkGroupsProperty, value);
+			}
 		}
 
 		/// <summary>
@@ -170,8 +180,15 @@
 		/// <value>The selected link.</value>
 		public Link SelectedLink
 		{
-			get { return (Link)GetValue(SelectedLinkProperty); }
-			set { SetValue(SelectedLinkProperty, value); }
+			get
+			{
+				return (Link)GetValue(SelectedLinkProperty);
+			}
+
+			set
+			{
+				SetValue(SelectedLinkProperty, value);
+			}
 		}
 
 		/// <summary>
@@ -180,8 +197,15 @@
 		/// <value>The source URI of the selected link.</value>
 		public Uri SelectedSource
 		{
-			get { return (Uri)GetValue(SelectedSourceProperty); }
-			set { SetValue(SelectedSourceProperty, value); }
+			get
+			{
+				return (Uri)GetValue(SelectedSourceProperty);
+			}
+
+			set
+			{
+				SetValue(SelectedSourceProperty, value);
+			}
 		}
 
 		/// <summary>
@@ -189,7 +213,10 @@
 		/// </summary>
 		public LinkGroup SelectedLinkGroup
 		{
-			get { return (LinkGroup)GetValue(SelectedLinkGroupProperty); }
+			get
+			{
+				return (LinkGroup)GetValue(SelectedLinkGroupProperty);
+			}
 		}
 
 		/// <summary>
@@ -197,7 +224,10 @@
 		/// </summary>
 		public ReadOnlyLinkGroupCollection VisibleLinkGroups
 		{
-			get { return (ReadOnlyLinkGroupCollection)GetValue(VisibleLinkGroupsProperty); }
+			get
+			{
+				return (ReadOnlyLinkGroupCollection)GetValue(VisibleLinkGroupsProperty);
+			}
 		}
 
 		/// <summary>
@@ -213,7 +243,8 @@
 
 		private void RebuildMenu(LinkGroupCollection groups)
 		{
-			this.groupMap.Clear();
+			groupMap.Clear();
+
 			if (groups != null)
 			{
 				// fill the group map based on group key
@@ -222,11 +253,12 @@
 					var groupKey = GetGroupKey(group);
 
 					ReadOnlyLinkGroupCollection groupCollection;
-					if (!this.groupMap.TryGetValue(groupKey, out groupCollection))
+
+					if (!groupMap.TryGetValue(groupKey, out groupCollection))
 					{
 						// create a new collection for this group key
 						groupCollection = new ReadOnlyLinkGroupCollection(new LinkGroupCollection());
-						this.groupMap.Add(groupKey, groupCollection);
+						groupMap.Add(groupKey, groupCollection);
 					}
 
 					// add the group
@@ -242,13 +274,12 @@
 		{
 			LinkGroup selectedGroup = null;
 			Link selectedLink = null;
-
 			Uri sourceNoFragment = NavigationHelper.RemoveFragment(this.SelectedSource);
 
-			if (this.LinkGroups != null)
+			if (LinkGroups != null)
 			{
 				// find the current select group and link based on the selected source
-				var linkInfo = (from g in this.LinkGroups
+				var linkInfo = (from g in LinkGroups
 								from l in g.Links
 								where l.Source == sourceNoFragment
 								select new
@@ -268,30 +299,30 @@
 					selectedGroup = this.SelectedLinkGroup;
 
 					// if selected group doesn't exist in available groups, select first group
-					if (!this.LinkGroups.Any(g => g == selectedGroup))
+					if (LinkGroups.All(g => g != selectedGroup))
 					{
-						selectedGroup = this.LinkGroups.FirstOrDefault();
+						selectedGroup = LinkGroups.FirstOrDefault();
 					}
 				}
 			}
 
 			ReadOnlyLinkGroupCollection groups = null;
+
 			if (selectedGroup != null)
 			{
 				// ensure group itself maintains the selected link
 				selectedGroup.SelectedLink = selectedLink;
-
 				// find the collection this group belongs to
 				var groupKey = GetGroupKey(selectedGroup);
-				this.groupMap.TryGetValue(groupKey, out groups);
+				groupMap.TryGetValue(groupKey, out groups);
 			}
 
-			this.isSelecting = true;
+			isSelecting = true;
 			// update selection
 			SetValue(VisibleLinkGroupsPropertyKey, groups);
 			SetCurrentValue(SelectedLinkGroupProperty, selectedGroup);
 			SetCurrentValue(SelectedLinkProperty, selectedLink);
-			this.isSelecting = false;
+			isSelecting = false;
 		}
 	}
 }

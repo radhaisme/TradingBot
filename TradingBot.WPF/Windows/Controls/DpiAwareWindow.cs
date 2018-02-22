@@ -17,24 +17,23 @@ namespace TradingBot.WPF.Windows.Controls
 		/// <summary>
 		/// Occurs when the system or monitor DPI for this window has changed.
 		/// </summary>
-		public event EventHandler DpiChanged;
+		public new event EventHandler DpiChanged;
 
-		private HwndSource source;
-		private DpiInformation dpiInfo;
-		private bool isPerMonitorDpiAware;
+		private HwndSource _source;
+		private DpiInformation _dpiInfo;
+		private readonly bool _isPerMonitorDpiAware;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DpiAwareWindow"/> class.
 		/// </summary>
-		public DpiAwareWindow()
+		protected DpiAwareWindow()
 		{
-			this.SourceInitialized += OnSourceInitialized;
+			SourceInitialized += OnSourceInitialized;
 
 			// WM_DPICHANGED is not send when window is minimized, do listen to global display setting changes
 			SystemEvents.DisplaySettingsChanged += OnSystemEventsDisplaySettingsChanged;
-
 			// try to set per-monitor dpi awareness, before the window is displayed
-			this.isPerMonitorDpiAware = ModernUIHelper.TrySetPerMonitorDpiAware();
+			_isPerMonitorDpiAware = ModernUIHelper.TrySetPerMonitorDpiAware();
 		}
 
 		/// <summary>
@@ -45,7 +44,10 @@ namespace TradingBot.WPF.Windows.Controls
 		/// </remarks>
 		public DpiInformation DpiInformation
 		{
-			get { return this.dpiInfo; }
+			get
+			{
+				return _dpiInfo;
+			}
 		}
 
 		/// <summary>
@@ -55,14 +57,13 @@ namespace TradingBot.WPF.Windows.Controls
 		protected override void OnClosed(EventArgs e)
 		{
 			base.OnClosed(e);
-
 			// detach global event handlers
 			SystemEvents.DisplaySettingsChanged -= OnSystemEventsDisplaySettingsChanged;
 		}
 
 		private void OnSystemEventsDisplaySettingsChanged(object sender, EventArgs e)
 		{
-			if (this.source != null && this.WindowState == WindowState.Minimized)
+			if (_source != null && WindowState == WindowState.Minimized)
 			{
 				RefreshMonitorDpi();
 			}
@@ -70,70 +71,65 @@ namespace TradingBot.WPF.Windows.Controls
 
 		private void OnSourceInitialized(object sender, EventArgs e)
 		{
-			this.source = (HwndSource)HwndSource.FromVisual(this);
-
+			_source = (HwndSource)HwndSource.FromVisual(this);
 			// calculate the DPI used by WPF; this is the same as the system DPI
-			var matrix = source.CompositionTarget.TransformToDevice;
+			var matrix = _source.CompositionTarget.TransformToDevice;
 
-			this.dpiInfo = new DpiInformation(96D * matrix.M11, 96D * matrix.M22);
+			_dpiInfo = new DpiInformation(96D * matrix.M11, 96D * matrix.M22);
 
-			if (this.isPerMonitorDpiAware)
+			if (_isPerMonitorDpiAware)
 			{
-				this.source.AddHook(WndProc);
-
+				_source.AddHook(WndProc);
 				RefreshMonitorDpi();
 			}
 		}
 
 		private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
 		{
-			if (msg == NativeMethods.WM_DPICHANGED)
+			if (msg == Native.WM_DPICHANGED)
 			{
 				// Marshal the value in the lParam into a Rect.
 				var newDisplayRect = (RECT)Marshal.PtrToStructure(lParam, typeof(RECT));
-
 				// Set the Window's position & size.
-				var matrix = this.source.CompositionTarget.TransformFromDevice;
+				var matrix = _source.CompositionTarget.TransformFromDevice;
 				var ul = matrix.Transform(new Vector(newDisplayRect.left, newDisplayRect.top));
 				var hw = matrix.Transform(new Vector(newDisplayRect.right - newDisplayRect.left, newDisplayRect.bottom - newDisplayRect.top));
-				this.Left = ul.X;
-				this.Top = ul.Y;
+				Left = ul.X;
+				Top = ul.Y;
 				UpdateWindowSize(hw.X, hw.Y);
-
 				// Remember the current DPI settings.
-				var oldDpiX = this.dpiInfo.MonitorDpiX;
-				var oldDpiY = this.dpiInfo.MonitorDpiY;
-
+				var oldDpiX = _dpiInfo.MonitorDpiX;
+				var oldDpiY = _dpiInfo.MonitorDpiY;
 				// Get the new DPI settings from wParam
 				var dpiX = (double)(wParam.ToInt32() >> 16);
 				var dpiY = (double)(wParam.ToInt32() & 0x0000FFFF);
 
 				if (oldDpiX != dpiX || oldDpiY != dpiY)
 				{
-					this.dpiInfo.UpdateMonitorDpi(dpiX, dpiY);
-
+					_dpiInfo.UpdateMonitorDpi(dpiX, dpiY);
 					// update layout scale
 					UpdateLayoutTransform();
-
 					// raise DpiChanged event
-					OnDpiChanged(EventArgs.Empty);
+					OnDpiChanged(null);
 				}
 
 				handled = true;
 			}
+
 			return IntPtr.Zero;
 		}
 
 		private void UpdateLayoutTransform()
 		{
-			if (this.isPerMonitorDpiAware)
+			if (_isPerMonitorDpiAware)
 			{
-				var root = (FrameworkElement)this.GetVisualChild(0);
+				var root = (FrameworkElement)GetVisualChild(0);
+
 				if (root != null)
 				{
-					if (this.dpiInfo.ScaleX != 1 || this.dpiInfo.ScaleY != 1)
+					if (_dpiInfo.ScaleX != 1 || _dpiInfo.ScaleY != 1)
 					{
-						root.LayoutTransform = new ScaleTransform(this.dpiInfo.ScaleX, this.dpiInfo.ScaleY);
+						root.LayoutTransform = new ScaleTransform(_dpiInfo.ScaleX, _dpiInfo.ScaleY);
 					}
 					else
 					{
@@ -152,13 +148,12 @@ namespace TradingBot.WPF.Windows.Controls
 			if (relScaleX != 1 || relScaleY != 1)
 			{
 				// adjust window size constraints as well
-				this.MinWidth *= relScaleX;
-				this.MaxWidth *= relScaleX;
-				this.MinHeight *= relScaleY;
-				this.MaxHeight *= relScaleY;
-
-				this.Width = width;
-				this.Height = height;
+				MinWidth *= relScaleX;
+				MaxWidth *= relScaleX;
+				MinHeight *= relScaleY;
+				MaxHeight *= relScaleY;
+				Width = width;
+				Height = height;
 			}
 		}
 
@@ -167,27 +162,26 @@ namespace TradingBot.WPF.Windows.Controls
 		/// </summary>
 		protected void RefreshMonitorDpi()
 		{
-			if (!this.isPerMonitorDpiAware)
+			if (!_isPerMonitorDpiAware)
 			{
 				return;
 			}
 
 			// get the current DPI of the monitor of the window
-			var monitor = NativeMethods.MonitorFromWindow(this.source.Handle, NativeMethods.MONITOR_DEFAULTTONEAREST);
-
+			IntPtr monitor = Native.MonitorFromWindow(_source.Handle, Native.MONITOR_DEFAULTTONEAREST);
 			uint xDpi = 96;
 			uint yDpi = 96;
-			if (NativeMethods.GetDpiForMonitor(monitor, (int)MonitorDpiType.EffectiveDpi, ref xDpi, ref yDpi) != NativeMethods.S_OK)
+
+			if (Native.GetDpiForMonitor(monitor, (int)MonitorDpiType.EffectiveDpi, ref xDpi, ref yDpi) != Native.S_OK)
 			{
 				xDpi = 96;
 				yDpi = 96;
 			}
+
 			// vector contains the change of the old to new DPI
-			var dpiVector = this.dpiInfo.UpdateMonitorDpi(xDpi, yDpi);
-
+			var dpiVector = _dpiInfo.UpdateMonitorDpi(xDpi, yDpi);
 			// update Width and Height based on the current DPI of the monitor
-			UpdateWindowSize(this.Width * dpiVector.X, this.Height * dpiVector.Y);
-
+			UpdateWindowSize(Width * dpiVector.X, Height * dpiVector.Y);
 			// update graphics and text based on the current DPI of the monitor
 			UpdateLayoutTransform();
 		}
@@ -198,10 +192,9 @@ namespace TradingBot.WPF.Windows.Controls
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
 		protected virtual void OnDpiChanged(EventArgs e)
 		{
-			var handler = this.DpiChanged;
-			if (handler != null)
+			if (DpiChanged != null)
 			{
-				handler(this, e);
+				DpiChanged(this, e);
 			}
 		}
 	}

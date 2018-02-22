@@ -40,8 +40,8 @@ namespace TradingBot.WPF
 			if (OSVersionHelper.IsWindows8Point1OrGreater)
 			{
 				ProcessDpiAwareness value;
-				var result = NativeMethods.GetProcessDpiAwareness(IntPtr.Zero, out value);
-				if (result != NativeMethods.S_OK)
+				var result = Native.GetProcessDpiAwareness(IntPtr.Zero, out value);
+				if (result != Native.S_OK)
 				{
 					throw new Win32Exception(result);
 				}
@@ -51,7 +51,7 @@ namespace TradingBot.WPF
 			if (OSVersionHelper.IsWindowsVistaOrGreater)
 			{
 				// use older Win32 API to query system DPI awareness
-				return NativeMethods.IsProcessDPIAware() ? ProcessDpiAwareness.SystemDpiAware : ProcessDpiAwareness.DpiUnaware;
+				return Native.IsProcessDPIAware() ? ProcessDpiAwareness.SystemDpiAware : ProcessDpiAwareness.DpiUnaware;
 			}
 
 			// assume WPF default
@@ -81,11 +81,11 @@ namespace TradingBot.WPF
 			{
 				if (OSVersionHelper.IsWindows8Point1OrGreater)
 				{
-					return NativeMethods.SetProcessDpiAwareness(ProcessDpiAwareness.PerMonitorDpiAware) == NativeMethods.S_OK;
+					return Native.SetProcessDpiAwareness(ProcessDpiAwareness.PerMonitorDpiAware) == Native.S_OK;
 				}
 
 				// use older Win32 API to set the awareness to SystemDpiAware
-				return NativeMethods.SetProcessDPIAware() == NativeMethods.S_OK;
+				return Native.SetProcessDPIAware() == Native.S_OK;
 			}
 
 			// return true if per monitor was already enabled

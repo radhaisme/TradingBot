@@ -1,4 +1,5 @@
-﻿namespace TradingBot.WPF.Windows.Converters
+﻿
+namespace TradingBot.WPF.Windows.Converters
 {
 	using System;
 	using System.Globalization;
@@ -23,20 +24,20 @@
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			var flag = value == null;
+
 			if (value is string)
 			{
 				flag = string.IsNullOrEmpty((string)value);
 			}
+
 			var inverse = (parameter as string) == "inverse";
 
 			if (inverse)
 			{
-				return (flag ? Visibility.Collapsed : Visibility.Visible);
+				return flag ? Visibility.Collapsed : Visibility.Visible;
 			}
-			else
-			{
-				return (flag ? Visibility.Visible : Visibility.Collapsed);
-			}
+
+			return flag ? Visibility.Visible : Visibility.Collapsed;
 		}
 
 		/// <summary>

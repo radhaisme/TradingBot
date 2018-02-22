@@ -8,7 +8,7 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 	/// </summary>
 	internal abstract class Parser<TResult>
 	{
-		private TokenBuffer buffer;
+		private readonly TokenBuffer _buffer;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:Parser"/> class.
@@ -18,9 +18,10 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		{
 			if (lexer == null)
 			{
-				throw new ArgumentNullException("lexer");
+				throw new ArgumentNullException(nameof(lexer));
 			}
-			this.buffer = new TokenBuffer(lexer);
+
+			_buffer = new TokenBuffer(lexer);
 		}
 
 		/// <summary>
@@ -30,7 +31,7 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		/// <returns></returns>
 		protected Token LA(int count)
 		{
-			return this.buffer.LA(count);
+			return _buffer.LA(count);
 		}
 
 		/// <summary>
@@ -38,7 +39,7 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		/// </summary>
 		protected void Consume()
 		{
-			this.buffer.Consume();
+			_buffer.Consume();
 		}
 
 		/// <summary>
@@ -56,6 +57,7 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 			}
 
 			Token token = LA(1);
+
 			for (int i = 0; i < tokenTypes.Length; i++)
 			{
 				if (token.TokenType == tokenTypes[i])
@@ -108,11 +110,13 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		protected void MatchRange(int[] tokenTypes, int minOccurs, int maxOccurs)
 		{
 			int i = 0;
+
 			while (IsInRange(tokenTypes))
 			{
 				Consume();
 				i++;
 			}
+
 			if (i < minOccurs || i > maxOccurs)
 			{
 				throw new ParseException("Invalid number of tokens");

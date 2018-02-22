@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Diagnostics.CodeAnalysis;
+	using System.Globalization;
 	using System.Windows.Data;
 
 	/// <summary>
@@ -20,15 +21,15 @@
 		/// A converted value. If the method returns null, the valid null value is used.
 		/// </returns>
 		[SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
-		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			if (value != null)
 			{
 				var strValue = value.ToString();
 
-
 				return strValue.ToLowerInvariant();
 			}
+
 			return null;
 		}
 

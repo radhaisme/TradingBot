@@ -3,8 +3,7 @@
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 					xmlns:local="clr-namespace:TradingBot.WPF.Windows.Controls"
 					xmlns:presentation="clr-namespace:TradingBot.WPF.Presentation"
-					Title="Modern UI for WPF Demo" IsTitleVisible="True"
-                    ContentSource="/Views/Introduction.xaml">
+					Title="TradingBot" IsTitleVisible="True">
 
 	<!--<local:ModernWindow.MenuLinkGroups>
 		<presentation:LinkGroup DisplayName="Welcome">

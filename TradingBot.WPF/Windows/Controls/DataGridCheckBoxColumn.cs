@@ -13,8 +13,8 @@ namespace TradingBot.WPF.Windows.Controls
 		/// </summary>
 		public DataGridCheckBoxColumn()
 		{
-			this.ElementStyle = Application.Current.Resources["DataGridCheckBoxStyle"] as Style;
-			this.EditingElementStyle = Application.Current.Resources["DataGridEditingCheckBoxStyle"] as Style;
+			ElementStyle = Application.Current.Resources["DataGridCheckBoxStyle"] as Style;
+			EditingElementStyle = Application.Current.Resources["DataGridEditingCheckBoxStyle"] as Style;
 		}
 	}
 }

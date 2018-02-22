@@ -5,6 +5,7 @@
 
 namespace TradingBot.WPF.Windows.Controls
 {
+	using Media;
 	using System;
 	using System.Diagnostics.CodeAnalysis;
 	using System.Globalization;
@@ -12,7 +13,6 @@ namespace TradingBot.WPF.Windows.Controls
 	using System.Windows;
 	using System.Windows.Controls;
 	using System.Windows.Media.Animation;
-	using Media;
 
 	/// <summary>
 	/// Represents a control with a single piece of content and when that content 
@@ -90,6 +90,7 @@ namespace TradingBot.WPF.Windows.Controls
 		public bool IsTransitioning
 		{
 			get { return (bool)GetValue(IsTransitioningProperty); }
+
 			private set
 			{
 				_allowIsTransitioningWrite = true;
@@ -140,7 +141,11 @@ namespace TradingBot.WPF.Windows.Controls
 		/// </summary>
 		private Storyboard CurrentTransition
 		{
-			get { return _currentTransition; }
+			get
+			{
+				return _currentTransition;
+			}
+
 			set
 			{
 				// decouple event
@@ -165,8 +170,15 @@ namespace TradingBot.WPF.Windows.Controls
 		/// </summary>
 		public string Transition
 		{
-			get { return GetValue(TransitionProperty) as string; }
-			set { SetValue(TransitionProperty, value); }
+			get
+			{
+				return GetValue(TransitionProperty) as string;
+			}
+
+			set
+			{
+				SetValue(TransitionProperty, value);
+			}
 		}
 
 		/// <summary>
@@ -211,9 +223,7 @@ namespace TradingBot.WPF.Windows.Controls
 				{
 					// revert to old value
 					source.SetValue(TransitionProperty, oldTransition);
-
-					throw new ArgumentException(
-						string.Format(CultureInfo.CurrentCulture, "Transition '{0}' was not defined.", newTransition));
+					throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, "Transition '{0}' was not defined.", newTransition));
 				}
 			}
 			else
@@ -230,8 +240,15 @@ namespace TradingBot.WPF.Windows.Controls
 		/// </summary>
 		public bool RestartTransitionOnContentChange
 		{
-			get { return (bool)GetValue(RestartTransitionOnContentChangeProperty); }
-			set { SetValue(RestartTransitionOnContentChangeProperty, value); }
+			get
+			{
+				return (bool)GetValue(RestartTransitionOnContentChangeProperty);
+			}
+
+			set
+			{
+				SetValue(RestartTransitionOnContentChangeProperty, value);
+			}
 		}
 
 		/// <summary>
@@ -260,8 +277,7 @@ namespace TradingBot.WPF.Windows.Controls
 		/// <param name="oldValue">The old value of RestartTransitionOnContentChange.</param>
 		/// <param name="newValue">The new value of RestartTransitionOnContentChange.</param>
 		protected virtual void OnRestartTransitionOnContentChangeChanged(bool oldValue, bool newValue)
-		{
-		}
+		{ }
 		#endregion public bool RestartTransitionOnContentChange
 
 		#region Events
@@ -303,7 +319,6 @@ namespace TradingBot.WPF.Windows.Controls
 			}
 
 			base.OnApplyTemplate();
-
 			PreviousContentPresentationSite = GetTemplateChild(PreviousContentPresentationSitePartName) as ContentPresenter;
 			CurrentContentPresentationSite = GetTemplateChild(CurrentContentPresentationSitePartName) as ContentPresenter;
 
@@ -315,14 +330,14 @@ namespace TradingBot.WPF.Windows.Controls
 			// hookup currenttransition
 			Storyboard transition = GetStoryboard(Transition);
 			CurrentTransition = transition;
+
 			if (transition == null)
 			{
 				string invalidTransition = Transition;
 				// revert to default
 				Transition = DefaultTransitionState;
 
-				throw new ArgumentException(
-					string.Format(CultureInfo.CurrentCulture, "Transition '{0}' was not defined.", invalidTransition));
+				throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, "Transition '{0}' was not defined.", invalidTransition));
 			}
 
 			VisualStateManager.GoToState(this, NormalState, false);
@@ -336,7 +351,6 @@ namespace TradingBot.WPF.Windows.Controls
 		protected override void OnContentChanged(object oldContent, object newContent)
 		{
 			base.OnContentChanged(oldContent, newContent);
-
 			StartTransition(oldContent, newContent);
 		}
 
@@ -352,7 +366,6 @@ namespace TradingBot.WPF.Windows.Controls
 			if (CurrentContentPresentationSite != null && PreviousContentPresentationSite != null)
 			{
 				CurrentContentPresentationSite.Content = newContent;
-
 				PreviousContentPresentationSite.Content = oldContent;
 
 				// and start a new transition
@@ -375,6 +388,7 @@ namespace TradingBot.WPF.Windows.Controls
 			AbortTransition();
 
 			RoutedEventHandler handler = TransitionCompleted;
+
 			if (handler != null)
 			{
 				handler(this, new RoutedEventArgs());
@@ -389,6 +403,7 @@ namespace TradingBot.WPF.Windows.Controls
 			// go to normal state and release our hold on the old content.
 			VisualStateManager.GoToState(this, NormalState, false);
 			IsTransitioning = false;
+
 			if (PreviousContentPresentationSite != null)
 			{
 				PreviousContentPresentationSite.Content = null;
@@ -404,6 +419,7 @@ namespace TradingBot.WPF.Windows.Controls
 		{
 			VisualStateGroup presentationGroup = VisualTreeHelperEx.TryGetVisualStateGroup(this, PresentationGroup);
 			Storyboard newStoryboard = null;
+
 			if (presentationGroup != null)
 			{
 				newStoryboard = presentationGroup.States
@@ -412,6 +428,7 @@ namespace TradingBot.WPF.Windows.Controls
 					.Select(state => state.Storyboard)
 					.FirstOrDefault();
 			}
+
 			return newStoryboard;
 		}
 	}

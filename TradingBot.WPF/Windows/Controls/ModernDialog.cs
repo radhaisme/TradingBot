@@ -15,6 +15,7 @@
 		/// Identifies the BackgroundContent dependency property.
 		/// </summary>
 		public static readonly DependencyProperty BackgroundContentProperty = DependencyProperty.Register("BackgroundContent", typeof(object), typeof(ModernDialog));
+		
 		/// <summary>
 		/// Identifies the Buttons dependency property.
 		/// </summary>
@@ -22,52 +23,52 @@
 
 		private ICommand closeCommand;
 
-		private Button okButton;
-		private Button cancelButton;
-		private Button yesButton;
-		private Button noButton;
-		private Button closeButton;
-
-		private MessageBoxResult messageBoxResult = MessageBoxResult.None;
+		private Button _okButton;
+		private Button _cancelButton;
+		private Button _yesButton;
+		private Button _noButton;
+		private Button _closeButton;
+		private MessageBoxResult _messageBoxResult = MessageBoxResult.None;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ModernDialog"/> class.
 		/// </summary>
 		public ModernDialog()
 		{
-			this.DefaultStyleKey = typeof(ModernDialog);
-			this.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+			DefaultStyleKey = typeof(ModernDialog);
+			WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
-			this.closeCommand = new RelayCommand(o =>
+			closeCommand = new RelayCommand(o =>
 			{
 				var result = o as MessageBoxResult?;
+
 				if (result.HasValue)
 				{
-					this.messageBoxResult = result.Value;
+					_messageBoxResult = result.Value;
 
 					// sets the Window.DialogResult as well
 					if (result.Value == MessageBoxResult.OK || result.Value == MessageBoxResult.Yes)
 					{
-						this.DialogResult = true;
+						DialogResult = true;
 					}
 					else if (result.Value == MessageBoxResult.Cancel || result.Value == MessageBoxResult.No)
 					{
-						this.DialogResult = false;
+						DialogResult = false;
 					}
 					else
 					{
-						this.DialogResult = null;
+						DialogResult = null;
 					}
 				}
 				Close();
 			});
 
-			this.Buttons = new Button[] { this.CloseButton };
+			Buttons = new[] { CloseButton };
 
 			// set the default owner to the app main window (if possible)
 			if (Application.Current != null && Application.Current.MainWindow != this)
 			{
-				this.Owner = Application.Current.MainWindow;
+				Owner = Application.Current.MainWindow;
 			}
 		}
 
@@ -76,7 +77,7 @@
 			return new Button
 			{
 				Content = content,
-				Command = this.CloseCommand,
+				Command = CloseCommand,
 				CommandParameter = result,
 				IsDefault = isDefault,
 				IsCancel = isCancel,
@@ -91,7 +92,10 @@
 		/// </summary>
 		public ICommand CloseCommand
 		{
-			get { return this.closeCommand; }
+			get
+			{
+				return closeCommand;
+			}
 		}
 
 		/// <summary>
@@ -101,11 +105,12 @@
 		{
 			get
 			{
-				if (this.okButton == null)
+				if (_okButton == null)
 				{
-					this.okButton = CreateCloseDialogButton(WPF.Resources.Ok, true, false, MessageBoxResult.OK);
+					_okButton = CreateCloseDialogButton(WPF.Resources.Ok, true, false, MessageBoxResult.OK);
 				}
-				return this.okButton;
+
+				return _okButton;
 			}
 		}
 
@@ -116,11 +121,12 @@
 		{
 			get
 			{
-				if (this.cancelButton == null)
+				if (_cancelButton == null)
 				{
-					this.cancelButton = CreateCloseDialogButton(WPF.Resources.Cancel, false, true, MessageBoxResult.Cancel);
+					_cancelButton = CreateCloseDialogButton(WPF.Resources.Cancel, false, true, MessageBoxResult.Cancel);
 				}
-				return this.cancelButton;
+
+				return _cancelButton;
 			}
 		}
 
@@ -131,11 +137,12 @@
 		{
 			get
 			{
-				if (this.yesButton == null)
+				if (_yesButton == null)
 				{
-					this.yesButton = CreateCloseDialogButton(WPF.Resources.Yes, true, false, MessageBoxResult.Yes);
+					_yesButton = CreateCloseDialogButton(WPF.Resources.Yes, true, false, MessageBoxResult.Yes);
 				}
-				return this.yesButton;
+
+				return _yesButton;
 			}
 		}
 
@@ -146,11 +153,12 @@
 		{
 			get
 			{
-				if (this.noButton == null)
+				if (_noButton == null)
 				{
-					this.noButton = CreateCloseDialogButton(WPF.Resources.No, false, true, MessageBoxResult.No);
+					_noButton = CreateCloseDialogButton(WPF.Resources.No, false, true, MessageBoxResult.No);
 				}
-				return this.noButton;
+
+				return _noButton;
 			}
 		}
 
@@ -161,11 +169,11 @@
 		{
 			get
 			{
-				if (this.closeButton == null)
+				if (this._closeButton == null)
 				{
-					this.closeButton = CreateCloseDialogButton(WPF.Resources.Close, true, false, MessageBoxResult.None);
+					this._closeButton = CreateCloseDialogButton(WPF.Resources.Close, true, false, MessageBoxResult.None);
 				}
-				return this.closeButton;
+				return this._closeButton;
 			}
 		}
 
@@ -174,8 +182,15 @@
 		/// </summary>
 		public object BackgroundContent
 		{
-			get { return GetValue(BackgroundContentProperty); }
-			set { SetValue(BackgroundContentProperty, value); }
+			get
+			{
+				return GetValue(BackgroundContentProperty);
+			}
+
+			set
+			{
+				SetValue(BackgroundContentProperty, value);
+			}
 		}
 
 		/// <summary>
@@ -183,8 +198,15 @@
 		/// </summary>
 		public IEnumerable<Button> Buttons
 		{
-			get { return (IEnumerable<Button>)GetValue(ButtonsProperty); }
-			set { SetValue(ButtonsProperty, value); }
+			get
+			{
+				return (IEnumerable<Button>)GetValue(ButtonsProperty);
+			}
+
+			set
+			{
+				SetValue(ButtonsProperty, value);
+			}
 		}
 
 		/// <summary>
@@ -195,7 +217,10 @@
 		/// </value>
 		public MessageBoxResult MessageBoxResult
 		{
-			get { return this.messageBoxResult; }
+			get
+			{
+				return _messageBoxResult;
+			}
 		}
 
 		/// <summary>
@@ -208,7 +233,7 @@
 		/// <returns></returns>
 		public static MessageBoxResult ShowMessage(string text, string title, MessageBoxButton button, Window owner = null)
 		{
-			var dlg = new ModernDialog
+			var dialog = new ModernDialog
 			{
 				Title = title,
 				Content = new BBCodeBlock { BBCode = text, Margin = new Thickness(0, 0, 0, 8) },
@@ -217,14 +242,16 @@
 				MaxHeight = 480,
 				MaxWidth = 640,
 			};
+
 			if (owner != null)
 			{
-				dlg.Owner = owner;
+				dialog.Owner = owner;
 			}
 
-			dlg.Buttons = GetButtons(dlg, button);
-			dlg.ShowDialog();
-			return dlg.messageBoxResult;
+			dialog.Buttons = GetButtons(dialog, button);
+			dialog.ShowDialog();
+
+			return dialog._messageBoxResult;
 		}
 
 		private static IEnumerable<Button> GetButtons(ModernDialog owner, MessageBoxButton button)

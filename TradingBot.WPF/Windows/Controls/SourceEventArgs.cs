@@ -6,8 +6,7 @@ namespace TradingBot.WPF.Windows.Controls
 	/// <summary>
 	/// Provides data for events related to uri sources.
 	/// </summary>
-	public class SourceEventArgs
-		: EventArgs
+	public class SourceEventArgs : EventArgs
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SourceEventArgs"/> class.
@@ -15,12 +14,12 @@ namespace TradingBot.WPF.Windows.Controls
 		/// <param name="source"></param>
 		public SourceEventArgs(Uri source)
 		{
-			this.Source = source;
+			Source = source;
 		}
 
 		/// <summary>
 		/// Gets the source uri.
 		/// </summary>
-		public Uri Source { get; private set; }
+		public Uri Source { get; }
 	}
 }

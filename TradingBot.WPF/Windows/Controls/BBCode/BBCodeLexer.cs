@@ -1,31 +1,37 @@
 ﻿
 namespace TradingBot.WPF.Windows.Controls.BBCode
 {
+	using System;
+
 	/// <summary>
 	/// The BBCode lexer.
 	/// </summary>
 	internal class BBCodeLexer : Lexer
 	{
-		private static readonly char[] QuoteChars = new char[] { '\'', '"' };
-		private static readonly char[] WhitespaceChars = new char[] { ' ', '\t' };
-		private static readonly char[] NewlineChars = new char[] { '\r', '\n' };
+		private static readonly char[] QuoteChars = { '\'', '"' };
+		private static readonly char[] WhitespaceChars = { ' ', '\t' };
+		private static readonly char[] NewlineChars = { '\r', '\n' };
 
 		/// <summary>
 		/// Start tag
 		/// </summary>
 		public const int TokenStartTag = 0;
+
 		/// <summary>
 		/// End tag
 		/// </summary>
 		public const int TokenEndTag = 1;
+
 		/// <summary>
 		/// Attribute
 		/// </summary>
 		public const int TokenAttribute = 2;
+
 		/// <summary>
 		/// Text
 		/// </summary>
 		public const int TokenText = 3;
+
 		/// <summary>
 		/// Line break
 		/// </summary>
@@ -35,6 +41,7 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		/// Normal state
 		/// </summary>
 		public const int StateNormal = 0;
+
 		/// <summary>
 		/// Tag state
 		/// </summary>
@@ -44,20 +51,19 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		/// Initializes a new instance of the <see cref="T:BBCodeLexer"/> class.
 		/// </summary>
 		/// <param name="value">The value.</param>
-		public BBCodeLexer(string value)
-			: base(value)
-		{
-		}
+		public BBCodeLexer(string value) : base(value)
+		{ }
 
 		private bool IsTagNameChar()
 		{
-			return IsInRange('A', 'Z') || IsInRange('a', 'z') || IsInRange(new char[] { '*' });
+			return IsInRange('A', 'Z') || IsInRange('a', 'z') || IsInRange(new[] { '*' });
 		}
 
 		private Token OpenTag()
 		{
 			Match('[');
 			Mark();
+
 			while (IsTagNameChar())
 			{
 				Consume();
@@ -72,11 +78,13 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 			Match('/');
 
 			Mark();
+
 			while (IsTagNameChar())
 			{
 				Consume();
 			}
-			Token token = new Token(GetMark(), TokenEndTag);
+
+			var token = new Token(GetMark(), TokenEndTag);
 			Match(']');
 
 			return token;
@@ -87,22 +95,25 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 			Match('\r', 0, 1);
 			Match('\n');
 
-			return new Token(string.Empty, TokenLineBreak);
+			return new Token(String.Empty, TokenLineBreak);
 		}
 
 		private Token Text()
 		{
 			Mark();
+
 			while (LA(1) != '[' && LA(1) != char.MaxValue && !IsInRange(NewlineChars))
 			{
 				Consume();
 			}
+
 			return new Token(GetMark(), TokenText);
 		}
 
 		private Token Attribute()
 		{
 			Match('=');
+
 			while (IsInRange(WhitespaceChars))
 			{
 				Consume();
@@ -114,16 +125,19 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 			{
 				Consume();
 				Mark();
+
 				while (!IsInRange(QuoteChars))
 				{
 					Consume();
 				}
+
 				token = new Token(GetMark(), TokenAttribute);
 				Consume();
 			}
 			else
 			{
 				Mark();
+
 				while (!IsInRange(WhitespaceChars) && LA(1) != ']' && LA(1) != char.MaxValue)
 				{
 					Consume();
@@ -136,6 +150,7 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 			{
 				Consume();
 			}
+
 			return token;
 		}
 
@@ -145,7 +160,10 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		/// <value>The state of the default.</value>
 		protected override int DefaultState
 		{
-			get { return StateNormal; }
+			get
+			{
+				return StateNormal;
+			}
 		}
 
 		/// <summary>
@@ -167,23 +185,22 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 					{
 						return CloseTag();
 					}
-					else
-					{
-						Token token = OpenTag();
-						PushState(StateTag);
-						return token;
-					}
+
+					Token token = OpenTag();
+					PushState(StateTag);
+
+					return token;
 				}
-				else if (IsInRange(NewlineChars))
+
+				if (IsInRange(NewlineChars))
 				{
 					return Newline();
 				}
-				else
-				{
-					return Text();
-				}
+
+				return Text();
 			}
-			else if (State == StateTag)
+
+			if (State == StateTag)
 			{
 				if (LA(1) == ']')
 				{
@@ -194,10 +211,8 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 
 				return Attribute();
 			}
-			else
-			{
-				throw new ParseException("Invalid state");
-			}
+
+			throw new ParseException("Invalid state");
 		}
 	}
 }

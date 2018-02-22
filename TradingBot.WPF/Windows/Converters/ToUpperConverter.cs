@@ -27,6 +27,7 @@ namespace TradingBot.WPF.Windows.Converters
 
 				return strValue.ToUpperInvariant();
 			}
+
 			return null;
 		}
 

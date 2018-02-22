@@ -8,7 +8,7 @@ namespace TradingBot.WPF.Presentation
 	/// </summary>
 	public class Link : Displayable
 	{
-		private Uri source;
+		private Uri _source;
 
 		/// <summary>
 		/// Gets or sets the source uri.
@@ -16,12 +16,16 @@ namespace TradingBot.WPF.Presentation
 		/// <value>The source.</value>
 		public Uri Source
 		{
-			get { return this.source; }
+			get
+			{
+				return _source;
+			}
+
 			set
 			{
-				if (this.source != value)
+				if (_source != value)
 				{
-					this.source = value;
+					_source = value;
 					OnPropertyChanged("Source");
 				}
 			}

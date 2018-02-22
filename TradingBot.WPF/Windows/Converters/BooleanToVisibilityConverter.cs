@@ -1,4 +1,5 @@
-﻿namespace TradingBot.WPF.Windows.Converters
+﻿
+namespace TradingBot.WPF.Windows.Converters
 {
 	using System;
 	using System.Globalization;
@@ -37,12 +38,10 @@
 
 			if (inverse)
 			{
-				return (flag ? Visibility.Collapsed : Visibility.Visible);
+				return flag ? Visibility.Collapsed : Visibility.Visible;
 			}
-			else
-			{
-				return (flag ? Visibility.Visible : Visibility.Collapsed);
-			}
+
+			return flag ? Visibility.Visible : Visibility.Collapsed;
 		}
 
 		/// <summary>

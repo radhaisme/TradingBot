@@ -1,10 +1,11 @@
-﻿namespace TradingBot.WPF.Windows.Navigation
+﻿
+namespace TradingBot.WPF.Windows.Navigation
 {
+	using Controls;
 	using Media;
 	using System;
 	using System.Linq;
 	using System.Windows;
-	using Controls;
 
 	/// <summary>
 	/// Provides helper function for navigation.
@@ -34,7 +35,7 @@
 		{
 			if (context == null)
 			{
-				throw new ArgumentNullException("context");
+				throw new ArgumentNullException(nameof(context));
 			}
 
 			// collect all ancestor frames
@@ -45,11 +46,13 @@
 				// find first ancestor frame
 				return frames.FirstOrDefault();
 			}
+
 			if (name == FrameParent)
 			{
 				// find parent frame
 				return frames.Skip(1).FirstOrDefault();
 			}
+
 			if (name == FrameTop)
 			{
 				// find top-most frame
@@ -67,10 +70,12 @@
 				if (frame == null)
 				{
 					// find frame in scope of ancestor frame content
-					var parent = frames.FirstOrDefault();
+					ModernFrame parent = frames.FirstOrDefault();
+
 					if (parent != null && parent.Content != null)
 					{
 						var content = parent.Content as FrameworkElement;
+
 						if (content != null)
 						{
 							frame = content.FindName(name) as ModernFrame;
@@ -90,6 +95,7 @@
 		public static Uri RemoveFragment(Uri uri)
 		{
 			string fragment;
+
 			return RemoveFragment(uri, out fragment);
 		}
 
@@ -108,6 +114,7 @@
 				var value = uri.OriginalString;
 
 				var i = value.IndexOf('#');
+
 				if (i != -1)
 				{
 					fragment = value.Substring(i + 1);
@@ -126,14 +133,17 @@
 		public static Uri ToUri(object value)
 		{
 			var uri = value as Uri;
+
 			if (uri == null)
 			{
 				var uriString = value as string;
+
 				if (uriString == null || !Uri.TryCreate(uriString, UriKind.RelativeOrAbsolute, out uri))
 				{
 					return null; // no valid uri found
 				}
 			}
+
 			return uri;
 		}
 
@@ -154,6 +164,7 @@
 			if (uri == null)
 			{
 				var valueString = value as string;
+
 				return TryParseUriWithParameters(valueString, out uri, out parameter, out targetName);
 			}
 
@@ -182,6 +193,7 @@
 			// parse uri value for optional parameter and/or target, eg 'cmd://foo|parameter|target'
 			string uriString = value;
 			var parts = uriString.Split(new char[] { '|' }, 3);
+
 			if (parts.Length == 3)
 			{
 				uriString = parts[0];

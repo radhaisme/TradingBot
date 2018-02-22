@@ -1,11 +1,12 @@
-﻿namespace TradingBot.WPF.Windows.Controls
+﻿
+namespace TradingBot.WPF.Windows.Controls
 {
+	using Presentation;
 	using System;
 	using System.Linq;
 	using System.Windows;
 	using System.Windows.Controls;
 	using Windows;
-	using Presentation;
 
 	/// <summary>
 	/// Represents a control that contains multiple pages that share the same space on screen.
@@ -16,18 +17,22 @@
 		/// Identifies the ContentLoader dependency property.
 		/// </summary>
 		public static readonly DependencyProperty ContentLoaderProperty = DependencyProperty.Register("ContentLoader", typeof(IContentLoader), typeof(ModernTab), new PropertyMetadata(new DefaultContentLoader()));
+
 		/// <summary>
 		/// Identifies the Layout dependency property.
 		/// </summary>
 		public static readonly DependencyProperty LayoutProperty = DependencyProperty.Register("Layout", typeof(TabLayout), typeof(ModernTab), new PropertyMetadata(TabLayout.Tab));
+
 		/// <summary>
 		/// Identifies the ListWidth dependency property.
 		/// </summary>
 		public static readonly DependencyProperty ListWidthProperty = DependencyProperty.Register("ListWidth", typeof(GridLength), typeof(ModernTab), new PropertyMetadata(new GridLength(170)));
+
 		/// <summary>
 		/// Identifies the Links dependency property.
 		/// </summary>
 		public static readonly DependencyProperty LinksProperty = DependencyProperty.Register("Links", typeof(LinkCollection), typeof(ModernTab), new PropertyMetadata(OnLinksChanged));
+
 		/// <summary>
 		/// Identifies the SelectedSource dependency property.
 		/// </summary>
@@ -45,8 +50,7 @@
 		/// </summary>
 		public ModernTab()
 		{
-			this.DefaultStyleKey = typeof(ModernTab);
-
+			DefaultStyleKey = typeof(ModernTab);
 			// create a default links collection
 			SetCurrentValue(LinksProperty, new LinkCollection());
 		}
@@ -65,23 +69,21 @@
 		{
 			UpdateSelection();
 
-			// raise SelectedSourceChanged event
-			var handler = this.SelectedSourceChanged;
-			if (handler != null)
+			if (SelectedSourceChanged != null)
 			{
-				handler(this, new SourceEventArgs(newValue));
+				SelectedSourceChanged(this, new SourceEventArgs(newValue));
 			}
 		}
 
 		private void UpdateSelection()
 		{
-			if (this.linkList == null || this.Links == null)
+			if (linkList == null || Links == null)
 			{
 				return;
 			}
 
 			// sync list selection with current source
-			this.linkList.SelectedItem = this.Links.FirstOrDefault(l => l.Source == this.SelectedSource);
+			linkList.SelectedItem = Links.FirstOrDefault(l => l.Source == SelectedSource);
 		}
 
 		/// <summary>
@@ -91,15 +93,16 @@
 		{
 			base.OnApplyTemplate();
 
-			if (this.linkList != null)
+			if (linkList != null)
 			{
-				this.linkList.SelectionChanged -= OnLinkListSelectionChanged;
+				linkList.SelectionChanged -= OnLinkListSelectionChanged;
 			}
 
-			this.linkList = GetTemplateChild("LinkList") as ListBox;
-			if (this.linkList != null)
+			linkList = GetTemplateChild("LinkList") as ListBox;
+
+			if (linkList != null)
 			{
-				this.linkList.SelectionChanged += OnLinkListSelectionChanged;
+				linkList.SelectionChanged += OnLinkListSelectionChanged;
 			}
 
 			UpdateSelection();
@@ -107,7 +110,8 @@
 
 		private void OnLinkListSelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			var link = this.linkList.SelectedItem as Link;
+			var link = linkList.SelectedItem as Link;
+
 			if (link != null && link.Source != this.SelectedSource)
 			{
 				SetCurrentValue(SelectedSourceProperty, link.Source);
@@ -119,8 +123,15 @@
 		/// </summary>
 		public IContentLoader ContentLoader
 		{
-			get { return (IContentLoader)GetValue(ContentLoaderProperty); }
-			set { SetValue(ContentLoaderProperty, value); }
+			get
+			{
+				return (IContentLoader)GetValue(ContentLoaderProperty);
+			}
+
+			set
+			{
+				SetValue(ContentLoaderProperty, value);
+			}
 		}
 
 		/// <summary>
@@ -128,8 +139,15 @@
 		/// </summary>
 		public TabLayout Layout
 		{
-			get { return (TabLayout)GetValue(LayoutProperty); }
-			set { SetValue(LayoutProperty, value); }
+			get
+			{
+				return (TabLayout)GetValue(LayoutProperty);
+			}
+
+			set
+			{
+				SetValue(LayoutProperty, value);
+			}
 		}
 
 		/// <summary>
@@ -137,8 +155,15 @@
 		/// </summary>
 		public LinkCollection Links
 		{
-			get { return (LinkCollection)GetValue(LinksProperty); }
-			set { SetValue(LinksProperty, value); }
+			get
+			{
+				return (LinkCollection)GetValue(LinksProperty);
+			}
+
+			set
+			{
+				SetValue(LinksProperty, value);
+			}
 		}
 
 		/// <summary>
@@ -149,8 +174,15 @@
 		/// </value>
 		public GridLength ListWidth
 		{
-			get { return (GridLength)GetValue(ListWidthProperty); }
-			set { SetValue(ListWidthProperty, value); }
+			get
+			{
+				return (GridLength)GetValue(ListWidthProperty);
+			}
+
+			set
+			{
+				SetValue(ListWidthProperty, value);
+			}
 		}
 
 		/// <summary>
@@ -159,8 +191,15 @@
 		/// <value>The source URI of the selected link.</value>
 		public Uri SelectedSource
 		{
-			get { return (Uri)GetValue(SelectedSourceProperty); }
-			set { SetValue(SelectedSourceProperty, value); }
+			get
+			{
+				return (Uri)GetValue(SelectedSourceProperty);
+			}
+
+			set
+			{
+				SetValue(SelectedSourceProperty, value);
+			}
 		}
 	}
 }

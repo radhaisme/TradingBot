@@ -25,13 +25,12 @@ namespace TradingBot.WPF.Windows.Controls
 		/// </summary>
 		public ModernProgressRing()
 		{
-			this.DefaultStyleKey = typeof(ModernProgressRing);
+			DefaultStyleKey = typeof(ModernProgressRing);
 		}
 
 		private void GotoCurrentState(bool animate)
 		{
-			var state = this.IsActive ? StateActive : StateInactive;
-
+			string state = IsActive ? StateActive : StateInactive;
 			VisualStateManager.GoToState(this, state, animate);
 		}
 
@@ -41,7 +40,6 @@ namespace TradingBot.WPF.Windows.Controls
 		public override void OnApplyTemplate()
 		{
 			base.OnApplyTemplate();
-
 			GotoCurrentState(false);
 		}
 
@@ -55,8 +53,15 @@ namespace TradingBot.WPF.Windows.Controls
 		/// </summary>
 		public bool IsActive
 		{
-			get { return (bool)GetValue(IsActiveProperty); }
-			set { SetValue(IsActiveProperty, value); }
+			get
+			{
+				return (bool)GetValue(IsActiveProperty);
+			}
+
+			set
+			{
+				SetValue(IsActiveProperty, value);
+			}
 		}
 	}
 }

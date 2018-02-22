@@ -1,4 +1,5 @@
-﻿namespace TradingBot.WPF.Windows
+﻿
+namespace TradingBot.WPF.Windows
 {
 	using System;
 	using System.Threading;
@@ -25,6 +26,7 @@
 
 			// scheduler ensures LoadContent is executed on the current UI thread
 			var scheduler = TaskScheduler.FromCurrentSynchronizationContext();
+
 			return Task.Factory.StartNew(() => LoadContent(uri), cancellationToken, TaskCreationOptions.None, scheduler);
 		}
 
@@ -40,6 +42,7 @@
 			{
 				return null;
 			}
+
 			return Application.LoadComponent(uri);
 		}
 	}

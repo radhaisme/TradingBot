@@ -7,8 +7,7 @@ namespace TradingBot.WPF.Presentation
 	/// <summary>
 	/// The base implementation of the INotifyPropertyChanged contract.
 	/// </summary>
-	public abstract class NotifyPropertyChanged
-		: INotifyPropertyChanged
+	public abstract class NotifyPropertyChanged : INotifyPropertyChanged
 	{
 		/// <summary>
 		/// Occurs when a property value changes.
@@ -21,14 +20,12 @@ namespace TradingBot.WPF.Presentation
 		/// <param name="propertyName">Name of the property.</param>
 		protected virtual void OnPropertyChanged(string propertyName)
 		{
-			var handler = this.PropertyChanged;
-			if (handler != null)
+			if (PropertyChanged != null)
 			{
-				handler(this, new PropertyChangedEventArgs(propertyName));
+				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
 
-#if !NET4
 		/// <summary>
 		/// Updates specified value, and raises the <see cref="PropertyChanged"/> event when the value has changed.
 		/// </summary>
@@ -39,14 +36,15 @@ namespace TradingBot.WPF.Presentation
 		/// <returns>Indicates whether the value has changed.</returns>
 		protected bool Set<T>(ref T storage, T value, [CallerMemberName]string propertyName = null)
 		{
-			if (!object.Equals(storage, value))
+			if (!Equals(storage, value))
 			{
 				storage = value;
 				OnPropertyChanged(propertyName);
+
 				return true;
 			}
+
 			return false;
 		}
-#endif
 	}
 }

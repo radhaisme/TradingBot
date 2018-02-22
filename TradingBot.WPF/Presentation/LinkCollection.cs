@@ -14,8 +14,7 @@ namespace TradingBot.WPF.Presentation
 		/// Initializes a new instance of the <see cref="LinkCollection"/> class.
 		/// </summary>
 		public LinkCollection()
-		{
-		}
+		{ }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="LinkCollection"/> class that contains specified links.
@@ -25,8 +24,9 @@ namespace TradingBot.WPF.Presentation
 		{
 			if (links == null)
 			{
-				throw new ArgumentNullException("links");
+				throw new ArgumentNullException(nameof(links));
 			}
+
 			foreach (var link in links)
 			{
 				Add(link);

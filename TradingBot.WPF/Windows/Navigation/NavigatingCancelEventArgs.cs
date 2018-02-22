@@ -1,4 +1,5 @@
-﻿namespace TradingBot.WPF.Windows.Navigation
+﻿
+namespace TradingBot.WPF.Windows.Navigation
 {
 	using Controls;
 

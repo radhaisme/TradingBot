@@ -1,7 +1,7 @@
 ﻿
 namespace TradingBot.WPF.Windows.Controls.BBCode
 {
-	using System.Diagnostics.CodeAnalysis;
+	using System;
 	using System.Globalization;
 
 	/// <summary>
@@ -12,11 +12,9 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		/// <summary>
 		/// Represents the token that marks the end of the input.
 		/// </summary>
-		[SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]     // token is immutable
 		public static readonly Token End = new Token(string.Empty, Lexer.TokenEnd);
-
-		private string value;
-		private int tokenType;
+		private readonly string _value;
+		private readonly int _tokenType;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:Token"/> class.
@@ -25,8 +23,8 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		/// <param name="tokenType">Type of the token.</param>
 		public Token(string value, int tokenType)
 		{
-			this.value = value;
-			this.tokenType = tokenType;
+			_value = value;
+			_tokenType = tokenType;
 		}
 
 		/// <summary>
@@ -35,7 +33,10 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		/// <value>The value.</value>
 		public string Value
 		{
-			get { return this.value; }
+			get
+			{
+				return _value;
+			}
 		}
 
 		/// <summary>
@@ -44,7 +45,10 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		/// <value>The type.</value>
 		public int TokenType
 		{
-			get { return this.tokenType; }
+			get
+			{
+				return _tokenType;
+			}
 		}
 
 		/// <summary>
@@ -55,7 +59,7 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		/// </returns>
 		public override string ToString()
 		{
-			return string.Format(CultureInfo.InvariantCulture, "{0}: {1}", this.tokenType, this.value);
+			return String.Format(CultureInfo.InvariantCulture, "{0}: {1}", _tokenType, _value);
 		}
 	}
 }

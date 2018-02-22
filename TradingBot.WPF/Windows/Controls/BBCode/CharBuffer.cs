@@ -9,9 +9,9 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 	/// </summary>
 	internal class CharBuffer
 	{
-		private string value;
-		private int position;
-		private int mark;
+		private readonly string _value;
+		private int _position;
+		private int _mark;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:CharBuffer"/> class.
@@ -21,9 +21,10 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		{
 			if (value == null)
 			{
-				throw new ArgumentNullException("value");
+				throw new ArgumentNullException(nameof(value));
 			}
-			this.value = value;
+
+			_value = value;
 		}
 
 		/// <summary>
@@ -33,10 +34,11 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		/// <returns></returns>
 		public char LA(int count)
 		{
-			int index = this.position + count - 1;
-			if (index < this.value.Length)
+			int index = _position + count - 1;
+
+			if (index < _value.Length)
 			{
-				return this.value[index];
+				return _value[index];
 			}
 
 			return char.MaxValue;
@@ -47,7 +49,7 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		/// </summary>
 		public void Mark()
 		{
-			this.mark = this.position;
+			_mark = _position;
 		}
 
 		/// <summary>
@@ -57,11 +59,12 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		[SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
 		public string GetMark()
 		{
-			if (this.mark < this.position)
+			if (_mark < _position)
 			{
-				return this.value.Substring(this.mark, this.position - this.mark);
+				return _value.Substring(_mark, _position - _mark);
 			}
-			return string.Empty;
+
+			return String.Empty;
 		}
 
 		/// <summary>
@@ -69,7 +72,7 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		/// </summary>
 		public void Consume()
 		{
-			this.position++;
+			_position++;
 		}
 	}
 }

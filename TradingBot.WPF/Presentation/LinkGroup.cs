@@ -8,9 +8,9 @@ namespace TradingBot.WPF.Presentation
 	/// </summary>
 	public class LinkGroup : Displayable
 	{
-		private string groupKey;
-		private Link selectedLink;
-		private LinkCollection links = new LinkCollection();
+		private string _groupKey;
+		private Link _selectedLink;
+		private readonly LinkCollection _links = new LinkCollection();
 
 		/// <summary>
 		/// Gets or sets the key of the group.
@@ -21,13 +21,17 @@ namespace TradingBot.WPF.Presentation
 		/// </remarks>
 		public string GroupKey
 		{
-			get { return this.groupKey; }
+			get
+			{
+				return _groupKey;
+			}
+
 			set
 			{
-				if (this.groupKey != value)
+				if (_groupKey != value)
 				{
-					this.groupKey = value;
-					OnPropertyChanged("GroupKey");
+					_groupKey = value;
+					OnPropertyChanged(nameof(GroupKey));
 				}
 			}
 		}
@@ -38,13 +42,17 @@ namespace TradingBot.WPF.Presentation
 		/// <value>The selected link.</value>
 		internal Link SelectedLink
 		{
-			get { return this.selectedLink; }
+			get
+			{
+				return _selectedLink;
+			}
+
 			set
 			{
-				if (this.selectedLink != value)
+				if (_selectedLink != value)
 				{
-					this.selectedLink = value;
-					OnPropertyChanged("SelectedLink");
+					_selectedLink = value;
+					OnPropertyChanged(nameof(SelectedLink));
 				}
 			}
 		}
@@ -55,7 +63,10 @@ namespace TradingBot.WPF.Presentation
 		/// <value>The links.</value>
 		public LinkCollection Links
 		{
-			get { return this.links; }
+			get
+			{
+				return _links;
+			}
 		}
 	}
 }

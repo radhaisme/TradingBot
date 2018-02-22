@@ -15,8 +15,8 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		/// </summary>
 		public const int TokenEnd = int.MaxValue;
 
-		private CharBuffer buffer;
-		private Stack<int> states;
+		private readonly CharBuffer _buffer;
+		private readonly Stack<int> _states;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:Lexer"/> class.
@@ -24,8 +24,8 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		/// <param name="value">The value.</param>
 		protected Lexer(string value)
 		{
-			this.buffer = new CharBuffer(value);
-			this.states = new Stack<int>();
+			_buffer = new CharBuffer(value);
+			_states = new Stack<int>();
 		}
 
 		private static void ValidateOccurence(int count, int minOccurs, int maxOccurs)
@@ -50,10 +50,11 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		{
 			get
 			{
-				if (this.states.Count > 0)
+				if (_states.Count > 0)
 				{
-					return this.states.Peek();
+					return _states.Peek();
 				}
+
 				return DefaultState;
 			}
 		}
@@ -64,7 +65,7 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		/// <param name="state">The state.</param>
 		protected void PushState(int state)
 		{
-			this.states.Push(state);
+			_states.Push(state);
 		}
 
 		/// <summary>
@@ -73,7 +74,7 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		/// <returns></returns>
 		protected int PopState()
 		{
-			return this.states.Pop();
+			return _states.Pop();
 		}
 
 		/// <summary>
@@ -83,7 +84,7 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		/// <returns></returns>
 		protected char LA(int count)
 		{
-			return this.buffer.LA(count);
+			return _buffer.LA(count);
 		}
 
 		/// <summary>
@@ -91,7 +92,7 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		/// </summary>
 		protected void Mark()
 		{
-			this.buffer.Mark();
+			_buffer.Mark();
 		}
 
 		/// <summary>
@@ -101,7 +102,7 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		[SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
 		protected string GetMark()
 		{
-			return this.buffer.GetMark();
+			return _buffer.GetMark();
 		}
 
 		/// <summary>
@@ -109,7 +110,7 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		/// </summary>
 		protected void Consume()
 		{
-			this.buffer.Consume();
+			_buffer.Consume();
 		}
 
 		/// <summary>
@@ -123,6 +124,7 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		protected bool IsInRange(char first, char last)
 		{
 			char la = LA(1);
+
 			return la >= first && la <= last;
 		}
 
@@ -139,7 +141,9 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 			{
 				return false;
 			}
+
 			char la = LA(1);
+
 			for (int i = 0; i < value.Length; i++)
 			{
 				if (la == value[i])
@@ -176,11 +180,13 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		protected void Match(char value, int minOccurs, int maxOccurs)
 		{
 			int i = 0;
+
 			while (LA(1) == value)
 			{
 				Consume();
 				i++;
 			}
+
 			ValidateOccurence(i, minOccurs, maxOccurs);
 		}
 
@@ -192,7 +198,7 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		{
 			if (value == null)
 			{
-				throw new ArgumentNullException("value");
+				throw new ArgumentNullException(nameof(value));
 			}
 			for (int i = 0; i < value.Length; i++)
 			{
@@ -232,11 +238,13 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		protected void MatchRange(char[] value, int minOccurs, int maxOccurs)
 		{
 			int i = 0;
+
 			while (IsInRange(value))
 			{
 				Consume();
 				i++;
 			}
+
 			ValidateOccurence(i, minOccurs, maxOccurs);
 		}
 
@@ -267,11 +275,13 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		protected void MatchRange(char first, char last, int minOccurs, int maxOccurs)
 		{
 			int i = 0;
+
 			while (IsInRange(first, last))
 			{
 				Consume();
 				i++;
 			}
+
 			ValidateOccurence(i, minOccurs, maxOccurs);
 		}
 

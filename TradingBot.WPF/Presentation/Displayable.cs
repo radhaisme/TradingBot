@@ -6,7 +6,7 @@ namespace TradingBot.WPF.Presentation
 	/// </summary>
 	public abstract class Displayable : NotifyPropertyChanged
 	{
-		private string displayName;
+		private string _displayName;
 
 		/// <summary>
 		/// Gets or sets the display name.
@@ -14,12 +14,16 @@ namespace TradingBot.WPF.Presentation
 		/// <value>The display name.</value>
 		public string DisplayName
 		{
-			get { return this.displayName; }
+			get
+			{
+				return _displayName;
+			}
+
 			set
 			{
-				if (this.displayName != value)
+				if (_displayName != value)
 				{
-					this.displayName = value;
+					_displayName = value;
 					OnPropertyChanged("DisplayName");
 				}
 			}

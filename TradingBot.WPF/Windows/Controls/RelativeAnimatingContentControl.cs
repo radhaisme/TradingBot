@@ -1,15 +1,4 @@
-﻿/* 
-    Copyright (c) 2011 Microsoft Corporation.  All rights reserved.
-    Use of this sample source code is subject to the terms of the Microsoft license 
-    agreement under which you licensed this sample source code and is provided AS-IS.
-    If you did not accept the terms of the license agreement, you are not authorized 
-    to use this sample source code.  For the terms of the license, please see the 
-    license agreement between you and Microsoft.
-  
-    To see all Code Samples for Windows Phone, visit http://go.microsoft.com/fwlink/?LinkID=219604 
-  
-*/
-
+﻿
 namespace TradingBot.WPF.Windows.Controls
 {
 	using System;
@@ -67,7 +56,6 @@ namespace TradingBot.WPF.Windows.Controls
 			{
 				_knownWidth = e.NewSize.Width;
 				_knownHeight = e.NewSize.Height;
-
 				UpdateAnyAnimationValues();
 			}
 		}
@@ -268,7 +256,7 @@ namespace TradingBot.WPF.Windows.Controls
 			/// <summary>
 			/// Stores the animation instance.
 			/// </summary>
-			protected T Instance { get; set; }
+			protected T Instance { get; }
 
 			/// <summary>
 			/// Gets the value of the underlying property of interest.
@@ -286,7 +274,7 @@ namespace TradingBot.WPF.Windows.Controls
 			/// Gets the initial value (minus the identifying value portion) that the
 			/// designer stored within the visual state animation property.
 			/// </summary>
-			protected double InitialValue { get; private set; }
+			protected double InitialValue { get; }
 
 			/// <summary>
 			/// The ratio based on the original identifying value, used for computing
@@ -337,10 +325,12 @@ namespace TradingBot.WPF.Windows.Controls
 				{
 					return DoubleAnimationDimension.Width;
 				}
+
 				if (remainder >= .2 - SimpleDoubleComparisonEpsilon && remainder <= .2 + SimpleDoubleComparisonEpsilon)
 				{
 					return DoubleAnimationDimension.Height;
 				}
+
 				return null;
 			}
 
@@ -395,10 +385,8 @@ namespace TradingBot.WPF.Windows.Controls
 			/// </summary>
 			/// <param name="dimension">The dimension of interest.</param>
 			/// <param name="instance">The instance of the animation type.</param>
-			public DoubleAnimationToAdapter(DoubleAnimationDimension dimension, DoubleAnimation instance)
-				: base(dimension, instance)
-			{
-			}
+			public DoubleAnimationToAdapter(DoubleAnimationDimension dimension, DoubleAnimation instance) : base(dimension, instance)
+			{ }
 		}
 
 		/// <summary>
@@ -430,10 +418,8 @@ namespace TradingBot.WPF.Windows.Controls
 			/// </summary>
 			/// <param name="dimension">The dimension of interest.</param>
 			/// <param name="instance">The instance of the animation type.</param>
-			public DoubleAnimationFromAdapter(DoubleAnimationDimension dimension, DoubleAnimation instance)
-				: base(dimension, instance)
-			{
-			}
+			public DoubleAnimationFromAdapter(DoubleAnimationDimension dimension, DoubleAnimation instance) : base(dimension, instance)
+			{ }
 		}
 
 		/// <summary>
@@ -465,10 +451,8 @@ namespace TradingBot.WPF.Windows.Controls
 			/// </summary>
 			/// <param name="dimension">The dimension of interest.</param>
 			/// <param name="frame">The instance of the animation type.</param>
-			public DoubleAnimationFrameAdapter(DoubleAnimationDimension dimension, DoubleKeyFrame frame)
-				: base(dimension, frame)
-			{
-			}
+			public DoubleAnimationFrameAdapter(DoubleAnimationDimension dimension, DoubleKeyFrame frame) : base(dimension, frame)
+			{ }
 		}
 		#endregion
 	}

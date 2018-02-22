@@ -8,6 +8,5 @@
 	/// Represents a collection of commands keyed by a uri.
 	/// </summary>
 	public class CommandDictionary : Dictionary<Uri, ICommand>
-	{
-	}
+	{ }
 }

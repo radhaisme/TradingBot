@@ -23,12 +23,13 @@ namespace TradingBot.WPF.Windows.Converters
 		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
 			bool inverse = (parameter as string) == "inverse";
-
 			var bold = value as bool?;
+
 			if (bold.HasValue && bold.Value)
 			{
 				return inverse ? FontWeights.Normal : FontWeights.Bold;
 			}
+
 			return inverse ? FontWeights.Bold : FontWeights.Normal;
 		}
 

@@ -21,56 +21,60 @@ namespace TradingBot.WPF.Windows.Controls
 		/// Identifies the BackgroundContent dependency property.
 		/// </summary>
 		public static readonly DependencyProperty BackgroundContentProperty = DependencyProperty.Register("BackgroundContent", typeof(object), typeof(ModernWindow));
+
 		/// <summary>
 		/// Identifies the MenuLinkGroups dependency property.
 		/// </summary>
 		public static readonly DependencyProperty MenuLinkGroupsProperty = DependencyProperty.Register("MenuLinkGroups", typeof(LinkGroupCollection), typeof(ModernWindow));
+
 		/// <summary>
 		/// Identifies the TitleLinks dependency property.
 		/// </summary>
 		public static readonly DependencyProperty TitleLinksProperty = DependencyProperty.Register("TitleLinks", typeof(LinkCollection), typeof(ModernWindow));
+
 		/// <summary>
 		/// Identifies the IsTitleVisible dependency property.
 		/// </summary>
 		public static readonly DependencyProperty IsTitleVisibleProperty = DependencyProperty.Register("IsTitleVisible", typeof(bool), typeof(ModernWindow), new PropertyMetadata(false));
+
 		/// <summary>
 		/// Identifies the LogoData dependency property.
 		/// </summary>
 		public static readonly DependencyProperty LogoDataProperty = DependencyProperty.Register("LogoData", typeof(Geometry), typeof(ModernWindow));
+
 		/// <summary>
 		/// Defines the ContentSource dependency property.
 		/// </summary>
 		public static readonly DependencyProperty ContentSourceProperty = DependencyProperty.Register("ContentSource", typeof(Uri), typeof(ModernWindow));
+
 		/// <summary>
 		/// Identifies the ContentLoader dependency property.
 		/// </summary>
 		public static readonly DependencyProperty ContentLoaderProperty = DependencyProperty.Register("ContentLoader", typeof(IContentLoader), typeof(ModernWindow), new PropertyMetadata(new DefaultContentLoader()));
+
 		/// <summary>
 		/// Identifies the LinkNavigator dependency property.
 		/// </summary>
 		public static DependencyProperty LinkNavigatorProperty = DependencyProperty.Register("LinkNavigator", typeof(ILinkNavigator), typeof(ModernWindow), new PropertyMetadata(new DefaultLinkNavigator()));
 
-		private Storyboard backgroundAnimation;
+		private Storyboard _backgroundAnimation;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ModernWindow"/> class.
 		/// </summary>
 		public ModernWindow()
 		{
-			this.DefaultStyleKey = typeof(ModernWindow);
-
+			DefaultStyleKey = typeof(ModernWindow);
 			// create empty collections
 			SetCurrentValue(MenuLinkGroupsProperty, new LinkGroupCollection());
 			SetCurrentValue(TitleLinksProperty, new LinkCollection());
-
 			// associate window commands with this instance
-			this.CommandBindings.Add(new CommandBinding(SystemCommands.CloseWindowCommand, OnCloseWindow));
-			this.CommandBindings.Add(new CommandBinding(SystemCommands.MaximizeWindowCommand, OnMaximizeWindow, OnCanResizeWindow));
-			this.CommandBindings.Add(new CommandBinding(SystemCommands.MinimizeWindowCommand, OnMinimizeWindow, OnCanMinimizeWindow));
-			this.CommandBindings.Add(new CommandBinding(SystemCommands.RestoreWindowCommand, OnRestoreWindow, OnCanResizeWindow));
+			CommandBindings.Add(new CommandBinding(SystemCommands.CloseWindowCommand, OnCloseWindow));
+			CommandBindings.Add(new CommandBinding(SystemCommands.MaximizeWindowCommand, OnMaximizeWindow, OnCanResizeWindow));
+			CommandBindings.Add(new CommandBinding(SystemCommands.MinimizeWindowCommand, OnMinimizeWindow, OnCanMinimizeWindow));
+			CommandBindings.Add(new CommandBinding(SystemCommands.RestoreWindowCommand, OnRestoreWindow, OnCanResizeWindow));
 			// associate navigate link command with this instance
-			this.CommandBindings.Add(new CommandBinding(LinkCommands.NavigateLink, OnNavigateLink, OnCanNavigateLink));
-
+			CommandBindings.Add(new CommandBinding(LinkCommands.NavigateLink, OnNavigateLink, OnCanNavigateLink));
 			// listen for theme changes
 			AppearanceManager.Current.PropertyChanged += OnAppearanceManagerPropertyChanged;
 		}
@@ -82,7 +86,6 @@ namespace TradingBot.WPF.Windows.Controls
 		protected override void OnClosed(EventArgs e)
 		{
 			base.OnClosed(e);
-
 			// detach event handler
 			AppearanceManager.Current.PropertyChanged -= OnAppearanceManagerPropertyChanged;
 		}
@@ -93,16 +96,16 @@ namespace TradingBot.WPF.Windows.Controls
 		public override void OnApplyTemplate()
 		{
 			base.OnApplyTemplate();
-
 			// retrieve BackgroundAnimation storyboard
 			var border = GetTemplateChild("WindowBorder") as Border;
+
 			if (border != null)
 			{
-				this.backgroundAnimation = border.Resources["BackgroundAnimation"] as Storyboard;
+				_backgroundAnimation = border.Resources["BackgroundAnimation"] as Storyboard;
 
-				if (this.backgroundAnimation != null)
+				if (_backgroundAnimation != null)
 				{
-					this.backgroundAnimation.Begin();
+					_backgroundAnimation.Begin();
 				}
 			}
 		}
@@ -110,9 +113,9 @@ namespace TradingBot.WPF.Windows.Controls
 		private void OnAppearanceManagerPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			// start background animation if theme has changed
-			if (e.PropertyName == "ThemeSource" && this.backgroundAnimation != null)
+			if (e.PropertyName == "ThemeSource" && _backgroundAnimation != null)
 			{
-				this.backgroundAnimation.Begin();
+				_backgroundAnimation.Begin();
 			}
 		}
 
@@ -121,7 +124,7 @@ namespace TradingBot.WPF.Windows.Controls
 			// true by default
 			e.CanExecute = true;
 
-			if (this.LinkNavigator != null && this.LinkNavigator.Commands != null)
+			if (LinkNavigator != null && LinkNavigator.Commands != null)
 			{
 				// in case of command uri, check if ICommand.CanExecute is true
 				Uri uri;
@@ -132,7 +135,7 @@ namespace TradingBot.WPF.Windows.Controls
 				if (NavigationHelper.TryParseUriWithParameters(e.Parameter, out uri, out parameter, out targetName))
 				{
 					ICommand command;
-					if (this.LinkNavigator.Commands.TryGetValue(uri, out command))
+					if (LinkNavigator.Commands.TryGetValue(uri, out command))
 					{
 						e.CanExecute = command.CanExecute(parameter);
 					}
@@ -142,7 +145,7 @@ namespace TradingBot.WPF.Windows.Controls
 
 		private void OnNavigateLink(object sender, ExecutedRoutedEventArgs e)
 		{
-			if (this.LinkNavigator != null)
+			if (LinkNavigator != null)
 			{
 				Uri uri;
 				string parameter;
@@ -150,55 +153,39 @@ namespace TradingBot.WPF.Windows.Controls
 
 				if (NavigationHelper.TryParseUriWithParameters(e.Parameter, out uri, out parameter, out targetName))
 				{
-					this.LinkNavigator.Navigate(uri, e.Source as FrameworkElement, parameter);
+					LinkNavigator.Navigate(uri, e.Source as FrameworkElement, parameter);
 				}
 			}
 		}
 
 		private void OnCanResizeWindow(object sender, CanExecuteRoutedEventArgs e)
 		{
-			e.CanExecute = this.ResizeMode == ResizeMode.CanResize || this.ResizeMode == ResizeMode.CanResizeWithGrip;
+			e.CanExecute = ResizeMode == ResizeMode.CanResize || ResizeMode == ResizeMode.CanResizeWithGrip;
 		}
 
 		private void OnCanMinimizeWindow(object sender, CanExecuteRoutedEventArgs e)
 		{
-			e.CanExecute = this.ResizeMode != ResizeMode.NoResize;
+			e.CanExecute = ResizeMode != ResizeMode.NoResize;
 		}
 
 		private void OnCloseWindow(object target, ExecutedRoutedEventArgs e)
 		{
-#if NET4
-            Microsoft.Windows.Shell.SystemCommands.CloseWindow(this);
-#else
 			SystemCommands.CloseWindow(this);
-#endif
 		}
 
 		private void OnMaximizeWindow(object target, ExecutedRoutedEventArgs e)
 		{
-#if NET4
-            Microsoft.Windows.Shell.SystemCommands.MaximizeWindow(this);
-#else
 			SystemCommands.MaximizeWindow(this);
-#endif
 		}
 
 		private void OnMinimizeWindow(object target, ExecutedRoutedEventArgs e)
 		{
-#if NET4
-            Microsoft.Windows.Shell.SystemCommands.MinimizeWindow(this);
-#else
 			SystemCommands.MinimizeWindow(this);
-#endif
 		}
 
 		private void OnRestoreWindow(object target, ExecutedRoutedEventArgs e)
 		{
-#if NET4
-            Microsoft.Windows.Shell.SystemCommands.RestoreWindow(this);
-#else
 			SystemCommands.RestoreWindow(this);
-#endif
 		}
 
 		/// <summary>
@@ -206,8 +193,15 @@ namespace TradingBot.WPF.Windows.Controls
 		/// </summary>
 		public object BackgroundContent
 		{
-			get { return GetValue(BackgroundContentProperty); }
-			set { SetValue(BackgroundContentProperty, value); }
+			get
+			{
+				return GetValue(BackgroundContentProperty);
+			}
+
+			set
+			{
+				SetValue(BackgroundContentProperty, value);
+			}
 		}
 
 		/// <summary>
@@ -215,8 +209,15 @@ namespace TradingBot.WPF.Windows.Controls
 		/// </summary>
 		public LinkGroupCollection MenuLinkGroups
 		{
-			get { return (LinkGroupCollection)GetValue(MenuLinkGroupsProperty); }
-			set { SetValue(MenuLinkGroupsProperty, value); }
+			get
+			{
+				return (LinkGroupCollection)GetValue(MenuLinkGroupsProperty);
+			}
+
+			set
+			{
+				SetValue(MenuLinkGroupsProperty, value);
+			}
 		}
 
 		/// <summary>
@@ -224,8 +225,15 @@ namespace TradingBot.WPF.Windows.Controls
 		/// </summary>
 		public LinkCollection TitleLinks
 		{
-			get { return (LinkCollection)GetValue(TitleLinksProperty); }
-			set { SetValue(TitleLinksProperty, value); }
+			get
+			{
+				return (LinkCollection)GetValue(TitleLinksProperty);
+			}
+
+			set
+			{
+				SetValue(TitleLinksProperty, value);
+			}
 		}
 
 		/// <summary>
@@ -233,8 +241,15 @@ namespace TradingBot.WPF.Windows.Controls
 		/// </summary>
 		public bool IsTitleVisible
 		{
-			get { return (bool)GetValue(IsTitleVisibleProperty); }
-			set { SetValue(IsTitleVisibleProperty, value); }
+			get
+			{
+				return (bool)GetValue(IsTitleVisibleProperty);
+			}
+
+			set
+			{
+				SetValue(IsTitleVisibleProperty, value);
+			}
 		}
 
 		/// <summary>
@@ -242,8 +257,15 @@ namespace TradingBot.WPF.Windows.Controls
 		/// </summary>
 		public Geometry LogoData
 		{
-			get { return (Geometry)GetValue(LogoDataProperty); }
-			set { SetValue(LogoDataProperty, value); }
+			get
+			{
+				return (Geometry)GetValue(LogoDataProperty);
+			}
+
+			set
+			{
+				SetValue(LogoDataProperty, value);
+			}
 		}
 
 		/// <summary>
@@ -251,8 +273,15 @@ namespace TradingBot.WPF.Windows.Controls
 		/// </summary>
 		public Uri ContentSource
 		{
-			get { return (Uri)GetValue(ContentSourceProperty); }
-			set { SetValue(ContentSourceProperty, value); }
+			get
+			{
+				return (Uri)GetValue(ContentSourceProperty);
+			}
+
+			set
+			{
+				SetValue(ContentSourceProperty, value);
+			}
 		}
 
 		/// <summary>
@@ -260,8 +289,15 @@ namespace TradingBot.WPF.Windows.Controls
 		/// </summary>
 		public IContentLoader ContentLoader
 		{
-			get { return (IContentLoader)GetValue(ContentLoaderProperty); }
-			set { SetValue(ContentLoaderProperty, value); }
+			get
+			{
+				return (IContentLoader)GetValue(ContentLoaderProperty);
+			}
+
+			set
+			{
+				SetValue(ContentLoaderProperty, value);
+			}
 		}
 
 		/// <summary>
@@ -270,8 +306,15 @@ namespace TradingBot.WPF.Windows.Controls
 		/// <value>The link navigator.</value>
 		public ILinkNavigator LinkNavigator
 		{
-			get { return (ILinkNavigator)GetValue(LinkNavigatorProperty); }
-			set { SetValue(LinkNavigatorProperty, value); }
+			get
+			{
+				return (ILinkNavigator)GetValue(LinkNavigatorProperty);
+			}
+
+			set
+			{
+				SetValue(LinkNavigatorProperty, value);
+			}
 		}
 	}
 }

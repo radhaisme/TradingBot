@@ -9,8 +9,8 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 	/// </summary>
 	internal class TokenBuffer
 	{
-		private List<Token> tokens = new List<Token>();
-		private int position;
+		private readonly List<Token> _tokens = new List<Token>();
+		private int _position;
 		//private int mark;
 
 		/// <summary>
@@ -21,14 +21,15 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		{
 			if (lexer == null)
 			{
-				throw new ArgumentNullException("lexer");
+				throw new ArgumentNullException(nameof(lexer));
 			}
 
 			Token token;
+
 			do
 			{
 				token = lexer.NextToken();
-				this.tokens.Add(token);
+				_tokens.Add(token);
 			}
 			while (token.TokenType != Lexer.TokenEnd);
 		}
@@ -40,46 +41,22 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		/// <returns></returns>
 		public Token LA(int count)
 		{
-			int index = this.position + count - 1;
-			if (index < this.tokens.Count)
+			int index = _position + count - 1;
+
+			if (index < _tokens.Count)
 			{
-				return this.tokens[index];
+				return _tokens[index];
 			}
 
 			return Token.End;
 		}
-
-		///// <summary>
-		///// Marks the current position.
-		///// </summary>
-		//public void Mark()
-		//{
-		//    this.mark = this.position;
-		//}
-
-		///// <summary>
-		///// Gets the mark.
-		///// </summary>
-		///// <returns></returns>
-		//public Token[] GetMark()
-		//{
-		//    if (this.mark < this.position) {
-		//        Token[] result = new Token[this.position - this.mark];
-		//        for (int i = this.mark; i < this.position; i++) {
-		//            result[i - this.mark] = this.tokens[i];
-		//        }
-
-		//        return result;
-		//    }
-		//    return new Token[0];
-		//}
 
 		/// <summary>
 		/// Consumes the next token.
 		/// </summary>
 		public void Consume()
 		{
-			this.position++;
+			_position++;
 		}
 	}
 }

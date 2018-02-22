@@ -1,14 +1,14 @@
 ﻿
 namespace TradingBot.WPF.Windows.Controls
 {
+	using BBCode;
+	using Navigation;
 	using System;
 	using System.Windows;
 	using System.Windows.Controls;
 	using System.Windows.Documents;
 	using System.Windows.Markup;
 	using System.Windows.Navigation;
-	using BBCode;
-	using Navigation;
 
 	/// <summary>
 	/// A lighweight control for displaying small amounts of rich formatted BBCode content.
@@ -19,13 +19,12 @@ namespace TradingBot.WPF.Windows.Controls
 		/// <summary>
 		/// Identifies the BBCode dependency property.
 		/// </summary>
-		public static DependencyProperty BBCodeProperty = DependencyProperty.Register("BBCode", typeof(string), typeof(BBCodeBlock), new PropertyMetadata(new PropertyChangedCallback(OnBBCodeChanged)));
+		public static DependencyProperty BBCodeProperty = DependencyProperty.Register("BBCode", typeof(string), typeof(BBCodeBlock), new PropertyMetadata(OnBBCodeChanged));
 		/// <summary>
 		/// Identifies the LinkNavigator dependency property.
 		/// </summary>
 		public static DependencyProperty LinkNavigatorProperty = DependencyProperty.Register("LinkNavigator", typeof(ILinkNavigator), typeof(BBCodeBlock), new PropertyMetadata(new DefaultLinkNavigator(), OnLinkNavigatorChanged));
-
-		private bool dirty = false;
+		private bool _dirty;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="BBCodeBlock"/> class.
@@ -33,8 +32,7 @@ namespace TradingBot.WPF.Windows.Controls
 		public BBCodeBlock()
 		{
 			// ensures the implicit BBCodeBlock style is used
-			this.DefaultStyleKey = typeof(BBCodeBlock);
-
+			DefaultStyleKey = typeof(BBCodeBlock);
 			AddHandler(Hyperlink.LoadedEvent, new RoutedEventHandler(OnLoaded));
 			AddHandler(Hyperlink.RequestNavigateEvent, new RequestNavigateEventHandler(OnRequestNavigate));
 		}
@@ -62,30 +60,31 @@ namespace TradingBot.WPF.Windows.Controls
 
 		private void UpdateDirty()
 		{
-			this.dirty = true;
+			_dirty = true;
 			Update();
 		}
 
 		private void Update()
 		{
-			if (!this.IsLoaded || !this.dirty)
+			if (!IsLoaded || !_dirty)
 			{
 				return;
 			}
 
-			var bbcode = this.BBCode;
-
-			this.Inlines.Clear();
+			var bbcode = BBCode;
+			Inlines.Clear();
 
 			if (!string.IsNullOrWhiteSpace(bbcode))
 			{
 				Inline inline;
+
 				try
 				{
 					var parser = new BBCodeParser(bbcode, this)
 					{
-						Commands = this.LinkNavigator.Commands
+						Commands = LinkNavigator.Commands
 					};
+
 					inline = parser.Parse();
 				}
 				catch (Exception)
@@ -93,9 +92,11 @@ namespace TradingBot.WPF.Windows.Controls
 					// parsing failed, display BBCode value as-is
 					inline = new Run { Text = bbcode };
 				}
-				this.Inlines.Add(inline);
+
+				Inlines.Add(inline);
 			}
-			this.dirty = false;
+
+			_dirty = false;
 		}
 
 		private void OnRequestNavigate(object sender, RequestNavigateEventArgs e)
@@ -103,7 +104,7 @@ namespace TradingBot.WPF.Windows.Controls
 			try
 			{
 				// perform navigation using the link navigator
-				this.LinkNavigator.Navigate(e.Uri, this, e.Target);
+				LinkNavigator.Navigate(e.Uri, this, e.Target);
 			}
 			catch (Exception error)
 			{
@@ -118,8 +119,15 @@ namespace TradingBot.WPF.Windows.Controls
 		/// <value>The BB code.</value>
 		public string BBCode
 		{
-			get { return (string)GetValue(BBCodeProperty); }
-			set { SetValue(BBCodeProperty, value); }
+			get
+			{
+				return (string)GetValue(BBCodeProperty);
+			}
+
+			set
+			{
+				SetValue(BBCodeProperty, value);
+			}
 		}
 
 		/// <summary>
@@ -128,8 +136,15 @@ namespace TradingBot.WPF.Windows.Controls
 		/// <value>The link navigator.</value>
 		public ILinkNavigator LinkNavigator
 		{
-			get { return (ILinkNavigator)GetValue(LinkNavigatorProperty); }
-			set { SetValue(LinkNavigatorProperty, value); }
+			get
+			{
+				return (ILinkNavigator)GetValue(LinkNavigatorProperty);
+			}
+
+			set
+			{
+				SetValue(LinkNavigatorProperty, value);
+			}
 		}
 	}
 }

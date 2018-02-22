@@ -10,33 +10,39 @@ namespace TradingBot.WPF.Windows.Controls
 	{
 		internal DpiInformation(double wpfDpiX, double wpfDpiY)
 		{
-			this.WpfDpiX = wpfDpiX;
-			this.WpfDpiY = wpfDpiY;
-			this.ScaleX = 1;
-			this.ScaleY = 1;
+			WpfDpiX = wpfDpiX;
+			WpfDpiY = wpfDpiY;
+			ScaleX = 1;
+			ScaleY = 1;
 		}
+
 		/// <summary>
 		/// Gets the horizontal resolution of the WPF rendering DPI.
 		/// </summary>
-		public double WpfDpiX { get; private set; }
+		public double WpfDpiX { get; }
+		
 		/// <summary>
 		/// Gets the vertical resolution of the WPF rendering DPI.
 		/// </summary>
-		public double WpfDpiY { get; private set; }
+		public double WpfDpiY { get; }
+		
 		/// <summary>
 		/// Gets the horizontal resolution of the current monitor DPI.
 		/// </summary>
 		/// <remarks>Null when the process is not per monitor DPI aware.</remarks>
 		public double? MonitorDpiX { get; private set; }
+		
 		/// <summary>
 		/// Gets the vertical resolution of the current monitor DPI.
 		/// </summary>
 		/// <remarks>Null when the process is not per monitor DPI aware.</remarks>
 		public double? MonitorDpiY { get; private set; }
+		
 		/// <summary>
 		/// Gets the x-axis scale factor.
 		/// </summary>
 		public double ScaleX { get; private set; }
+		
 		/// <summary>
 		/// Gets the y-axis scale factor.
 		/// </summary>
@@ -45,14 +51,14 @@ namespace TradingBot.WPF.Windows.Controls
 		internal Vector UpdateMonitorDpi(double dpiX, double dpiY)
 		{
 			// calculate the vector of the current to new dpi
-			var oldDpiX = this.MonitorDpiX ?? this.WpfDpiX;
-			var oldDpiY = this.MonitorDpiY ?? this.WpfDpiY;
+			var oldDpiX = MonitorDpiX ?? WpfDpiX;
+			var oldDpiY = MonitorDpiY ?? WpfDpiY;
 
-			this.MonitorDpiX = dpiX;
-			this.MonitorDpiY = dpiY;
+			MonitorDpiX = dpiX;
+			MonitorDpiY = dpiY;
 
-			this.ScaleX = dpiX / this.WpfDpiX;
-			this.ScaleY = dpiY / this.WpfDpiY;
+			ScaleX = dpiX / WpfDpiX;
+			ScaleY = dpiY / WpfDpiY;
 
 			return new Vector(dpiX / oldDpiX, dpiY / oldDpiY);
 		}

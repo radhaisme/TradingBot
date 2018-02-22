@@ -26,9 +26,9 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		{
 			public ParseContext(Span parent)
 			{
-				this.Parent = parent;
+				Parent = parent;
 			}
-			public Span Parent { get; private set; }
+			public Span Parent { get; }
 			public double? FontSize { get; set; }
 			public FontWeight? FontWeight { get; set; }
 			public FontStyle? FontStyle { get; set; }
@@ -43,43 +43,48 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 			public Run CreateRun(string text)
 			{
 				var run = new Run { Text = text };
-				if (this.FontSize.HasValue)
+
+				if (FontSize.HasValue)
 				{
-					run.FontSize = this.FontSize.Value;
+					run.FontSize = FontSize.Value;
 				}
-				if (this.FontWeight.HasValue)
+
+				if (FontWeight.HasValue)
 				{
-					run.FontWeight = this.FontWeight.Value;
+					run.FontWeight = FontWeight.Value;
 				}
-				if (this.FontStyle.HasValue)
+
+				if (FontStyle.HasValue)
 				{
-					run.FontStyle = this.FontStyle.Value;
+					run.FontStyle = FontStyle.Value;
 				}
-				if (this.Foreground != null)
+
+				if (Foreground != null)
 				{
-					run.Foreground = this.Foreground;
+					run.Foreground = Foreground;
 				}
-				run.TextDecorations = this.TextDecorations;
+
+				run.TextDecorations = TextDecorations;
 
 				return run;
 			}
 		}
 
-		private FrameworkElement source;
+		private readonly FrameworkElement _source;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:BBCodeParser"/> class.
 		/// </summary>
 		/// <param name="value">The value.</param>
 		/// <param name="source">The framework source element this parser operates in.</param>
-		public BBCodeParser(string value, FrameworkElement source)
-			: base(new BBCodeLexer(value))
+		public BBCodeParser(string value, FrameworkElement source) : base(new BBCodeLexer(value))
 		{
 			if (source == null)
 			{
 				throw new ArgumentNullException("source");
 			}
-			this.source = source;
+
+			_source = source;
 		}
 
 		/// <summary>
@@ -106,7 +111,6 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 					{
 						var color = (Color)ColorConverter.ConvertFromString(token.Value);
 						context.Foreground = new SolidColorBrush(color);
-
 						Consume();
 					}
 				}
@@ -134,7 +138,6 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 					if (token.TokenType == BBCodeLexer.TokenAttribute)
 					{
 						context.FontSize = Convert.ToDouble(token.Value);
-
 						Consume();
 					}
 				}
@@ -186,8 +189,8 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 				{
 					var parent = span;
 					Uri uri;
-					string parameter = null;
-					string targetName = null;
+					string parameter;
+					string targetName;
 
 					// parse uri value for optional parameter and/or target, eg [url=cmd://foo|parameter|target]
 					if (NavigationHelper.TryParseUriWithParameters(context.NavigateUri, out uri, out parameter, out targetName))
@@ -196,13 +199,15 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 
 						// assign ICommand instance if available, otherwise set NavigateUri
 						ICommand command;
-						if (this.Commands != null && this.Commands.TryGetValue(uri, out command))
+
+						if (Commands != null && Commands.TryGetValue(uri, out command))
 						{
 							link.Command = command;
 							link.CommandParameter = parameter;
+
 							if (targetName != null)
 							{
-								link.CommandTarget = this.source.FindName(targetName) as IInputElement;
+								link.CommandTarget = _source.FindName(targetName) as IInputElement;
 							}
 						}
 						else
@@ -210,9 +215,11 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 							link.NavigateUri = uri;
 							link.TargetName = parameter;
 						}
+
 						parent = link;
 						span.Inlines.Add(parent);
 					}
+
 					var run = context.CreateRun(token.Value);
 					parent.Inlines.Add(run);
 				}
@@ -242,7 +249,6 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 		public override Span Parse()
 		{
 			var span = new Span();
-
 			Parse(span);
 
 			return span;

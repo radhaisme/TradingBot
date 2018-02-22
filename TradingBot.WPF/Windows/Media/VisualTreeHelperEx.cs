@@ -21,13 +21,13 @@ namespace TradingBot.WPF.Windows.Media
 		public static VisualStateGroup TryGetVisualStateGroup(this DependencyObject dependencyObject, string groupName)
 		{
 			FrameworkElement root = GetImplementationRoot(dependencyObject);
+
 			if (root == null)
 			{
 				return null;
 			}
-			return (from @group in VisualStateManager.GetVisualStateGroups(root).OfType<VisualStateGroup>()
-					where string.CompareOrdinal(groupName, @group.Name) == 0
-					select @group).FirstOrDefault<VisualStateGroup>();
+
+			return (from @group in VisualStateManager.GetVisualStateGroups(root).OfType<VisualStateGroup>() where string.CompareOrdinal(groupName, @group.Name) == 0 select @group).FirstOrDefault();
 		}
 
 		/// <summary>
@@ -41,7 +41,8 @@ namespace TradingBot.WPF.Windows.Media
 			{
 				return null;
 			}
-			return (VisualTreeHelper.GetChild(dependencyObject, 0) as FrameworkElement);
+
+			return VisualTreeHelper.GetChild(dependencyObject, 0) as FrameworkElement;
 		}
 
 		/// <summary>
@@ -54,9 +55,11 @@ namespace TradingBot.WPF.Windows.Media
 		public static IEnumerable<DependencyObject> Ancestors(this DependencyObject dependencyObject)
 		{
 			var parent = dependencyObject;
+
 			while (true)
 			{
 				parent = GetParent(parent);
+
 				if (parent != null)
 				{
 					yield return parent;
@@ -79,10 +82,11 @@ namespace TradingBot.WPF.Windows.Media
 		{
 			if (dependencyObject == null)
 			{
-				throw new ArgumentNullException("dependencyObject");
+				throw new ArgumentNullException(nameof(dependencyObject));
 			}
 
 			var parent = dependencyObject;
+
 			while (true)
 			{
 				if (parent != null)
@@ -93,6 +97,7 @@ namespace TradingBot.WPF.Windows.Media
 				{
 					break;
 				}
+
 				parent = GetParent(parent);
 			}
 		}
@@ -106,19 +111,22 @@ namespace TradingBot.WPF.Windows.Media
 		{
 			if (dependencyObject == null)
 			{
-				throw new ArgumentNullException("dependencyObject");
+				throw new ArgumentNullException(nameof(dependencyObject));
 			}
 
 			var ce = dependencyObject as ContentElement;
+
 			if (ce != null)
 			{
 				var parent = ContentOperations.GetParent(ce);
+
 				if (parent != null)
 				{
 					return parent;
 				}
 
 				var fce = ce as FrameworkContentElement;
+
 				return fce != null ? fce.Parent : null;
 			}
 

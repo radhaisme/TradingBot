@@ -14,8 +14,15 @@ namespace TradingBot.WPF.Presentation
 		/// </summary>
 		public event EventHandler CanExecuteChanged
 		{
-			add { System.Windows.Input.CommandManager.RequerySuggested += value; }
-			remove { System.Windows.Input.CommandManager.RequerySuggested -= value; }
+			add
+			{
+				CommandManager.RequerySuggested += value;
+			}
+
+			remove
+			{
+				CommandManager.RequerySuggested -= value;
+			}
 		}
 
 		/// <summary>
@@ -23,7 +30,7 @@ namespace TradingBot.WPF.Presentation
 		/// </summary>
 		public void OnCanExecuteChanged()
 		{
-			System.Windows.Input.CommandManager.InvalidateRequerySuggested();
+			CommandManager.InvalidateRequerySuggested();
 		}
 
 		/// <summary>
@@ -48,6 +55,7 @@ namespace TradingBot.WPF.Presentation
 			{
 				return;
 			}
+
 			OnExecute(parameter);
 		}
 
