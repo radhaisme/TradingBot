@@ -1,0 +1,19 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:TradingBot.WPF.Windows.Controls"
+                    xmlns:shell="http://schemas.microsoft.com/winfx/2006/xaml/presentation/shell">
+    
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/Themes/BBCodeBlock.xaml" />
+        <ResourceDictionary Source="/Themes/ModernButton.xaml" />
+        <ResourceDictionary Source="/Themes/ModernToggleButton.xaml" />
+        <ResourceDictionary Source="/Themes/ModernDialog.xaml" />
+        <ResourceDictionary Source="/Themes/ModernFrame.xaml" />
+        <ResourceDictionary Source="/Themes/ModernMenu.xaml" />
+        <ResourceDictionary Source="/Themes/ModernProgressRing.xaml" />
+        <ResourceDictionary Source="/Themes/ModernTab.xaml" />
+        <ResourceDictionary Source="/Themes/ModernWindow.xaml" />
+        <ResourceDictionary Source="/Themes/TransitioningContentControl.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+ 
+</ResourceDictionary>

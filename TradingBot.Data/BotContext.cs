@@ -18,6 +18,7 @@ namespace TradingBot.Data
 			builder.ApplyConfiguration(new UserMapping());
 			builder.ApplyConfiguration(new AccountMapping());
 			builder.ApplyConfiguration(new PairInfoMapping());
+			//builder.ApplyConfiguration(new ExchangeClientMapping());
 		}
 	}
 }

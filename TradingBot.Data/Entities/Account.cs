@@ -10,5 +10,7 @@ namespace TradingBot.Data.Entities
         public string ApiSettings { get; set; }
         public int UserId { get; set; }
         public virtual User User { get; set; }
-    }
+		//public int ClientId { get; set; }
+		//public virtual ExchangeClient Client { get; set; }
+	}
 }
