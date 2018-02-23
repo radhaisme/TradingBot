@@ -109,7 +109,7 @@ namespace TradingBot.WPF.Windows.Controls
 			catch (Exception error)
 			{
 				// display navigation failures
-				ModernDialog.ShowMessage(error.Message, WPF.Resources.NavigationFailed, MessageBoxButton.OK);
+				ModernDialog.ShowMessage(error.Message, WPF.Localization.Resources.NavigationFailed, MessageBoxButton.OK);
 			}
 		}
 

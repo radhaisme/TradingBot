@@ -1,6 +1,7 @@
 ﻿
 namespace TradingBot.WPF.Windows.Navigation
 {
+	using Localization;
 	using System.Windows.Input;
 
 	/// <summary>
@@ -15,7 +16,10 @@ namespace TradingBot.WPF.Windows.Navigation
 		/// </summary>
 		public static RoutedUICommand NavigateLink
 		{
-			get { return navigateLink; }
+			get
+			{
+				return navigateLink;
+			}
 		}
 	}
 }

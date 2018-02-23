@@ -5,6 +5,7 @@ namespace TradingBot.WPF.Windows
 	using System.Threading;
 	using System.Threading.Tasks;
 	using System.Windows;
+	using Localization;
 
 	/// <summary>
 	/// Loads XAML files using Application.LoadComponent.

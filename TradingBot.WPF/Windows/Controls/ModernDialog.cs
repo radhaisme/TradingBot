@@ -107,7 +107,7 @@
 			{
 				if (_okButton == null)
 				{
-					_okButton = CreateCloseDialogButton(WPF.Resources.Ok, true, false, MessageBoxResult.OK);
+					_okButton = CreateCloseDialogButton(WPF.Localization.Resources.Ok, true, false, MessageBoxResult.OK);
 				}
 
 				return _okButton;
@@ -123,7 +123,7 @@
 			{
 				if (_cancelButton == null)
 				{
-					_cancelButton = CreateCloseDialogButton(WPF.Resources.Cancel, false, true, MessageBoxResult.Cancel);
+					_cancelButton = CreateCloseDialogButton(WPF.Localization.Resources.Cancel, false, true, MessageBoxResult.Cancel);
 				}
 
 				return _cancelButton;
@@ -139,7 +139,7 @@
 			{
 				if (_yesButton == null)
 				{
-					_yesButton = CreateCloseDialogButton(WPF.Resources.Yes, true, false, MessageBoxResult.Yes);
+					_yesButton = CreateCloseDialogButton(WPF.Localization.Resources.Yes, true, false, MessageBoxResult.Yes);
 				}
 
 				return _yesButton;
@@ -155,7 +155,7 @@
 			{
 				if (_noButton == null)
 				{
-					_noButton = CreateCloseDialogButton(WPF.Resources.No, false, true, MessageBoxResult.No);
+					_noButton = CreateCloseDialogButton(WPF.Localization.Resources.No, false, true, MessageBoxResult.No);
 				}
 
 				return _noButton;
@@ -171,7 +171,7 @@
 			{
 				if (this._closeButton == null)
 				{
-					this._closeButton = CreateCloseDialogButton(WPF.Resources.Close, true, false, MessageBoxResult.None);
+					this._closeButton = CreateCloseDialogButton(WPF.Localization.Resources.Close, true, false, MessageBoxResult.None);
 				}
 				return this._closeButton;
 			}

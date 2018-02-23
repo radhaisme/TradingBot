@@ -1,6 +1,7 @@
 ﻿
 namespace TradingBot.WPF.Win32
 {
+	using Localization;
 	using System;
 	using System.Collections.Generic;
 	using System.Runtime.InteropServices;

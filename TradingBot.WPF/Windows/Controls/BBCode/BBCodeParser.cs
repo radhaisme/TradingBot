@@ -8,6 +8,7 @@ namespace TradingBot.WPF.Windows.Controls.BBCode
 	using System.Windows.Input;
 	using System.Windows.Media;
 	using Windows;
+	using Localization;
 
 	/// <summary>
 	/// Represents the BBCode parser.

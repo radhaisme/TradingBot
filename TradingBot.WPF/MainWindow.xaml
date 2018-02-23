@@ -3,7 +3,13 @@
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 					xmlns:local="clr-namespace:TradingBot.WPF.Windows.Controls"
 					xmlns:presentation="clr-namespace:TradingBot.WPF.Presentation"
-					Title="TradingBot" IsTitleVisible="True">
+					Title="TradingBot" IsTitleVisible="True"
+                    ContentSource="Views/Introduction.xaml">
+
+	<local:ModernWindow.TitleLinks>
+        <presentation:Link DisplayName="Settings" Source="/Pages/Settings.xaml" />
+        <presentation:Link DisplayName="Help" Source="https://github.com/firstfloorsoftware/mui/wiki" />
+    </local:ModernWindow.TitleLinks>
 
 	<!--<local:ModernWindow.MenuLinkGroups>
 		<presentation:LinkGroup DisplayName="Welcome">

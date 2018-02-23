@@ -7,6 +7,7 @@ namespace TradingBot.WPF.Windows.Navigation
 	using System.Linq;
 	using System.Windows;
 	using System.Windows.Input;
+	using Localization;
 	using Presentation;
 
 	/// <summary>
