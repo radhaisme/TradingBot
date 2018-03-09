@@ -61,11 +61,6 @@ namespace Yobit.Api
 			}
 		}
 
-		public OrderDetails GetOrderInfo(int orderId)
-		{
-			return GetOrderInfoAsync(orderId).Result;
-		}
-
 		public async Task<CancelOrder> CancelOrderAsync(int orderId)
 		{
 			if (orderId <= 0)
@@ -97,11 +92,6 @@ namespace Yobit.Api
 			{
 				throw new HttpRequestException(ex.Message, ex);
 			}
-		}
-
-		public CancelOrder CancelOrder(int orderId)
-		{
-			return CancelOrderAsync(orderId).Result;
 		}
 
 		public async Task<CreateOrder> CreateOrderAsync(string pair, OrderType type, decimal price, decimal amount)
@@ -139,11 +129,6 @@ namespace Yobit.Api
 			}
 		}
 
-		public CreateOrder CreateOrder(string pair, OrderType type, decimal price, decimal amount)
-		{
-			return CreateOrderAsync(pair, type, price, amount).Result;
-		}
-
 		public async Task<Balance> GetInfoAsync()
 		{
 			try
@@ -179,11 +164,6 @@ namespace Yobit.Api
 			}
 		}
 
-		public Balance GetInfo()
-		{
-			return GetInfoAsync().Result;
-		}
-
 		public async Task<TradeInfo> GetTradesAsync(string pair, uint limit = 150)
 		{
 			try
@@ -213,11 +193,6 @@ namespace Yobit.Api
 			}
 		}
 
-		public TradeInfo GetTrades(string pair, uint limit = 150)
-		{
-			return GetTradesAsync(pair, limit).Result;
-		}
-
 		public async Task<PairsInfo> GetPairsAsync()
 		{
 			try
@@ -230,11 +205,6 @@ namespace Yobit.Api
 			{
 				throw new HttpRequestException(ex.Message, ex);
 			}
-		}
-
-		public PairsInfo GetPairs()
-		{
-			return GetPairsAsync().Result;
 		}
 
 		public async Task<PairData> GetPairDataAsync(string pair)
@@ -267,11 +237,6 @@ namespace Yobit.Api
 			}
 		}
 
-		public PairData GetPairData(string pair)
-		{
-			return GetPairDataAsync(pair).Result;
-		}
-
 		public async Task<PairOrders> GetPairOrdersAsync(string pair, uint limit = 150)
 		{
 			if (String.IsNullOrEmpty(pair))
@@ -300,11 +265,6 @@ namespace Yobit.Api
 			{
 				throw new HttpRequestException(ex.Message, ex);
 			}
-		}
-
-		public PairOrders GetPairOrders(string pair, uint limit = 150)
-		{
-			return GetPairOrdersAsync(pair, limit).Result;
 		}
 
 		public async Task<OrderDetails> GetActiveOrdersOfUserAsync(string pair)
@@ -345,11 +305,6 @@ namespace Yobit.Api
 			{
 				throw new HttpRequestException(ex.Message, ex);
 			}
-		}
-
-		public OrderDetails GetActiveOrdersOfUser(string pair)
-		{
-			return GetActiveOrdersOfUserAsync(pair).Result;
 		}
 	}
 }

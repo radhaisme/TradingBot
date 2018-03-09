@@ -13,10 +13,5 @@ namespace TradingBot.WPF
 		{
 			InitializeComponent();
 		}
-
-		private void ComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-		{
-
-		}
 	}
 }

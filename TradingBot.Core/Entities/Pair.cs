@@ -3,6 +3,7 @@ namespace TradingBot.Core.Entities
 {
 	public class Pair
 	{
+		public string Name { get; set; }
 		public byte DecimalPlaces { get; set; }
 		public decimal MinPrice { get; set; }
 		public decimal MaxPrice { get; set; }

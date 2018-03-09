@@ -6,21 +6,31 @@
         mc:Ignorable="d"
         Title="MainWindow">
 	<Grid>
-		<TabControl TabStripPlacement="Top">
-			<TabItem Header="BTC">
-				<DataGrid>
-					<DataGrid.Columns>
-						<DataGridTextColumn Header="Pair"></DataGridTextColumn>
-						<DataGridTextColumn Header="Price"></DataGridTextColumn>
-					</DataGrid.Columns>
-				</DataGrid>
-			</TabItem>
-			<!--<TabItem Header="ETH">
-				<Label Content="Content goes here..." />
-			</TabItem>
-			<TabItem Header="USD">
-				<Label Content="Content goes here..." />
-			</TabItem>-->
+		<TabControl SelectedIndex="0" Name="Tickers" TabStripPlacement="Top" HorizontalAlignment="Left" MinWidth="175" MaxWidth="175" ItemsSource="{Binding Path=Pairs, IsAsync=True}">
+			<TabControl.ItemTemplate>
+				<DataTemplate>
+					<TextBlock Text="{Binding Path=Key}" />
+				</DataTemplate>
+			</TabControl.ItemTemplate>
+			<TabControl.ContentTemplate>
+				<DataTemplate>
+					<DataGrid HorizontalAlignment="Left" CanUserAddRows="False" SelectionMode="Single" ItemsSource="{Binding Path=Value, IsAsync=True}" AutoGenerateColumns="False" MinWidth="175" MaxWidth="175" VerticalScrollBarVisibility="Visible">
+						<DataGrid.ItemContainerStyle>
+							<Style TargetType="DataGridRow">
+								<EventSetter Event="MouseDoubleClick" Handler="DataGridMouseDoubleClick"/>
+							</Style>
+						</DataGrid.ItemContainerStyle>
+						<DataGrid.Columns>
+							<DataGridTextColumn Header="Pair" MinWidth="75" IsReadOnly="True" Binding="{Binding Path=Name, IsAsync=True}" />
+							<DataGridTextColumn Header="Price" MinWidth="75" IsReadOnly="True" Binding="{Binding Path=MinPrice, IsAsync=True}" />
+						</DataGrid.Columns>
+					</DataGrid>
+				</DataTemplate>
+			</TabControl.ContentTemplate>
 		</TabControl>
+		<Button x:Name="Buy" Content="Buy" HorizontalAlignment="Left" Margin="364,195,0,0" VerticalAlignment="Top" Width="75" Click="BuyClick"/>
+		<Button x:Name="Sell" Content="Sell" HorizontalAlignment="Left" Margin="444,195,0,0" VerticalAlignment="Top" Width="75" Click="SellClick" />
+		<TextBox x:Name="Price" HorizontalAlignment="Left" Height="23" Margin="364,167,0,0" TextWrapping="Wrap" Text="0.00" HorizontalContentAlignment="Right" VerticalAlignment="Top" Width="155"/>
+		<DataGrid x:Name="Orders" Height="111" Margin="191,298,10,0" VerticalAlignment="Top" />
 	</Grid>
 </Window>

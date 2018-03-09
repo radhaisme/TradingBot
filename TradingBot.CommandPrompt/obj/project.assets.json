@@ -893,7 +893,7 @@
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
-          "Newtonsoft.Json": "10.0.3"
+          "Newtonsoft.Json": "11.0.1"
         },
         "compile": {
           "bin/placeholder/TradingBot.Common.dll": {}
