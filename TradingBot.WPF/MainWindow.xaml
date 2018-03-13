@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:ControlLib;assembly=NumericUpDown"
         mc:Ignorable="d"
         Title="MainWindow">
 	<Grid>
@@ -30,7 +31,8 @@
 		</TabControl>
 		<Button x:Name="Buy" Content="Buy" HorizontalAlignment="Left" Margin="364,195,0,0" VerticalAlignment="Top" Width="75" Click="BuyClick"/>
 		<Button x:Name="Sell" Content="Sell" HorizontalAlignment="Left" Margin="444,195,0,0" VerticalAlignment="Top" Width="75" Click="SellClick" />
-		<TextBox x:Name="Price" HorizontalAlignment="Left" Height="23" Margin="364,167,0,0" TextWrapping="Wrap" Text="0.00" HorizontalContentAlignment="Right" VerticalAlignment="Top" Width="155"/>
 		<DataGrid x:Name="Orders" Height="111" Margin="191,298,10,0" VerticalAlignment="Top" />
+		<controls:NumericUpDown x:Name="Price" Width="75" Height="23" MinValue="0" Margin="364,167,321,314" />
+		<controls:NumericUpDown x:Name="Amount" Width="75" Height="23" MinValue="0" Margin="444,167,241,314" />
 	</Grid>
 </Window>
