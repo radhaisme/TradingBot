@@ -50,6 +50,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
@@ -61,6 +64,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\StartViewModel.cs" />
     <Compile Include="ModernUIHelper.cs" />
     <Compile Include="Presentation\AppearanceManager.cs" />
     <Compile Include="Presentation\CommandBase.cs" />
@@ -79,8 +83,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Views\Introduction.xaml.cs">
-      <DependentUpon>Introduction.xaml</DependentUpon>
+    <Compile Include="Views\Start.xaml.cs">
+      <DependentUpon>Start.xaml</DependentUpon>
     </Compile>
     <Compile Include="Win32\MonitorDpiType.cs" />
     <Compile Include="Win32\Native.cs" />
@@ -297,7 +301,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Introduction.xaml">
+    <Page Include="Views\Start.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -311,8 +315,18 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Exchange.API\Yobit.Api\Yobit.Api.csproj">
+      <Project>{1861FBAF-F851-4825-844C-77A4B04AA0FC}</Project>
+      <Name>Yobit.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TradingBot.Core\TradingBot.Core.csproj">
+      <Project>{52453AD4-1CB6-4F6A-B93F-FD20172A0A04}</Project>
+      <Name>TradingBot.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7">
       <Visible>False</Visible>

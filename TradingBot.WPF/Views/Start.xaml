@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="TradingBot.WPF.Views.Introduction"
+﻿<UserControl x:Class="TradingBot.WPF.Views.Start"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,12 +6,12 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
 	<Grid>
-		<ComboBox MinWidth="100" VerticalAlignment="Center" HorizontalAlignment="Center" >
-			<ComboBoxItem Content="Item 1" />
-			<ComboBoxItem Content="Item 2" />
-			<ComboBoxItem Content="Item 3" />
-			<ComboBoxItem Content="Item 4" />
-			<ComboBoxItem Content="Item 5" />
+		<ComboBox Name="CbPairs" MinWidth="100" VerticalAlignment="Center" HorizontalAlignment="Center" ItemsSource="{ Binding Path=Pairs }" Margin="86,129,114,149">
+			<ComboBox.ItemsPanel>
+				<ItemsPanelTemplate>
+					<VirtualizingStackPanel />
+				</ItemsPanelTemplate>
+			</ComboBox.ItemsPanel>
 		</ComboBox>
 	</Grid>
 </UserControl>

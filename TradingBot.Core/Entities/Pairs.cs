@@ -5,6 +5,11 @@ namespace TradingBot.Core.Entities
 
 	public class PairsInfo
 	{
-		public Dictionary<string, Pair> Pairs { get; set; }
+		public PairsInfo()
+		{
+			Pairs = new Dictionary<string, Pair>();
+		}
+
+		public IDictionary<string, Pair> Pairs { get; set; }
 	}
 }
