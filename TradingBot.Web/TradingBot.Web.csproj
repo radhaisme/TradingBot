@@ -12,4 +12,8 @@
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Exchange.API\Yobit.Api\Yobit.Api.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -18,8 +18,7 @@ namespace Yobit.Api
 
 		internal async Task<HttpResponseMessage> GetOrderInfoAsync(int orderId, IYobitSettings settings)
 		{
-			int nonce = (int)(DateTime.UtcNow - settings.CreatedAt).TotalSeconds;
-			string queryString = HttpHelper.QueryString(new Dictionary<string, string> { { "method", "OrderInfo" }, { "order_id", orderId.ToString() }, { "nonce", nonce.ToString() } }, true);
+			string queryString = HttpHelper.QueryString(new Dictionary<string, string> { { "method", "OrderInfo" }, { "order_id", orderId.ToString() }, { "nonce", GenerateNonce(settings.CreatedAt) } }, true);
 			GeneratePrivateHeaders(settings, queryString);
 			HttpResponseMessage response = await HttpClient.PostAsync(PrivateUrl, new StringContent(queryString, Encoding.UTF8, "application/x-www-form-urlencoded"));
 
@@ -48,8 +47,7 @@ namespace Yobit.Api
 
 		internal async Task<HttpResponseMessage> CancelTradeAsync(int orderId, IYobitSettings settings)
 		{
-			int nonce = (int)(DateTime.UtcNow - settings.CreatedAt).TotalSeconds;
-			string queryString = HttpHelper.QueryString(new Dictionary<string, string> { { "method", "CancelOrder" }, { "order_id", orderId.ToString() }, { "nonce", nonce.ToString() } }, true);
+			string queryString = HttpHelper.QueryString(new Dictionary<string, string> { { "method", "CancelOrder" }, { "order_id", orderId.ToString() }, { "nonce", GenerateNonce(settings.CreatedAt) } }, true);
 			GeneratePrivateHeaders(settings, queryString);
 			HttpResponseMessage response = await HttpClient.PostAsync(PrivateUrl, new StringContent(queryString, Encoding.UTF8, "application/x-www-form-urlencoded"));
 
@@ -63,7 +61,6 @@ namespace Yobit.Api
 
 		internal async Task<HttpResponseMessage> CreateOrderAsync(string pair, OrderType type, decimal price, decimal amount, IYobitSettings settings)
 		{
-			int nonce = (int)(DateTime.UtcNow - settings.CreatedAt).TotalSeconds;
 			string queryString = HttpHelper.QueryString(new Dictionary<string, string>
 			{
 				{"method", "Trade"},
@@ -71,7 +68,7 @@ namespace Yobit.Api
 				{"type", OrderType.Buy.ToString()},
 				{"rate", price.ToString()},
 				{"amount", amount.ToString()},
-				{"nonce", nonce.ToString()}
+				{"nonce", GenerateNonce(settings.CreatedAt)}
 			}, true);
 			GeneratePrivateHeaders(settings, queryString);
 			HttpResponseMessage response = await HttpClient.PostAsync(PrivateUrl, new StringContent(queryString, Encoding.UTF8, "application/x-www-form-urlencoded"));
@@ -86,8 +83,7 @@ namespace Yobit.Api
 
 		internal async Task<HttpResponseMessage> GetInfoAsync(IYobitSettings settings)
 		{
-			int nonce = (int)(DateTime.UtcNow - settings.CreatedAt).TotalSeconds;
-			string queryString = HttpHelper.QueryString(new Dictionary<string, string> { { "method", "getInfo" }, { "nonce", nonce.ToString() } }, true);
+			string queryString = HttpHelper.QueryString(new Dictionary<string, string> { { "method", "getInfo" }, { "nonce", GenerateNonce(settings.CreatedAt) } }, true);
 			GeneratePrivateHeaders(settings, queryString);
 			HttpResponseMessage response = await HttpClient.PostAsync(PrivateUrl, new StringContent(queryString, Encoding.UTF8, "application/x-www-form-urlencoded"));
 
@@ -101,8 +97,7 @@ namespace Yobit.Api
 
 		internal async Task<HttpResponseMessage> GetActiveOrdersOfUserAsync(IYobitSettings settings, string pair)
 		{
-			int nonce = (int)(DateTime.UtcNow - settings.CreatedAt).TotalSeconds; //don't forget to change on: new DateTime(2018, 1, 1) 
-			string queryString = HttpHelper.QueryString(new Dictionary<string, string> { { "method", "ActiveOrders" }, { "pair", pair }, { "nonce", nonce.ToString() } }, true);
+			string queryString = HttpHelper.QueryString(new Dictionary<string, string> { { "method", "ActiveOrders" }, { "pair", pair }, { "nonce", GenerateNonce(settings.CreatedAt) } }, true);
 			GeneratePrivateHeaders(settings, queryString);
 			HttpResponseMessage response = await HttpClient.PostAsync(PrivateUrl, new StringContent(queryString, Encoding.UTF8, "application/x-www-form-urlencoded"));
 
@@ -155,6 +150,11 @@ namespace Yobit.Api
 		}
 
 		#region Private methods
+
+		private string GenerateNonce(DateTimeOffset date)
+		{
+			return (DateTime.UtcNow - date).TotalSeconds.ToString();
+		}
 
 		private void GeneratePrivateHeaders(IYobitSettings settings, string queryString)
 		{
