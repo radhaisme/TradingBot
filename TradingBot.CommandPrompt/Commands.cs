@@ -331,7 +331,7 @@ namespace TradingBot.CommandPrompt
 				var apiSettings = GetAccountSettings(account);
 				var exchange = new ClientFactory().Create(account.ExchangeType, apiSettings);
 
-				var result = exchange.GetActiveOrdersOfUser(pair);
+				var result = exchange.GetActiveOrdersOfUserAsync(pair).Result;
 				Console.WriteLine("Done: " + JsonHelper.ToJson(result));
 			}
 		}
