@@ -33,8 +33,8 @@ namespace Yobit.Api
 		internal async Task<HttpResponseMessage> GetTradesAsync(string pair, uint? limit = null)
 		{
 			string queryString = limit.HasValue
-				? String.Format("trades/{0}?limit={1}&ignore_invalid", pair, limit.Value)
-				: String.Format("trades/{0}", pair);
+				? $"trades/{pair}?limit={limit.Value}&ignore_invalid"
+				: $"trades/{pair}";
 			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + queryString);
 
 			if (!response.IsSuccessStatusCode)

@@ -193,11 +193,11 @@ namespace Yobit.Api
 			}
 		}
 
-		public async Task<PairsInfo> GetPairsAsync()
+		public async Task<string> GetPairsAsync()
 		{
 			try
 			{
-				var info = await HttpHelper.AcquireContentAsync<PairsInfo>(await _api.GetPairsAsync());
+				string info = await HttpHelper.AcquireStringAsync(await _api.GetPairsAsync());
 
 				return info;
 			}
@@ -207,7 +207,7 @@ namespace Yobit.Api
 			}
 		}
 
-		public async Task<PairData> GetPairDataAsync(string pair)
+		public async Task<string> GetPairDataAsync(string pair)
 		{
 			if (String.IsNullOrEmpty(pair))
 			{
@@ -216,20 +216,9 @@ namespace Yobit.Api
 
 			try
 			{
-				var data = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairDataAsync(pair));
-				var model = new PairData
-				{
-					High = data[pair].high,
-					Low = data[pair].low,
-					Avg = data[pair].avg,
-					Vol = data[pair].vol,
-					VolCur = data[pair].vol_cur,
-					Last = data[pair].last,
-					Buy = data[pair].buy,
-					Sell = data[pair].sell
-				};
-
-				return model;
+				string data = await HttpHelper.AcquireStringAsync(await _api.GetPairDataAsync(pair));
+				
+				return data;
 			}
 			catch (YobitException ex)
 			{

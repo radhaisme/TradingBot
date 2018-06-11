@@ -1,7 +1,6 @@
 ﻿
 namespace TradingBot.Common
 {
-	using System;
 	using System.Collections.Generic;
 	using System.Net.Http;
 	using System.Text;
@@ -38,7 +37,7 @@ namespace TradingBot.Common
 
 			foreach (KeyValuePair<string, string> item in items)
 			{
-				sb.Append(String.Format("{0}={1}", item.Key, item.Value));
+				sb.Append($"{item.Key}={item.Value}");
 
 				if (count < items.Count - 1)
 				{

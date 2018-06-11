@@ -11,8 +11,8 @@ namespace TradingBot.Core
 		Task<CreateOrder> CreateOrderAsync(string pair, OrderType type, decimal price, decimal amount);
 		Task<Balance> GetInfoAsync();
 		Task<TradeInfo> GetTradesAsync(string pair, uint limit = 150);
-		Task<PairsInfo> GetPairsAsync();
-		Task<PairData> GetPairDataAsync(string pair);
+		Task<string> GetPairsAsync();
+		Task<string> GetPairDataAsync(string pair);
 		Task<PairOrders> GetPairOrdersAsync(string pair, uint limit = 150);
 		Task<OrderDetails> GetActiveOrdersOfUserAsync(string pair);
 	}
