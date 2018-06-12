@@ -2,7 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TypeScriptToolsVersion>2.8</TypeScriptToolsVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\ts\file.ts" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
@@ -10,11 +15,14 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\images\" />
-    <Folder Include="wwwroot\ts\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Exchange.API\Yobit.Api\Yobit.Api.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="wwwroot\ts\file.ts" />
   </ItemGroup>
 
 </Project>

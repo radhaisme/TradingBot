@@ -3773,11 +3773,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "d:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\TradingBot.CommandPrompt.csproj",
+      "projectUniqueName": "D:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\TradingBot.CommandPrompt.csproj",
       "projectName": "TradingBot.CommandPrompt",
-      "projectPath": "d:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\TradingBot.CommandPrompt.csproj",
+      "projectPath": "D:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\TradingBot.CommandPrompt.csproj",
       "packagesPath": "C:\\Users\\v-roasei\\.nuget\\packages\\",
-      "outputPath": "d:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\obj\\",
+      "outputPath": "D:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -3797,17 +3797,17 @@
       "frameworks": {
         "netcoreapp2.1": {
           "projectReferences": {
-            "d:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj": {
-              "projectPath": "d:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj"
+            "D:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj": {
+              "projectPath": "D:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj"
             },
-            "d:\\Projects\\TradingBot\\TradingBot.Common\\TradingBot.Common.csproj": {
-              "projectPath": "d:\\Projects\\TradingBot\\TradingBot.Common\\TradingBot.Common.csproj"
+            "D:\\Projects\\TradingBot\\TradingBot.Common\\TradingBot.Common.csproj": {
+              "projectPath": "D:\\Projects\\TradingBot\\TradingBot.Common\\TradingBot.Common.csproj"
             },
-            "d:\\Projects\\TradingBot\\TradingBot.Data\\TradingBot.Data.csproj": {
-              "projectPath": "d:\\Projects\\TradingBot\\TradingBot.Data\\TradingBot.Data.csproj"
+            "D:\\Projects\\TradingBot\\TradingBot.Data\\TradingBot.Data.csproj": {
+              "projectPath": "D:\\Projects\\TradingBot\\TradingBot.Data\\TradingBot.Data.csproj"
             },
-            "d:\\Projects\\TradingBot\\TradingBot.Services\\TradingBot.Services.csproj": {
-              "projectPath": "d:\\Projects\\TradingBot\\TradingBot.Services\\TradingBot.Services.csproj"
+            "D:\\Projects\\TradingBot\\TradingBot.Services\\TradingBot.Services.csproj": {
+              "projectPath": "D:\\Projects\\TradingBot\\TradingBot.Services\\TradingBot.Services.csproj"
             }
           }
         }

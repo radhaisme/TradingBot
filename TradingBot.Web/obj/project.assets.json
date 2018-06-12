@@ -12000,11 +12000,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "d:\\Projects\\TradingBot\\TradingBot.Web\\TradingBot.Web.csproj",
+      "projectUniqueName": "D:\\Projects\\TradingBot\\TradingBot.Web\\TradingBot.Web.csproj",
       "projectName": "TradingBot.Web",
-      "projectPath": "d:\\Projects\\TradingBot\\TradingBot.Web\\TradingBot.Web.csproj",
+      "projectPath": "D:\\Projects\\TradingBot\\TradingBot.Web\\TradingBot.Web.csproj",
       "packagesPath": "C:\\Users\\v-roasei\\.nuget\\packages\\",
-      "outputPath": "d:\\Projects\\TradingBot\\TradingBot.Web\\obj\\",
+      "outputPath": "D:\\Projects\\TradingBot\\TradingBot.Web\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -12024,8 +12024,8 @@
       "frameworks": {
         "netcoreapp2.1": {
           "projectReferences": {
-            "d:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj": {
-              "projectPath": "d:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj"
+            "D:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj": {
+              "projectPath": "D:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj"
             }
           }
         }
