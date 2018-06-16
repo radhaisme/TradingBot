@@ -2,7 +2,9 @@
 namespace TradingBot.CommandPrompt
 {
 	using System;
+	using System.IO;
 	using System.Linq;
+	using Binance.Api;
 	using Core;
 	using Core.Enums;
 	using Yobit.Api;
@@ -11,6 +13,14 @@ namespace TradingBot.CommandPrompt
 	{
 		private static void Main(string[] args)
 		{
+			var api = new BinanceApi("https://api.binance.com/api/v1", "https://api.binance.com/api/v3");
+			var r = api.Info().Result;
+
+			StreamWriter sw = File.CreateText("data.txt");
+			sw.WriteLine(r);
+			sw.Close();
+
+
 			//var client = new YobitClient("https://yobit.net/api/3/", "https://yobit.net/tapi/", new YobitSettings
 			//{
 			//	Secret = "5ceeeb6072789d30e79a961335e63d50",

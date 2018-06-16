@@ -1026,6 +1026,20 @@
           "ref/netstandard1.3/System.Threading.Tasks.dll": {}
         }
       },
+      "Binance.Api/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "dependencies": {
+          "TradingBot.Common": "1.0.0",
+          "TradingBot.Core": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Binance.Api.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Binance.Api.dll": {}
+        }
+      },
       "TradingBot.Common/1.0.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
@@ -3731,6 +3745,11 @@
         "system.threading.tasks.nuspec"
       ]
     },
+    "Binance.Api/1.0.0": {
+      "type": "project",
+      "path": "../Binance.Api/Binance.Api.csproj",
+      "msbuildProject": "../Binance.Api/Binance.Api.csproj"
+    },
     "TradingBot.Common/1.0.0": {
       "type": "project",
       "path": "../TradingBot.Common/TradingBot.Common.csproj",
@@ -3759,6 +3778,7 @@
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.1": [
+      "Binance.Api >= 1.0.0",
       "Microsoft.NETCore.App >= 2.1.0",
       "TradingBot.Common >= 1.0.0",
       "TradingBot.Data >= 1.0.0",
@@ -3773,11 +3793,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "e:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\TradingBot.CommandPrompt.csproj",
+      "projectUniqueName": "E:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\TradingBot.CommandPrompt.csproj",
       "projectName": "TradingBot.CommandPrompt",
-      "projectPath": "e:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\TradingBot.CommandPrompt.csproj",
+      "projectPath": "E:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\TradingBot.CommandPrompt.csproj",
       "packagesPath": "C:\\Users\\Roman\\.nuget\\packages\\",
-      "outputPath": "e:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\obj\\",
+      "outputPath": "E:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -3796,17 +3816,20 @@
       "frameworks": {
         "netcoreapp2.1": {
           "projectReferences": {
-            "e:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj": {
-              "projectPath": "e:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj"
+            "E:\\Projects\\TradingBot\\Binance.Api\\Binance.Api.csproj": {
+              "projectPath": "E:\\Projects\\TradingBot\\Binance.Api\\Binance.Api.csproj"
             },
-            "e:\\Projects\\TradingBot\\TradingBot.Common\\TradingBot.Common.csproj": {
-              "projectPath": "e:\\Projects\\TradingBot\\TradingBot.Common\\TradingBot.Common.csproj"
+            "E:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj": {
+              "projectPath": "E:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj"
             },
-            "e:\\Projects\\TradingBot\\TradingBot.Data\\TradingBot.Data.csproj": {
-              "projectPath": "e:\\Projects\\TradingBot\\TradingBot.Data\\TradingBot.Data.csproj"
+            "E:\\Projects\\TradingBot\\TradingBot.Common\\TradingBot.Common.csproj": {
+              "projectPath": "E:\\Projects\\TradingBot\\TradingBot.Common\\TradingBot.Common.csproj"
             },
-            "e:\\Projects\\TradingBot\\TradingBot.Services\\TradingBot.Services.csproj": {
-              "projectPath": "e:\\Projects\\TradingBot\\TradingBot.Services\\TradingBot.Services.csproj"
+            "E:\\Projects\\TradingBot\\TradingBot.Data\\TradingBot.Data.csproj": {
+              "projectPath": "E:\\Projects\\TradingBot\\TradingBot.Data\\TradingBot.Data.csproj"
+            },
+            "E:\\Projects\\TradingBot\\TradingBot.Services\\TradingBot.Services.csproj": {
+              "projectPath": "E:\\Projects\\TradingBot\\TradingBot.Services\\TradingBot.Services.csproj"
             }
           }
         }
