@@ -1040,6 +1040,20 @@
           "bin/placeholder/Binance.Api.dll": {}
         }
       },
+      "Cryptopia.Api/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "dependencies": {
+          "TradingBot.Common": "1.0.0",
+          "TradingBot.Core": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Cryptopia.Api.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Cryptopia.Api.dll": {}
+        }
+      },
       "TradingBot.Common/1.0.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
@@ -3750,6 +3764,11 @@
       "path": "../Binance.Api/Binance.Api.csproj",
       "msbuildProject": "../Binance.Api/Binance.Api.csproj"
     },
+    "Cryptopia.Api/1.0.0": {
+      "type": "project",
+      "path": "../Cryptopia.Api/Cryptopia.Api.csproj",
+      "msbuildProject": "../Cryptopia.Api/Cryptopia.Api.csproj"
+    },
     "TradingBot.Common/1.0.0": {
       "type": "project",
       "path": "../TradingBot.Common/TradingBot.Common.csproj",
@@ -3779,6 +3798,7 @@
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.1": [
       "Binance.Api >= 1.0.0",
+      "Cryptopia.Api >= 1.0.0",
       "Microsoft.NETCore.App >= 2.1.0",
       "TradingBot.Common >= 1.0.0",
       "TradingBot.Data >= 1.0.0",
@@ -3818,6 +3838,9 @@
           "projectReferences": {
             "E:\\Projects\\TradingBot\\Binance.Api\\Binance.Api.csproj": {
               "projectPath": "E:\\Projects\\TradingBot\\Binance.Api\\Binance.Api.csproj"
+            },
+            "E:\\Projects\\TradingBot\\Cryptopia.Api\\Cryptopia.Api.csproj": {
+              "projectPath": "E:\\Projects\\TradingBot\\Cryptopia.Api\\Cryptopia.Api.csproj"
             },
             "E:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj": {
               "projectPath": "E:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj"

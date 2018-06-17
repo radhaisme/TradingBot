@@ -14,6 +14,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Binance.Api\Binance.Api.csproj" />
+		<ProjectReference Include="..\Cryptopia.Api\Cryptopia.Api.csproj" />
 		<ProjectReference Include="..\Exchange.API\Yobit.Api\Yobit.Api.csproj" />
 		<ProjectReference Include="..\TradingBot.Common\TradingBot.Common.csproj" />
 		<ProjectReference Include="..\TradingBot.Data\TradingBot.Data.csproj" />

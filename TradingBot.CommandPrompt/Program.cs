@@ -13,13 +13,8 @@ namespace TradingBot.CommandPrompt
 	{
 		private static void Main(string[] args)
 		{
-			var api = new BinanceApi("https://api.binance.com/api/v1", "https://api.binance.com/api/v3");
-			var r = api.Info().Result;
-
-			StreamWriter sw = File.CreateText("data.txt");
-			sw.WriteLine(r);
-			sw.Close();
-
+			var api = new BinanceApi("https://api.binance.com/api", "https://api.binance.com/api/v3");
+			var r = api.GetPrice("LTCBTC").Result;
 
 			//var client = new YobitClient("https://yobit.net/api/3/", "https://yobit.net/tapi/", new YobitSettings
 			//{
