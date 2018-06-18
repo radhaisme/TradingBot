@@ -7,14 +7,18 @@ namespace TradingBot.CommandPrompt
 	using Binance.Api;
 	using Core;
 	using Core.Enums;
+	using Huobi.Api;
 	using Yobit.Api;
 
 	public class Program
 	{
 		private static void Main(string[] args)
 		{
-			var api = new BinanceApi("https://api.binance.com/api", "https://api.binance.com/api/v3");
-			var r = api.GetPrice("LTCBTC").Result;
+			//var api = new HuobiApi("https://api.huobi.pro", "https://api.huobi.pro");
+			//var r = api.GetCurrencies().Result;
+
+			//var api = new BinanceApi("https://api.binance.com/api", "https://api.binance.com/api/v3");
+			//var r = api.Time().Result;
 
 			//var client = new YobitClient("https://yobit.net/api/3/", "https://yobit.net/tapi/", new YobitSettings
 			//{
@@ -24,36 +28,6 @@ namespace TradingBot.CommandPrompt
 			//});
 			//var r = client.GetPairs();
 
-			//Console.WriteLine("Use help to get list of commands");
-			//var input = String.Empty;
-
-			//var commandsHelper = new CommandsHelper();
-
-			//var command = CommandsHelper.None;
-
-			//do
-			//{
-			//	Console.Write(string.Format("{0}> ", commandsHelper.CurrentUser == null ? "Anonymous" : commandsHelper.CurrentUser.Username));
-			//	input = Console.ReadLine().Trim();
-			//	if (input.Length < 1)
-			//		continue;
-			//	var parts = input.Split(' ');
-
-			//	command = CommandsHelper.List.FirstOrDefault(m => m.Aliases.Contains(parts[0].Trim()));
-			//	if (command == null)
-			//		command = CommandsHelper.None;
-
-			//	var parameters = parts.Skip(1).ToArray();
-			//	if (!command.AllowAnonymous && commandsHelper.CurrentUser == null)
-			//		Console.WriteLine("You are not authorized");
-			//	else
-			//	{
-			//		commandsHelper.ExecuteCommand(command.Type, parameters);
-			//	}
-			//}
-			//while (command.Type != CommandEnum.Exit);
-
-			//Console.Write("You are finished. Thanks");
 			Console.ReadLine();
 		}
 	}
