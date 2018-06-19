@@ -1082,6 +1082,20 @@
           "bin/placeholder/Kucoin.Api.dll": {}
         }
       },
+      "Okex.Api/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "dependencies": {
+          "TradingBot.Common": "1.0.0",
+          "TradingBot.Core": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Okex.Api.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Okex.Api.dll": {}
+        }
+      },
       "TradingBot.Common/1.0.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
@@ -3807,6 +3821,11 @@
       "path": "../Kucoin.Api/Kucoin.Api.csproj",
       "msbuildProject": "../Kucoin.Api/Kucoin.Api.csproj"
     },
+    "Okex.Api/1.0.0": {
+      "type": "project",
+      "path": "../Okex.Api/Okex.Api.csproj",
+      "msbuildProject": "../Okex.Api/Okex.Api.csproj"
+    },
     "TradingBot.Common/1.0.0": {
       "type": "project",
       "path": "../TradingBot.Common/TradingBot.Common.csproj",
@@ -3840,6 +3859,7 @@
       "Huobi.Api >= 1.0.0",
       "Kucoin.Api >= 1.0.0",
       "Microsoft.NETCore.App >= 2.1.0",
+      "Okex.Api >= 1.0.0",
       "TradingBot.Common >= 1.0.0",
       "TradingBot.Data >= 1.0.0",
       "TradingBot.Services >= 1.0.0",
@@ -3891,6 +3911,9 @@
             },
             "D:\\Projects\\TradingBot\\Kucoin.Api\\Kucoin.Api.csproj": {
               "projectPath": "D:\\Projects\\TradingBot\\Kucoin.Api\\Kucoin.Api.csproj"
+            },
+            "D:\\Projects\\TradingBot\\Okex.Api\\Okex.Api.csproj": {
+              "projectPath": "D:\\Projects\\TradingBot\\Okex.Api\\Okex.Api.csproj"
             },
             "D:\\Projects\\TradingBot\\TradingBot.Common\\TradingBot.Common.csproj": {
               "projectPath": "D:\\Projects\\TradingBot\\TradingBot.Common\\TradingBot.Common.csproj"

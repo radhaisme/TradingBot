@@ -1,6 +1,7 @@
 ﻿
 using System.Threading.Tasks;
 using Kucoin.Api;
+using Okex.Api;
 
 namespace TradingBot.CommandPrompt
 {
@@ -17,8 +18,11 @@ namespace TradingBot.CommandPrompt
 	{
 		private static async Task Main(string[] args)
 		{
-			var api = new KucoinApi("https://api.kucoin.com", "https://api.kucoin.com");
-			var r = await api.GetPairDetail("KCS-BTC");
+			var api = new OkexApi("https://www.okex.com/api/v1", "https://www.okex.com/api/v1");
+			var r = await api.GetPairDetail("btc_usd");
+
+			//var api = new KucoinApi("https://api.kucoin.com", "https://api.kucoin.com");
+			//var r = await api.GetPairDetail("KCS-BTC");
 
 
 			//var api = new HuobiApi("https://api.huobi.pro", "https://api.huobi.pro");
