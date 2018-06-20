@@ -31,15 +31,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradingBot.Tests", "Trading
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradingBot.Web", "TradingBot.Web\TradingBot.Web.csproj", "{B520213F-873A-4C46-844E-1E5A49B50D1A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cryptopia.Api", "Cryptopia.Api\Cryptopia.Api.csproj", "{4289F61F-08F1-42FA-A8F1-AAF9BE24D2DF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cryptopia.Api", "Exchange.API\Cryptopia.Api\Cryptopia.Api.csproj", "{4289F61F-08F1-42FA-A8F1-AAF9BE24D2DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kucoin.Api", "Kucoin.Api\Kucoin.Api.csproj", "{565771E4-0CEF-4A74-BAAC-BC1ABDCBDEA3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kucoin.Api", "Exchange.API\Kucoin.Api\Kucoin.Api.csproj", "{565771E4-0CEF-4A74-BAAC-BC1ABDCBDEA3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Okex.Api", "Okex.Api\Okex.Api.csproj", "{0BB4EFBA-34AE-456E-932B-C93AE42E2C24}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Okex.Api", "Exchange.API\Okex.Api\Okex.Api.csproj", "{0BB4EFBA-34AE-456E-932B-C93AE42E2C24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Huobi.Api", "Huobi.Api\Huobi.Api.csproj", "{BE660EF4-6BE1-47D7-8F11-F1F8AAF6BD10}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Huobi.Api", "Exchange.API\Huobi.Api\Huobi.Api.csproj", "{BE660EF4-6BE1-47D7-8F11-F1F8AAF6BD10}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Binance.Api", "Binance.Api\Binance.Api.csproj", "{FCE5DA40-AC91-4DF9-A315-CC4594D71625}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Binance.Api", "Exchange.API\Binance.Api\Binance.Api.csproj", "{FCE5DA40-AC91-4DF9-A315-CC4594D71625}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

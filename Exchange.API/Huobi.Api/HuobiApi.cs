@@ -1,11 +1,10 @@
-﻿
+﻿using System.Net.Http;
+using System.Threading.Tasks;
+using TradingBot.Common;
+using TradingBot.Core;
+
 namespace Huobi.Api
 {
-	using System.Net.Http;
-	using System.Threading.Tasks;
-	using TradingBot.Common;
-	using TradingBot.Core;
-
 	public sealed class HuobiApi : ExchangeApi
     {
 	    public HuobiApi(string publicEndpoint, string privateEndpoint) : base(publicEndpoint, privateEndpoint)

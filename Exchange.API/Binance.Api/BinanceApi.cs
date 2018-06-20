@@ -1,11 +1,10 @@
-﻿
+﻿using System.Net.Http;
+using System.Threading.Tasks;
+using TradingBot.Common;
+using TradingBot.Core;
+
 namespace Binance.Api
 {
-	using System.Net.Http;
-	using System.Threading.Tasks;
-	using TradingBot.Common;
-	using TradingBot.Core;
-
 	public class BinanceApi : ExchangeApi
 	{
 		public BinanceApi(string publicEndpoint, string privateEndpoint) : base(publicEndpoint, privateEndpoint)
