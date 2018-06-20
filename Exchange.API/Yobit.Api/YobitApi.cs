@@ -1,16 +1,15 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
+using TradingBot.Common;
+using TradingBot.Core;
+using TradingBot.Core.Entities;
+
 namespace Yobit.Api
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Net.Http;
-	using System.Security.Cryptography;
-	using System.Text;
-	using System.Threading.Tasks;
-	using TradingBot.Common;
-	using TradingBot.Core;
-	using TradingBot.Core.Entities;
-
 	internal sealed class YobitApi : ExchangeApi
 	{
 		public YobitApi(string publicEndpoint, string privateEndpoint) : base(publicEndpoint, privateEndpoint)

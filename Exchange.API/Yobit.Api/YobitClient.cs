@@ -216,7 +216,7 @@ namespace Yobit.Api
 			try
 			{
 				string data = await HttpHelper.AcquireStringAsync(await _api.GetPairDataAsync(pair));
-				
+
 				return data;
 			}
 			catch (YobitException ex)

@@ -3,9 +3,9 @@ using TradingBot.Core;
 
 namespace Huobi.Api
 {
-	internal class HuobiSettings : ApiSettings, IApiSettings
+	internal class HuobiSettings : ApiSettings, IHuobiSettings
 	{
-		public HuobiSettings() : base(typeof(IApiSettings))
+		public HuobiSettings() : base(typeof(IHuobiSettings))
 		{ }
 
 		public string PublicUrl { get; set; }
