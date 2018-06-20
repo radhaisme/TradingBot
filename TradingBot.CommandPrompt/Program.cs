@@ -9,6 +9,7 @@ namespace TradingBot.CommandPrompt
 	using System.IO;
 	using System.Linq;
 	using Binance.Api;
+	using Bitfinex.Api;
 	using Core;
 	using Core.Enums;
 	using Huobi.Api;
@@ -18,8 +19,11 @@ namespace TradingBot.CommandPrompt
 	{
 		private static async Task Main(string[] args)
 		{
-			var api = new OkexApi("https://www.okex.com/api/v1", "https://www.okex.com/api/v1");
-			var r = await api.GetPairDetail("btc_usd");
+			//var api = new BitfinexApi("https://api.bitfinex.com/v1", "https://api.bitfinex.com/v1");
+			//var r = await api.GetPairDetail("btcusd");
+
+			//var api = new OkexApi("https://www.okex.com/api/v1", "https://www.okex.com/api/v1");
+			//var r = await api.GetPairDetail("btc_usd");
 
 			//var api = new KucoinApi("https://api.kucoin.com", "https://api.kucoin.com");
 			//var r = await api.GetPairDetail("KCS-BTC");

@@ -11994,23 +11994,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\v-roasei\\.nuget\\packages\\": {},
+    "C:\\Users\\Roman\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Projects\\TradingBot\\TradingBot.Web\\TradingBot.Web.csproj",
+      "projectUniqueName": "E:\\Projects\\TradingBot\\TradingBot.Web\\TradingBot.Web.csproj",
       "projectName": "TradingBot.Web",
-      "projectPath": "D:\\Projects\\TradingBot\\TradingBot.Web\\TradingBot.Web.csproj",
-      "packagesPath": "C:\\Users\\v-roasei\\.nuget\\packages\\",
-      "outputPath": "D:\\Projects\\TradingBot\\TradingBot.Web\\obj\\",
+      "projectPath": "E:\\Projects\\TradingBot\\TradingBot.Web\\TradingBot.Web.csproj",
+      "packagesPath": "C:\\Users\\Roman\\.nuget\\packages\\",
+      "outputPath": "E:\\Projects\\TradingBot\\TradingBot.Web\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\v-roasei\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Roman\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -12018,14 +12018,13 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "https://api.nuget.org/v3/index.json": {},
-        "https://dynamicscrm.pkgs.visualstudio.com/_packaging/XrmSolutions/nuget/v3/index.json": {}
+        "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "netcoreapp2.1": {
           "projectReferences": {
-            "D:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj": {
-              "projectPath": "D:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj"
+            "E:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj": {
+              "projectPath": "E:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj"
             }
           }
         }

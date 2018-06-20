@@ -1040,6 +1040,20 @@
           "bin/placeholder/Binance.Api.dll": {}
         }
       },
+      "Bitfinex.Api/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "dependencies": {
+          "TradingBot.Common": "1.0.0",
+          "TradingBot.Core": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Bitfinex.Api.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Bitfinex.Api.dll": {}
+        }
+      },
       "Cryptopia.Api/1.0.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
@@ -3806,6 +3820,11 @@
       "path": "../Binance.Api/Binance.Api.csproj",
       "msbuildProject": "../Binance.Api/Binance.Api.csproj"
     },
+    "Bitfinex.Api/1.0.0": {
+      "type": "project",
+      "path": "../Exchange.API/Bitfinex.Api/Bitfinex.Api.csproj",
+      "msbuildProject": "../Exchange.API/Bitfinex.Api/Bitfinex.Api.csproj"
+    },
     "Cryptopia.Api/1.0.0": {
       "type": "project",
       "path": "../Cryptopia.Api/Cryptopia.Api.csproj",
@@ -3855,6 +3874,7 @@
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.1": [
       "Binance.Api >= 1.0.0",
+      "Bitfinex.Api >= 1.0.0",
       "Cryptopia.Api >= 1.0.0",
       "Huobi.Api >= 1.0.0",
       "Kucoin.Api >= 1.0.0",
@@ -3867,23 +3887,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\v-roasei\\.nuget\\packages\\": {},
+    "C:\\Users\\Roman\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\TradingBot.CommandPrompt.csproj",
+      "projectUniqueName": "E:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\TradingBot.CommandPrompt.csproj",
       "projectName": "TradingBot.CommandPrompt",
-      "projectPath": "D:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\TradingBot.CommandPrompt.csproj",
-      "packagesPath": "C:\\Users\\v-roasei\\.nuget\\packages\\",
-      "outputPath": "D:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\obj\\",
+      "projectPath": "E:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\TradingBot.CommandPrompt.csproj",
+      "packagesPath": "C:\\Users\\Roman\\.nuget\\packages\\",
+      "outputPath": "E:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\v-roasei\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Roman\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -3891,38 +3911,40 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "https://api.nuget.org/v3/index.json": {},
-        "https://dynamicscrm.pkgs.visualstudio.com/_packaging/XrmSolutions/nuget/v3/index.json": {}
+        "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "netcoreapp2.1": {
           "projectReferences": {
-            "D:\\Projects\\TradingBot\\Binance.Api\\Binance.Api.csproj": {
-              "projectPath": "D:\\Projects\\TradingBot\\Binance.Api\\Binance.Api.csproj"
+            "E:\\Projects\\TradingBot\\Binance.Api\\Binance.Api.csproj": {
+              "projectPath": "E:\\Projects\\TradingBot\\Binance.Api\\Binance.Api.csproj"
             },
-            "D:\\Projects\\TradingBot\\Cryptopia.Api\\Cryptopia.Api.csproj": {
-              "projectPath": "D:\\Projects\\TradingBot\\Cryptopia.Api\\Cryptopia.Api.csproj"
+            "E:\\Projects\\TradingBot\\Cryptopia.Api\\Cryptopia.Api.csproj": {
+              "projectPath": "E:\\Projects\\TradingBot\\Cryptopia.Api\\Cryptopia.Api.csproj"
             },
-            "D:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj": {
-              "projectPath": "D:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj"
+            "E:\\Projects\\TradingBot\\Exchange.API\\Bitfinex.Api\\Bitfinex.Api.csproj": {
+              "projectPath": "E:\\Projects\\TradingBot\\Exchange.API\\Bitfinex.Api\\Bitfinex.Api.csproj"
             },
-            "D:\\Projects\\TradingBot\\Huobi.Api\\Huobi.Api.csproj": {
-              "projectPath": "D:\\Projects\\TradingBot\\Huobi.Api\\Huobi.Api.csproj"
+            "E:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj": {
+              "projectPath": "E:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj"
             },
-            "D:\\Projects\\TradingBot\\Kucoin.Api\\Kucoin.Api.csproj": {
-              "projectPath": "D:\\Projects\\TradingBot\\Kucoin.Api\\Kucoin.Api.csproj"
+            "E:\\Projects\\TradingBot\\Huobi.Api\\Huobi.Api.csproj": {
+              "projectPath": "E:\\Projects\\TradingBot\\Huobi.Api\\Huobi.Api.csproj"
             },
-            "D:\\Projects\\TradingBot\\Okex.Api\\Okex.Api.csproj": {
-              "projectPath": "D:\\Projects\\TradingBot\\Okex.Api\\Okex.Api.csproj"
+            "E:\\Projects\\TradingBot\\Kucoin.Api\\Kucoin.Api.csproj": {
+              "projectPath": "E:\\Projects\\TradingBot\\Kucoin.Api\\Kucoin.Api.csproj"
             },
-            "D:\\Projects\\TradingBot\\TradingBot.Common\\TradingBot.Common.csproj": {
-              "projectPath": "D:\\Projects\\TradingBot\\TradingBot.Common\\TradingBot.Common.csproj"
+            "E:\\Projects\\TradingBot\\Okex.Api\\Okex.Api.csproj": {
+              "projectPath": "E:\\Projects\\TradingBot\\Okex.Api\\Okex.Api.csproj"
             },
-            "D:\\Projects\\TradingBot\\TradingBot.Data\\TradingBot.Data.csproj": {
-              "projectPath": "D:\\Projects\\TradingBot\\TradingBot.Data\\TradingBot.Data.csproj"
+            "E:\\Projects\\TradingBot\\TradingBot.Common\\TradingBot.Common.csproj": {
+              "projectPath": "E:\\Projects\\TradingBot\\TradingBot.Common\\TradingBot.Common.csproj"
             },
-            "D:\\Projects\\TradingBot\\TradingBot.Services\\TradingBot.Services.csproj": {
-              "projectPath": "D:\\Projects\\TradingBot\\TradingBot.Services\\TradingBot.Services.csproj"
+            "E:\\Projects\\TradingBot\\TradingBot.Data\\TradingBot.Data.csproj": {
+              "projectPath": "E:\\Projects\\TradingBot\\TradingBot.Data\\TradingBot.Data.csproj"
+            },
+            "E:\\Projects\\TradingBot\\TradingBot.Services\\TradingBot.Services.csproj": {
+              "projectPath": "E:\\Projects\\TradingBot\\TradingBot.Services\\TradingBot.Services.csproj"
             }
           }
         }
