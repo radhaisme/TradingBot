@@ -12,7 +12,7 @@ namespace Bitfinex.Api
 
 		public async Task<string> GetCurrencies()
 		{
-			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "/symbols");
+			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "symbols");
 
 			if (response.IsSuccessStatusCode)
 			{
@@ -24,7 +24,7 @@ namespace Bitfinex.Api
 
 		public async Task<string> GetPairsDetails()
 		{
-			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "/symbols_details");
+			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "symbols_details");
 
 			if (response.IsSuccessStatusCode)
 			{
@@ -36,7 +36,7 @@ namespace Bitfinex.Api
 
 		public async Task<string> GetPairDetail(string pair)
 		{
-			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + $"/pubticker/{pair}");
+			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + $"pubticker/{pair}");
 
 			if (response.IsSuccessStatusCode)
 			{
