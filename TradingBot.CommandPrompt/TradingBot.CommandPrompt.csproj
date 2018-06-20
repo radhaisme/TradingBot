@@ -17,6 +17,7 @@
 		<ProjectReference Include="..\Binance.Api\Binance.Api.csproj" />
 		<ProjectReference Include="..\Cryptopia.Api\Cryptopia.Api.csproj" />
 		<ProjectReference Include="..\Exchange.API\Bitfinex.Api\Bitfinex.Api.csproj" />
+		<ProjectReference Include="..\Exchange.API\Exmo.Api\Exmo.Api.csproj" />
 		<ProjectReference Include="..\Exchange.API\Yobit.Api\Yobit.Api.csproj" />
 		<ProjectReference Include="..\Huobi.Api\Huobi.Api.csproj" />
 		<ProjectReference Include="..\Kucoin.Api\Kucoin.Api.csproj" />

@@ -1,24 +1,16 @@
-﻿
+﻿using System;
 using System.Threading.Tasks;
-using Kucoin.Api;
-using Okex.Api;
+using Exmo.Api;
 
 namespace TradingBot.CommandPrompt
 {
-	using System;
-	using System.IO;
-	using System.Linq;
-	using Binance.Api;
-	using Bitfinex.Api;
-	using Core;
-	using Core.Enums;
-	using Huobi.Api;
-	using Yobit.Api;
-
 	public class Program
 	{
 		private static async Task Main(string[] args)
 		{
+			//var api = new ExmoApi("https://api.exmo.com/v1/", "https://api.exmo.com/v1/");
+			//var r = await api.GetCurrencies();
+
 			//var api = new BitfinexApi("https://api.bitfinex.com/v1", "https://api.bitfinex.com/v1");
 			//var r = await api.GetPairDetail("btcusd");
 
