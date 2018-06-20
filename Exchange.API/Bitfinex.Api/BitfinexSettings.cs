@@ -1,11 +1,11 @@
 ﻿using System;
 using TradingBot.Core;
 
-namespace Yobit.Api
+namespace Bitfinex.Api
 {
-	internal sealed class YobitSettings : ApiSettings, IYobitSettings
+	internal class BitfinexSettings : ApiSettings, IBitfinexSettings
 	{
-		public YobitSettings() : base(typeof(IYobitSettings))
+		public BitfinexSettings() : base(typeof(IBitfinexSettings))
 		{ }
 
 		public string PublicUrl { get; set; }

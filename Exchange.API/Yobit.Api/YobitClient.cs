@@ -1,22 +1,21 @@
-﻿
+﻿using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+using TradingBot.Common;
+using TradingBot.Core;
+using TradingBot.Core.Entities;
+
 namespace Yobit.Api
 {
-	using System;
-	using System.Net.Http;
-	using System.Threading.Tasks;
-	using TradingBot.Common;
-	using TradingBot.Core;
-	using TradingBot.Core.Entities;
-
 	public sealed class YobitClient : IExchangeClient
 	{
 		private readonly YobitApi _api;
 		private readonly IYobitSettings _settings;
 
-		public YobitClient(string publicEndpoint, string privateEndpoint, IYobitSettings settings)
+		public YobitClient()
 		{
-			_settings = settings;
-			_api = new YobitApi(publicEndpoint, privateEndpoint);
+			_settings = new YobitSettings();
+			_api = new YobitApi(_settings.PublicUrl, _settings.PrivateUrl);
 		}
 
 		public async Task<OrderDetails> GetOrderInfoAsync(int orderId)

@@ -1,11 +1,11 @@
 ﻿using System;
 using TradingBot.Core;
 
-namespace Yobit.Api
+namespace Binance.Api
 {
-	internal sealed class YobitSettings : ApiSettings, IYobitSettings
+	internal class BinanceSettings : ApiSettings, IBinanceSettings
 	{
-		public YobitSettings() : base(typeof(IYobitSettings))
+		public BinanceSettings() : base(typeof(IBinanceSettings))
 		{ }
 
 		public string PublicUrl { get; set; }

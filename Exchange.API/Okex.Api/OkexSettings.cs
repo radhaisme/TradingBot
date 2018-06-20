@@ -1,11 +1,11 @@
 ﻿using System;
 using TradingBot.Core;
 
-namespace Yobit.Api
+namespace Okex.Api
 {
-	internal sealed class YobitSettings : ApiSettings, IYobitSettings
+	internal class OkexSettings : ApiSettings, IOkexSettings
 	{
-		public YobitSettings() : base(typeof(IYobitSettings))
+		public OkexSettings() : base(typeof(IOkexSettings))
 		{ }
 
 		public string PublicUrl { get; set; }

@@ -1,11 +1,11 @@
 ﻿using System;
 using TradingBot.Core;
 
-namespace Yobit.Api
+namespace Huobi.Api
 {
-	internal sealed class YobitSettings : ApiSettings, IYobitSettings
+	internal class HuobiSettings : ApiSettings, IApiSettings
 	{
-		public YobitSettings() : base(typeof(IYobitSettings))
+		public HuobiSettings() : base(typeof(IApiSettings))
 		{ }
 
 		public string PublicUrl { get; set; }

@@ -1,11 +1,11 @@
 ﻿using System;
 using TradingBot.Core;
 
-namespace Yobit.Api
+namespace Exmo.Api
 {
-	internal sealed class YobitSettings : ApiSettings, IYobitSettings
+	internal class ExmoSettings : ApiSettings, IExmoSettings
 	{
-		public YobitSettings() : base(typeof(IYobitSettings))
+		public ExmoSettings() : base(typeof(IExmoSettings))
 		{ }
 
 		public string PublicUrl { get; set; }

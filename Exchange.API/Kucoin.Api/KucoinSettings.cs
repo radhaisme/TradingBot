@@ -1,11 +1,11 @@
 ﻿using System;
 using TradingBot.Core;
 
-namespace Yobit.Api
+namespace Kucoin.Api
 {
-	internal sealed class YobitSettings : ApiSettings, IYobitSettings
+	internal class KucoinSettings : ApiSettings, IKucoinSettings
 	{
-		public YobitSettings() : base(typeof(IYobitSettings))
+		public KucoinSettings() : base(typeof(IKucoinSettings))
 		{ }
 
 		public string PublicUrl { get; set; }

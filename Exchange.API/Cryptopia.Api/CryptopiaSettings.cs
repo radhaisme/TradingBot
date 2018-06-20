@@ -1,11 +1,11 @@
 ﻿using System;
 using TradingBot.Core;
 
-namespace Yobit.Api
+namespace Cryptopia.Api
 {
-	internal sealed class YobitSettings : ApiSettings, IYobitSettings
+	internal class CryptopiaSettings : ApiSettings, ICryptopiaSettings
 	{
-		public YobitSettings() : base(typeof(IYobitSettings))
+		public CryptopiaSettings() : base(typeof(ICryptopiaSettings))
 		{ }
 
 		public string PublicUrl { get; set; }

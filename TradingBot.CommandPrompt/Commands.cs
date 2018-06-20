@@ -144,12 +144,12 @@ namespace TradingBot.CommandPrompt
 
 		private IApiSettings GetAccountSettings(Account account)
 		{
-			if (account != null)
-				switch (account.ExchangeType)
-				{
-					case ExchangeType.Yobit:
-						return JsonHelper.FromJson<YobitSettings>(account.ApiSettings);
-				}
+			//if (account != null)
+			//	switch (account.ExchangeType)
+			//	{
+			//		case ExchangeType.Yobit:
+			//			return JsonHelper.FromJson<YobitSettings>(account.ApiSettings);
+			//	}
 			throw new ArgumentException("Such Exchange is not implemented");
 		}
 
@@ -269,14 +269,14 @@ namespace TradingBot.CommandPrompt
 						Console.WriteLine("For Yobit you must to enter Secret as 4th parameter");
 						return;
 					}
-					var sets = new YobitSettings
-					{
-						ApiKey = list[2],
-						Secret = list[3],
-						CreatedAt = DateTime.UtcNow
-					};
+					//var sets = new YobitSettings
+					//{
+					//	ApiKey = list[2],
+					//	Secret = list[3],
+					//	CreatedAt = DateTime.UtcNow
+					//};
 
-					settings = JsonHelper.ToJson(sets);
+					settings = null;
 					break;
 				default:
 					settings = "";

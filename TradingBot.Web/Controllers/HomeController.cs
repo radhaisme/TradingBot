@@ -15,29 +15,32 @@ namespace TradingBot.Web.Controllers
 		[HttpGet]
 		public async Task<IActionResult> GetPairs()
 		{
-			var client = new YobitClient("https://yobit.net/api/3/", "https://yobit.net/tapi/", new YobitSettings
-			{
-				Secret = "5ceeeb6072789d30e79a961335e63d50",
-				ApiKey = "B03E731C650825B49CB2840E8449D98D",
-				CreatedAt = new DateTime(2018, 1, 1)
-			});
-			string pairs = await client.GetPairsAsync();
+			return Content("");
 
-			return Content(pairs, "application/json");
+			//var client = new YobitClient("https://yobit.net/api/3/", "https://yobit.net/tapi/", new YobitSettings
+			//{
+			//	Secret = "5ceeeb6072789d30e79a961335e63d50",
+			//	ApiKey = "B03E731C650825B49CB2840E8449D98D",
+			//	CreatedAt = new DateTime(2018, 1, 1)
+			//});
+			//string pairs = await client.GetPairsAsync();
+
+			//return Content(pairs, "application/json");
 		}
 
 		[HttpGet]
 		public async Task<IActionResult> GetPairData(string pair)
 		{
-			var client = new YobitClient("https://yobit.net/api/3/", "https://yobit.net/tapi/", new YobitSettings
-			{
-				Secret = "5ceeeb6072789d30e79a961335e63d50",
-				ApiKey = "B03E731C650825B49CB2840E8449D98D",
-				CreatedAt = new DateTime(2018, 1, 1)
-			});
-			string data = await client.GetPairDataAsync(pair);
+			return Content("");
+			//var client = new YobitClient("https://yobit.net/api/3/", "https://yobit.net/tapi/", new YobitSettings
+			//{
+			//	Secret = "5ceeeb6072789d30e79a961335e63d50",
+			//	ApiKey = "B03E731C650825B49CB2840E8449D98D",
+			//	CreatedAt = new DateTime(2018, 1, 1)
+			//});
+			//string data = await client.GetPairDataAsync(pair);
 
-			return Content(data, "application/json");
+			//return Content(data, "application/json");
 		}
 	}
 }

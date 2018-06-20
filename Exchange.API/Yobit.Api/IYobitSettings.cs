@@ -1,11 +1,7 @@
-﻿
+﻿using TradingBot.Core;
+
 namespace Yobit.Api
 {
-	using System;
-	using TradingBot.Core;
-
-	public interface IYobitSettings : IApiSettings
-	{
-		DateTimeOffset CreatedAt { get; set; }
-	}
+	internal interface IYobitSettings : IApiSettings
+	{ }
 }
