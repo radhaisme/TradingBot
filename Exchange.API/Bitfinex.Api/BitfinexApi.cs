@@ -1,49 +1,33 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
-using TradingBot.Common;
 using TradingBot.Core;
 
 namespace Bitfinex.Api
 {
-	public class BitfinexApi : ExchangeApi
+	internal class BitfinexApi : ExchangeApi
 	{
 		public BitfinexApi(string publicEndpoint, string privateEndpoint) : base(publicEndpoint, privateEndpoint)
 		{ }
 
-		public async Task<string> GetCurrencies()
+		public async Task<HttpResponseMessage> GetPairs()
 		{
 			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "symbols");
 
-			if (response.IsSuccessStatusCode)
-			{
-				return await HttpHelper.AcquireStringAsync(response);
-			}
-
-			return null;
+			return response.EnsureSuccessStatusCode();
 		}
 
-		public async Task<string> GetPairsDetails()
+		public async Task<HttpResponseMessage> GetPairsDetails()
 		{
 			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "symbols_details");
 
-			if (response.IsSuccessStatusCode)
-			{
-				return await HttpHelper.AcquireStringAsync(response);
-			}
-
-			return null;
+			return response.EnsureSuccessStatusCode();
 		}
 
-		public async Task<string> GetPairDetail(string pair)
+		public async Task<HttpResponseMessage> GetPairDetail(string pair)
 		{
 			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + $"pubticker/{pair}");
 
-			if (response.IsSuccessStatusCode)
-			{
-				return await HttpHelper.AcquireStringAsync(response);
-			}
-
-			return null;
+			return response.EnsureSuccessStatusCode();
 		}
 	}
 }

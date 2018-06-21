@@ -1,4 +1,9 @@
-﻿
+﻿using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
+using TradingBot.Common;
+using TradingBot.Core.Entities;
+
 namespace Bitfinex.Api
 {
 	public class BitfinexClient
@@ -10,6 +15,44 @@ namespace Bitfinex.Api
 		{
 			_settings = new BitfinexSettings();
 			_api = new BitfinexApi(_settings.PublicUrl, _settings.PrivateUrl);
+		}
+
+		public async Task<IEnumerable<Pair>> GetPairs()
+		{
+			HttpResponseMessage[] results = await Task.WhenAll(_api.GetPairs(), _api.GetPairsDetails());
+			var items = await HttpHelper.AcquireContentAsync<string[]>(results[0]);
+			var details = await HttpHelper.AcquireContentAsync<dynamic>(results[1]);
+			var pairs = new Dictionary<string, Pair>(items.Length);
+
+			foreach (var item in items)
+			{
+				var pair = new Pair(item);
+				pairs.Add(item, pair);
+			}
+
+			foreach (dynamic detail in details)
+			{
+				if (!pairs.ContainsKey((string)detail.pair))
+				{
+					continue;
+				}
+
+				Pair pair = pairs[(string)detail.pair];
+				pair.Precision = detail.price_precision;
+				pair.MaxOrderSize = detail.maximum_order_size;
+				pair.MinOrderSize = detail.minimum_order_size;
+			}
+
+			return pairs.Values;
+		}
+
+		public async Task<dynamic> GetPairDetail(string pair)
+		{
+			HttpResponseMessage response = await _api.GetPairDetail(pair);
+			
+
+
+			return null;
 		}
 	}
 }
