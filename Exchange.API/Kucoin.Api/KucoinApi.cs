@@ -12,7 +12,7 @@ namespace Kucoin.Api
 
 		public async Task<string> GetCurrencies()
 		{
-			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "v1/market/open/coins");
+			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "market/open/coins");
 
 			if (response.IsSuccessStatusCode)
 			{
@@ -24,7 +24,7 @@ namespace Kucoin.Api
 
 		public async Task<string> GetPairs()
 		{
-			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "v1/market/open/symbols");
+			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "market/open/symbols");
 
 			if (response.IsSuccessStatusCode)
 			{
@@ -36,7 +36,7 @@ namespace Kucoin.Api
 
 		public async Task<string> GetPairDetail(string pair)
 		{
-			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + $"v1/{pair}/open/tick");
+			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + $"{pair}/open/tick");
 
 			if (response.IsSuccessStatusCode)
 			{

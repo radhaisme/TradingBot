@@ -12,7 +12,7 @@ namespace Cryptopia.Api
 
 		public async Task<string> GetCurrencies()
 		{
-			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "/GetCurrencies");
+			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "GetCurrencies");
 
 			if (response.IsSuccessStatusCode)
 			{
@@ -24,7 +24,7 @@ namespace Cryptopia.Api
 
 		public async Task<string> GetTradePairs()
 		{
-			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "/GetTradePairs");
+			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "GetTradePairs");
 
 			if (response.IsSuccessStatusCode)
 			{
@@ -36,7 +36,7 @@ namespace Cryptopia.Api
 
 		public async Task<string> GetMarket(string pair)
 		{
-			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + $"/GetMarket/{pair}");
+			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + $"GetMarket/{pair}");
 
 			if (response.IsSuccessStatusCode)
 			{

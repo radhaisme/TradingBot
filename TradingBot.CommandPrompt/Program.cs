@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Bitfinex.Api;
 
 namespace TradingBot.CommandPrompt
 {
@@ -8,7 +7,6 @@ namespace TradingBot.CommandPrompt
 	{
 		private static async Task Main(string[] args)
 		{
-			var client = new BitfinexClient();
 			
 
 			Console.ReadLine();

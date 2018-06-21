@@ -12,7 +12,7 @@ namespace Huobi.Api
 
 		public async Task<string> GetCurrencies()
 		{
-			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "v1/common/symbols");
+			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "common/symbols");
 
 			if (response.IsSuccessStatusCode)
 			{

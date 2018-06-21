@@ -1026,6 +1026,20 @@
           "ref/netstandard1.3/System.Threading.Tasks.dll": {}
         }
       },
+      "Binance.Api/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "dependencies": {
+          "TradingBot.Common": "1.0.0",
+          "TradingBot.Core": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Binance.Api.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Binance.Api.dll": {}
+        }
+      },
       "Bitfinex.Api/1.0.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
@@ -1040,6 +1054,20 @@
           "bin/placeholder/Bitfinex.Api.dll": {}
         }
       },
+      "Cryptopia.Api/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "dependencies": {
+          "TradingBot.Common": "1.0.0",
+          "TradingBot.Core": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Cryptopia.Api.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Cryptopia.Api.dll": {}
+        }
+      },
       "Exmo.Api/1.0.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
@@ -1052,6 +1080,48 @@
         },
         "runtime": {
           "bin/placeholder/Exmo.Api.dll": {}
+        }
+      },
+      "Huobi.Api/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "dependencies": {
+          "TradingBot.Common": "1.0.0",
+          "TradingBot.Core": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Huobi.Api.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Huobi.Api.dll": {}
+        }
+      },
+      "Kucoin.Api/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "dependencies": {
+          "TradingBot.Common": "1.0.0",
+          "TradingBot.Core": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Kucoin.Api.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Kucoin.Api.dll": {}
+        }
+      },
+      "Okex.Api/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "dependencies": {
+          "TradingBot.Common": "1.0.0",
+          "TradingBot.Core": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Okex.Api.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Okex.Api.dll": {}
         }
       },
       "TradingBot.Common/1.0.0": {
@@ -3759,15 +3829,40 @@
         "system.threading.tasks.nuspec"
       ]
     },
+    "Binance.Api/1.0.0": {
+      "type": "project",
+      "path": "../Exchange.API/Binance.Api/Binance.Api.csproj",
+      "msbuildProject": "../Exchange.API/Binance.Api/Binance.Api.csproj"
+    },
     "Bitfinex.Api/1.0.0": {
       "type": "project",
       "path": "../Exchange.API/Bitfinex.Api/Bitfinex.Api.csproj",
       "msbuildProject": "../Exchange.API/Bitfinex.Api/Bitfinex.Api.csproj"
     },
+    "Cryptopia.Api/1.0.0": {
+      "type": "project",
+      "path": "../Exchange.API/Cryptopia.Api/Cryptopia.Api.csproj",
+      "msbuildProject": "../Exchange.API/Cryptopia.Api/Cryptopia.Api.csproj"
+    },
     "Exmo.Api/1.0.0": {
       "type": "project",
       "path": "../Exchange.API/Exmo.Api/Exmo.Api.csproj",
       "msbuildProject": "../Exchange.API/Exmo.Api/Exmo.Api.csproj"
+    },
+    "Huobi.Api/1.0.0": {
+      "type": "project",
+      "path": "../Exchange.API/Huobi.Api/Huobi.Api.csproj",
+      "msbuildProject": "../Exchange.API/Huobi.Api/Huobi.Api.csproj"
+    },
+    "Kucoin.Api/1.0.0": {
+      "type": "project",
+      "path": "../Exchange.API/Kucoin.Api/Kucoin.Api.csproj",
+      "msbuildProject": "../Exchange.API/Kucoin.Api/Kucoin.Api.csproj"
+    },
+    "Okex.Api/1.0.0": {
+      "type": "project",
+      "path": "../Exchange.API/Okex.Api/Okex.Api.csproj",
+      "msbuildProject": "../Exchange.API/Okex.Api/Okex.Api.csproj"
     },
     "TradingBot.Common/1.0.0": {
       "type": "project",
@@ -3797,9 +3892,14 @@
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.1": [
+      "Binance.Api >= 1.0.0",
       "Bitfinex.Api >= 1.0.0",
+      "Cryptopia.Api >= 1.0.0",
       "Exmo.Api >= 1.0.0",
+      "Huobi.Api >= 1.0.0",
+      "Kucoin.Api >= 1.0.0",
       "Microsoft.NETCore.App >= 2.1.0",
+      "Okex.Api >= 1.0.0",
       "TradingBot.Common >= 1.0.0",
       "TradingBot.Data >= 1.0.0",
       "TradingBot.Services >= 1.0.0",
@@ -3837,11 +3937,26 @@
       "frameworks": {
         "netcoreapp2.1": {
           "projectReferences": {
+            "D:\\Projects\\TradingBot\\Exchange.API\\Binance.Api\\Binance.Api.csproj": {
+              "projectPath": "D:\\Projects\\TradingBot\\Exchange.API\\Binance.Api\\Binance.Api.csproj"
+            },
             "D:\\Projects\\TradingBot\\Exchange.API\\Bitfinex.Api\\Bitfinex.Api.csproj": {
               "projectPath": "D:\\Projects\\TradingBot\\Exchange.API\\Bitfinex.Api\\Bitfinex.Api.csproj"
             },
+            "D:\\Projects\\TradingBot\\Exchange.API\\Cryptopia.Api\\Cryptopia.Api.csproj": {
+              "projectPath": "D:\\Projects\\TradingBot\\Exchange.API\\Cryptopia.Api\\Cryptopia.Api.csproj"
+            },
             "D:\\Projects\\TradingBot\\Exchange.API\\Exmo.Api\\Exmo.Api.csproj": {
               "projectPath": "D:\\Projects\\TradingBot\\Exchange.API\\Exmo.Api\\Exmo.Api.csproj"
+            },
+            "D:\\Projects\\TradingBot\\Exchange.API\\Huobi.Api\\Huobi.Api.csproj": {
+              "projectPath": "D:\\Projects\\TradingBot\\Exchange.API\\Huobi.Api\\Huobi.Api.csproj"
+            },
+            "D:\\Projects\\TradingBot\\Exchange.API\\Kucoin.Api\\Kucoin.Api.csproj": {
+              "projectPath": "D:\\Projects\\TradingBot\\Exchange.API\\Kucoin.Api\\Kucoin.Api.csproj"
+            },
+            "D:\\Projects\\TradingBot\\Exchange.API\\Okex.Api\\Okex.Api.csproj": {
+              "projectPath": "D:\\Projects\\TradingBot\\Exchange.API\\Okex.Api\\Okex.Api.csproj"
             },
             "D:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj": {
               "projectPath": "D:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj"

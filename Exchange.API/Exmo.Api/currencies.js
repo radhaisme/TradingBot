@@ -1,0 +1,23 @@
+﻿[
+	"USD",
+	"EUR",
+	"RUB",
+	"PLN",
+	"UAH",
+	"BTC",
+	"LTC",
+	"DOGE",
+	"DASH",
+	"ETH",
+	"WAVES",
+	"ZEC",
+	"USDT",
+	"XMR",
+	"XRP",
+	"KICK",
+	"ETC",
+	"BCH",
+	"BTG",
+	"EOS",
+	"HBZ"
+]
