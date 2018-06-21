@@ -12,14 +12,14 @@ namespace Binance.Api
 
 		public async Task<bool> Ping()
 		{
-			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "/v1/ping");
+			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "ping");
 
 			return response.IsSuccessStatusCode;
 		}
 
 		public async Task<string> Time()
 		{
-			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "/v1/time");
+			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "time");
 
 			if (response.IsSuccessStatusCode)
 			{
@@ -31,7 +31,7 @@ namespace Binance.Api
 
 		public async Task<string> Info()
 		{
-			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "/v1/exchangeInfo");
+			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "exchangeInfo");
 
 			if (response.IsSuccessStatusCode)
 			{
@@ -43,7 +43,7 @@ namespace Binance.Api
 
 		public async Task<string> GetPrice(string pair)
 		{
-			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + $"/v3/ticker/price?symbol={pair}");
+			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + $"ticker/price?symbol={pair}");
 
 			if (response.IsSuccessStatusCode)
 			{

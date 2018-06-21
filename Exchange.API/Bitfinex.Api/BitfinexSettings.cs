@@ -1,5 +1,4 @@
-﻿using System;
-using TradingBot.Core;
+﻿using TradingBot.Core;
 
 namespace Bitfinex.Api
 {
@@ -7,11 +6,5 @@ namespace Bitfinex.Api
 	{
 		public BitfinexSettings() : base(typeof(IBitfinexSettings))
 		{ }
-
-		public string PublicUrl { get; set; }
-		public string PrivateUrl { get; set; }
-		public string ApiKey { get; set; }
-		public string Secret { get; set; }
-		public DateTimeOffset CreatedAt { get; set; }
 	}
 }

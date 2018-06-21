@@ -6,8 +6,14 @@ using System.Reflection;
 
 namespace TradingBot.Core
 {
-	public abstract class ApiSettings
+	public abstract class ApiSettings : IApiSettings
 	{
+		public string PublicUrl { get; set; }
+		public string PrivateUrl { get; set; }
+		public string ApiKey { get; set; }
+		public string Secret { get; set; }
+		public DateTimeOffset CreatedAt { get; set; }
+
 		protected ApiSettings(Type type)
 		{
 			if (!type.IsInterface)
