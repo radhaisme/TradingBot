@@ -1,11 +1,10 @@
-﻿
+﻿using System.Collections.Generic;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+
 namespace TradingBot.Common
 {
-	using System.Collections.Generic;
-	using System.Net.Http;
-	using System.Text;
-	using System.Threading.Tasks;
-
 	public static class HttpHelper
 	{
 		public static async Task<TModel> AcquireContentAsync<TModel>(HttpResponseMessage message)
