@@ -1,21 +1,35 @@
-﻿
+﻿using System;
+
 namespace TradingBot.Core.Entities
 {
-	public class Pair
+	public class Pair : IEquatable<Pair>
 	{
 		public Pair(string symbol)
 		{
 			Symbol = symbol;
+			InnerSymbol = symbol.ToUpper();
 		}
 
 		public Pair() : this("") { } //Delete it after refactoring
 
+		private string InnerSymbol { get; }
+
 		public string Symbol { get; }
-		public Currency BaseAsset { get; }
-		public Currency QuoteAsset { get; }
+		public Currency BaseAsset { get; set; }
+		public Currency QuoteAsset { get; set; }
 		public byte Precision { get; set; }
 		public decimal MaxOrderSize { get; set; }
 		public decimal MinOrderSize { get; set; }
+
+		public bool Equals(Pair other)
+		{
+			return other.Symbol.Equals(Symbol, StringComparison.InvariantCultureIgnoreCase);
+		}
+
+		public override int GetHashCode()
+		{
+			return InnerSymbol.GetHashCode();
+		}
 
 		public override string ToString()
 		{

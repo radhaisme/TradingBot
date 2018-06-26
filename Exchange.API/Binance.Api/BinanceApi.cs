@@ -5,7 +5,7 @@ using TradingBot.Core;
 
 namespace Binance.Api
 {
-	public class BinanceApi : ExchangeApi
+	internal class BinanceApi : ExchangeApi
 	{
 		public BinanceApi(string publicEndpoint, string privateEndpoint) : base(publicEndpoint, privateEndpoint)
 		{ }
@@ -29,28 +29,18 @@ namespace Binance.Api
 			return null;
 		}
 
-		public async Task<string> Info()
+		public async Task<HttpResponseMessage> GetPairs()
 		{
 			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "exchangeInfo");
-
-			if (response.IsSuccessStatusCode)
-			{
-				return await HttpHelper.AcquireStringAsync(response);
-			}
-
-			return null;
+			
+			return response.EnsureSuccessStatusCode();
 		}
 
-		public async Task<string> GetPrice(string pair)
+		public async Task<HttpResponseMessage> GetPairDetail(string pair)
 		{
 			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + $"ticker/price?symbol={pair}");
 
-			if (response.IsSuccessStatusCode)
-			{
-				return await HttpHelper.AcquireStringAsync(response);
-			}
-
-			return null;
+			return response.EnsureSuccessStatusCode();
 		}
 	}
 
