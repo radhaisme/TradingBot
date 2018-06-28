@@ -23,7 +23,7 @@ namespace TradingBot.Web.Controllers
 			//	ApiKey = "B03E731C650825B49CB2840E8449D98D",
 			//	CreatedAt = new DateTime(2018, 1, 1)
 			//});
-			//string pairs = await client.GetPairsAsync();
+			//string pairs = await client.GetPairs();
 
 			//return Content(pairs, "application/json");
 		}
@@ -38,7 +38,7 @@ namespace TradingBot.Web.Controllers
 			//	ApiKey = "B03E731C650825B49CB2840E8449D98D",
 			//	CreatedAt = new DateTime(2018, 1, 1)
 			//});
-			//string data = await client.GetPairDataAsync(pair);
+			//string data = await client.GetPairDetail(pair);
 
 			//return Content(data, "application/json");
 		}

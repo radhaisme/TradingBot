@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 using TradingBot.Common;
 using TradingBot.Core.Entities;
@@ -19,8 +18,7 @@ namespace Exmo.Api
 
 		public async Task<IEnumerable<Pair>> GetPairs()
 		{
-			HttpResponseMessage response = await _api.GetPairs();
-			var content = await HttpHelper.AcquireContentAsync<Dictionary<string, dynamic>>(response);
+			var content = await HttpHelper.AcquireContentAsync<Dictionary<string, dynamic>>(await _api.GetPairs());
 			var pairs = new List<Pair>();
 
 			foreach (string key in content.Keys)
@@ -37,8 +35,7 @@ namespace Exmo.Api
 
 		public async Task<IEnumerable<PairDetail>> GetPairsDetails()
 		{
-			HttpResponseMessage response = await _api.GetPairsDetails();
-			var content = await HttpHelper.AcquireContentAsync<Dictionary<string, dynamic>>(response);
+			var content = await HttpHelper.AcquireContentAsync<Dictionary<string, dynamic>>(await _api.GetPairsDetails());
 			var details = new List<PairDetail>();
 
 			foreach (string key in content.Keys)

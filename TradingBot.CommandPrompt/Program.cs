@@ -1,5 +1,4 @@
-﻿using Cryptopia.Api;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 
 namespace TradingBot.CommandPrompt

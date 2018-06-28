@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Net.Http;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TradingBot.Common;
 using TradingBot.Core.Entities;
@@ -19,8 +19,7 @@ namespace Cryptopia.Api
 
 		public async Task<IEnumerable<Pair>> GetPairs()
 		{
-			HttpResponseMessage response = await _api.GetTradePairs();
-			var content = await HttpHelper.AcquireContentAsync<dynamic>(response);
+			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetTradePairs());
 			var pairs = new List<Pair>();
 
 			foreach (dynamic item in content.Data)
@@ -38,8 +37,12 @@ namespace Cryptopia.Api
 
 		public async Task<PairDetail> GetPairDetail(string pair)
 		{
-			HttpResponseMessage response = await _api.GetPairDetail(pair);
-			var content = await HttpHelper.AcquireContentAsync<dynamic>(response);
+			if (String.IsNullOrEmpty(pair))
+			{
+				throw new ArgumentNullException(nameof(pair));
+			}
+
+			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairDetail(pair));
 			var detail = new PairDetail();
 			detail.Ask = content.Data.AskPrice;
 			detail.Bid = content.Data.BidPrice;

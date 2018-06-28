@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using TradingBot.Common;
@@ -39,8 +40,12 @@ namespace Binance.Api
 
 		public async Task<PairDetail> GetPairDetail(string pair)
 		{
-			HttpResponseMessage response = await _api.GetPairDetail(pair);
-			var content = await HttpHelper.AcquireContentAsync<dynamic>(response);
+			if (String.IsNullOrEmpty(pair))
+			{
+				throw new ArgumentNullException(nameof(pair));
+			}
+
+			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairDetail(pair));
 			var detail = new PairDetail();
 			detail.LastPrice = content.price;
 

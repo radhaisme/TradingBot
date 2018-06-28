@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using TradingBot.Common;
@@ -192,13 +193,20 @@ namespace Yobit.Api
 			}
 		}
 
-		public async Task<string> GetPairsAsync()
+		public async Task<IEnumerable<Pair>> GetPairs()
 		{
 			try
 			{
-				string info = await HttpHelper.AcquireStringAsync(await _api.GetPairsAsync());
+				var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairsAsync());
+				var pairs = new List<Pair>();
 
-				return info;
+				foreach (dynamic item in content.pairs)
+				{
+					var pair = new Pair((string)item.Name);
+					pairs.Add(pair);
+				}
+
+				return pairs;
 			}
 			catch (YobitException ex)
 			{
@@ -206,7 +214,7 @@ namespace Yobit.Api
 			}
 		}
 
-		public async Task<string> GetPairDataAsync(string pair)
+		public async Task<PairDetail> GetPairDetail(string pair)
 		{
 			if (String.IsNullOrEmpty(pair))
 			{
@@ -215,9 +223,17 @@ namespace Yobit.Api
 
 			try
 			{
-				string data = await HttpHelper.AcquireStringAsync(await _api.GetPairDataAsync(pair));
+				var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairDataAsync(pair));
+				var detail = new PairDetail();
+				detail.LastPrice = content[pair].last;
+				detail.Volume = content[pair].vol;
+				detail.Ask = content[pair].buy;
+				detail.Bid = content[pair].sell;
+				detail.High = content[pair].high;
+				detail.Low = content[pair].low;
+				detail.Avg = content[pair].avg;
 
-				return data;
+				return detail;
 			}
 			catch (YobitException ex)
 			{

@@ -11,7 +11,7 @@ namespace Huobi.Api
 
 		public async Task<HttpResponseMessage> GetPairs()
 		{
-			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "common/symbols");
+			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "v1/common/symbols");
 
 			return response.EnsureSuccessStatusCode();
 		}
