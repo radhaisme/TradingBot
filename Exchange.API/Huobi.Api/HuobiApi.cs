@@ -1,37 +1,26 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
-using TradingBot.Common;
 using TradingBot.Core;
 
 namespace Huobi.Api
 {
-	public sealed class HuobiApi : ExchangeApi
+	internal sealed class HuobiApi : ExchangeApi
 	{
 		public HuobiApi(string publicEndpoint, string privateEndpoint) : base(publicEndpoint, privateEndpoint)
 		{ }
 
-		public async Task<string> GetCurrencies()
+		public async Task<HttpResponseMessage> GetPairs()
 		{
 			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "common/symbols");
 
-			if (response.IsSuccessStatusCode)
-			{
-				return await HttpHelper.AcquireStringAsync(response);
-			}
-
-			return null;
+			return response.EnsureSuccessStatusCode();
 		}
 
-		public async Task<string> GetPairDetail(string pair)
+		public async Task<HttpResponseMessage> GetPairDetail(string pair)
 		{
 			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + $"market/detail/merged?symbol={pair}");
 
-			if (response.IsSuccessStatusCode)
-			{
-				return await HttpHelper.AcquireStringAsync(response);
-			}
-
-			return null;
+			return response.EnsureSuccessStatusCode();
 		}
 	}
 }
