@@ -26,10 +26,8 @@ namespace Binance.Api
 			foreach (dynamic item in content.symbols)
 			{
 				var pair = new Pair((string)item.symbol);
-				pair.BaseAsset = new Currency();
-				pair.BaseAsset.Symbol = item.baseAsset;
-				pair.QuoteAsset = new Currency();
-				pair.QuoteAsset.Symbol = item.quoteAsset;
+				pair.BaseAsset = item.baseAsset;
+				pair.QuoteAsset = item.quoteAsset;
 				pair.Precision = item.baseAssetPrecision;
 				pair.MinOrderSize = item.filters[0].minPrice;
 				pair.MaxOrderSize = item.filters[0].maxPrice;

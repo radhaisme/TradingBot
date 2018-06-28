@@ -1,49 +1,33 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
-using TradingBot.Common;
 using TradingBot.Core;
 
 namespace Cryptopia.Api
 {
-	public sealed class CryptopiaApi : ExchangeApi
+	internal sealed class CryptopiaApi : ExchangeApi
 	{
 		public CryptopiaApi(string publicEndpoint, string privateEndpoint) : base(publicEndpoint, privateEndpoint)
 		{ }
 
-		public async Task<string> GetCurrencies()
+		public async Task<HttpResponseMessage> GetPairs()
 		{
-			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "GetCurrencies");
+			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "GetPairs");
 
-			if (response.IsSuccessStatusCode)
-			{
-				return await HttpHelper.AcquireStringAsync(response);
-			}
-
-			return null;
+			return response.EnsureSuccessStatusCode();
 		}
 
-		public async Task<string> GetTradePairs()
+		public async Task<HttpResponseMessage> GetTradePairs()
 		{
 			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "GetTradePairs");
 
-			if (response.IsSuccessStatusCode)
-			{
-				return await HttpHelper.AcquireStringAsync(response);
-			}
-
-			return null;
+			return response.EnsureSuccessStatusCode();
 		}
 
-		public async Task<string> GetMarket(string pair)
+		public async Task<HttpResponseMessage> GetPairDetail(string pair)
 		{
 			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + $"GetMarket/{pair}");
 
-			if (response.IsSuccessStatusCode)
-			{
-				return await HttpHelper.AcquireStringAsync(response);
-			}
-
-			return null;
+			return response.EnsureSuccessStatusCode();
 		}
 	}
 }

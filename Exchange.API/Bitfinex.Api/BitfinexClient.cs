@@ -58,7 +58,7 @@ namespace Bitfinex.Api
 			detail.Volume = pairDetail.volume;
 			detail.High = pairDetail.high;
 			detail.Low = pairDetail.low;
-			
+
 			return detail;
 		}
 	}

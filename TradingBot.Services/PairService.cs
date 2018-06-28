@@ -87,15 +87,15 @@ namespace TradingBot.Services
 							AccountType = type,
 							UpdatedDt = DateTime.UtcNow,
 							Name = pair.Key,
-							DecimalPlaces = pairInfo.DecimalPlaces,
-							Fee = pairInfo.Fee,
-							FeeBuyer = pairInfo.FeeBuyer,
-							FeeSeller = pairInfo.FeeSeller,
-							IsHidden = pairInfo.IsHidden,
-							MaxPrice = pairInfo.MaxPrice,
-							MinAmount = pairInfo.MinAmount,
-							MinPrice = pairInfo.MinPrice,
-							MinTotal = pairInfo.MinTotal
+							//DecimalPlaces = pairInfo.DecimalPlaces,
+							//Fee = pairInfo.Fee,
+							//FeeBuyer = pairInfo.FeeBuyer,
+							//FeeSeller = pairInfo.FeeSeller,
+							//IsHidden = pairInfo.IsHidden,
+							//MaxPrice = pairInfo.MaxPrice,
+							//MinAmount = pairInfo.MinAmount,
+							//MinPrice = pairInfo.MinPrice,
+							//MinTotal = pairInfo.MinTotal
 						}, false);
 					}
 					Context.SaveChanges();
