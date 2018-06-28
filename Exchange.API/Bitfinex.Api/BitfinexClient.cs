@@ -49,16 +49,16 @@ namespace Bitfinex.Api
 		public async Task<PairDetail> GetPairDetail(string pair)
 		{
 			HttpResponseMessage response = await _api.GetPairDetail(pair);
-			dynamic pairDetail = await HttpHelper.AcquireContentAsync<dynamic>(response);
+			dynamic content = await HttpHelper.AcquireContentAsync<dynamic>(response);
 			var detail = new PairDetail();
-			detail.LastPrice = pairDetail.last_price;
-			detail.Ask = pairDetail.ask;
-			detail.Bid = pairDetail.bid;
-			detail.Avg = pairDetail.mid;
-			detail.Volume = pairDetail.volume;
-			detail.High = pairDetail.high;
-			detail.Low = pairDetail.low;
-			
+			detail.LastPrice = content.last_price;
+			detail.Ask = content.ask;
+			detail.Bid = content.bid;
+			detail.Avg = content.mid;
+			detail.Volume = content.volume;
+			detail.High = content.high;
+			detail.Low = content.low;
+
 			return detail;
 		}
 	}
