@@ -6,7 +6,7 @@ using TradingBot.Core.Entities;
 
 namespace Okex.Api
 {
-	public class OkexClient
+	public sealed class OkexClient
 	{
 		private readonly OkexApi _api;
 		private readonly IOkexSettings _settings;

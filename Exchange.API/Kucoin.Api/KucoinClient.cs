@@ -6,7 +6,7 @@ using TradingBot.Core.Entities;
 
 namespace Kucoin.Api
 {
-	public class KucoinClient
+	public sealed class KucoinClient
 	{
 		private readonly KucoinApi _api;
 		private readonly IKucoinSettings _settings;
