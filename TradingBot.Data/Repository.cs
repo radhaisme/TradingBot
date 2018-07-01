@@ -1,32 +1,33 @@
-﻿
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
+using TradingBot.Data.Entities;
+
 namespace TradingBot.Data
 {
-	using Entities;
-	using Microsoft.EntityFrameworkCore;
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Linq.Expressions;
-
-	public sealed class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
+	public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
 	{
 		private readonly IDataContext _context;
 		private readonly DbSet<TEntity> _set;
 
-		public Repository(IDataContext context)
+		protected Repository(IDataContext context)
 		{
 			_context = context;
 			_set = context.Set<TEntity>();
 		}
 
-		public void Add(TEntity entity)
+		public async Task AddAsync(TEntity entity, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			_set.Add(entity);
+			await _set.AddAsync(entity, cancellationToken);
 		}
 
-		public void Delete(int id)
+		public async Task RemoveAsync(int id, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			TEntity entity = Find(id);
+			TEntity entity = await FindAsync(id, cancellationToken);
 
 			if (entity == null)
 			{
@@ -36,30 +37,36 @@ namespace TradingBot.Data
 			_set.Remove(entity);
 		}
 
-		public ICollection<TEntity> Get(Expression<Func<TEntity, bool>> expr = null)
+		public async Task<ICollection<TEntity>> GetAsync(Expression<Func<TEntity, bool>> expr = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			if (expr != null)
+			return await Task.Factory.StartNew(() =>
 			{
-				return _set.Where(expr).ToList();
-			}
+				if (expr != null)
+				{
+					return _set.Where(expr).ToList();
+				}
 
-			return _set.ToList();
+				return _set.ToList();
+			}, cancellationToken);
 		}
 
-		public void Update(TEntity entity)
+		public async Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			_set.Update(entity);
-			_context.Entry(entity).State = EntityState.Modified;
+			await Task.Factory.StartNew(() =>
+			{
+				_set.Update(entity);
+				_context.Entry(entity).State = EntityState.Modified;
+			}, cancellationToken);
 		}
 
-		public IQueryable<TEntity> Query()
+		protected IQueryable<TEntity> Query()
 		{
 			return _set;
 		}
 
-		public TEntity Find(int id)
+		public async Task<TEntity> FindAsync(int id, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			return _set.Find(id);
+			return await _set.FindAsync(id, cancellationToken);
 		}
 	}
 }

@@ -1,10 +1,8 @@
-﻿
+﻿using Microsoft.EntityFrameworkCore;
+using System.Configuration;
+
 namespace TradingBot.Data
 {
-	using Mappings;
-	using Microsoft.EntityFrameworkCore;
-	using System.Configuration;
-
 	public class BotContext : DbContext, IDataContext
 	{
 		protected override void OnConfiguring(DbContextOptionsBuilder options)
@@ -15,9 +13,11 @@ namespace TradingBot.Data
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
-			builder.ApplyConfiguration(new UserMapping());
-			builder.ApplyConfiguration(new AccountMapping());
-			builder.ApplyConfiguration(new PairInfoMapping());
+			
+			
+			//builder.ApplyConfiguration(new UserMapping());
+			//builder.ApplyConfiguration(new AccountMapping());
+			//builder.ApplyConfiguration(new PairInfoMapping());
 			//builder.ApplyConfiguration(new ExchangeClientMapping());
 		}
 	}

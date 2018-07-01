@@ -126,13 +126,13 @@ namespace TradingBot.CommandPrompt
 
 			List.Add(
 			  new Command(CommandEnum.GetPairs, new List<string> { "getpairs", "all", "info" },
-			  string.Format("Get all list of tickers with basic statistics. Parameters (* - required): exchangeType* ({0})",
+			  string.Format("GetAsync all list of tickers with basic statistics. Parameters (* - required): exchangeType* ({0})",
 			  ClientFactory.GetExchanges().Aggregate((s, n) => s + ", " + n)))
 			);
 
 			List.Add(
 			  new Command(CommandEnum.GetPairInfo, new List<string> { "getpairinfo", "tickerinfo", "get-ticker-info", "get-pair-info", "pair-info", "ticker-info" },
-			  string.Format("Get basic ticker info. It uses info stored from last 'getpairs'. Parameters (* - required): exchangeType* ({0}), tickerCode* ", ClientFactory.GetExchanges().Aggregate((s, n) => s + ", " + n)))
+			  string.Format("GetAsync basic ticker info. It uses info stored from last 'getpairs'. Parameters (* - required): exchangeType* ({0}), tickerCode* ", ClientFactory.GetExchanges().Aggregate((s, n) => s + ", " + n)))
 			);
 		}
 
@@ -179,19 +179,19 @@ namespace TradingBot.CommandPrompt
 				return;
 			}
 
-			using (var usrService = new UserService())
-			{
-				var usr = usrService.RegisterUser(list[0].Trim(), list[1].Trim());
-				if (usr == null)
-				{
-					Console.WriteLine("Such username already registered");
-					return;
-				}
+			//using (var usrService = new UserService())
+			//{
+			//	var usr = usrService.RegisterUser(list[0].Trim(), list[1].Trim());
+			//	if (usr == null)
+			//	{
+			//		Console.WriteLine("Such username already registered");
+			//		return;
+			//	}
 
-				Console.WriteLine("Registration complete");
+			//	Console.WriteLine("Registration complete");
 
-				CurrentUser = usr;
-			}
+			//	CurrentUser = usr;
+			//}
 		}
 
 		public void Login(params string[] list)
@@ -202,19 +202,19 @@ namespace TradingBot.CommandPrompt
 				return;
 			}
 
-			using (var usrService = new UserService())
-			{
-				var usr = usrService.AuthenticateUser(list[0].Trim(), list[1].Trim());
-				if (usr == null)
-				{
-					Console.WriteLine("Incorrect username or password");
-					return;
-				}
+			//using (var usrService = new UserService())
+			//{
+			//	var usr = usrService.AuthenticateUser(list[0].Trim(), list[1].Trim());
+			//	if (usr == null)
+			//	{
+			//		Console.WriteLine("Incorrect username or password");
+			//		return;
+			//	}
 
-				Console.WriteLine("You are logged in");
+			//	Console.WriteLine("You are logged in");
 
-				CurrentUser = usr;
-			}
+			//	CurrentUser = usr;
+			//}
 		}
 
 		public void Logout(params string[] list)
@@ -230,13 +230,13 @@ namespace TradingBot.CommandPrompt
 			if (CurrentUser == null)
 				Console.WriteLine("You are not authorized");
 
-			using (var accService = new AccountService())
-			{
-				var result = accService.GetAccounts(CurrentUser.Id);
+			//using (var accService = new AccountService())
+			//{
+			//	var result = accService.GetAccounts(CurrentUser.Id);
 
-				Console.WriteLine(string.Format("Your Account(s):\n\r {0}",
-					string.Join("\n\r * ", result.Select(m => JsonHelper.ToJson(m)))));
-			}
+			//	Console.WriteLine(string.Format("Your Account(s):\n\r {0}",
+			//		string.Join("\n\r * ", result.Select(m => JsonHelper.ToJson(m)))));
+			//}
 			return;
 		}
 
@@ -283,12 +283,12 @@ namespace TradingBot.CommandPrompt
 					break;
 			}
 
-			using (var accService = new AccountService())
-			{
-				var result = accService.CreateOrUpdate(CurrentUser.Id, list[0], typeEnum, settings);
+			//using (var accService = new AccountService())
+			//{
+			//	var result = accService.CreateOrUpdate(CurrentUser.Id, list[0], typeEnum, settings);
 
-				Console.WriteLine(string.Format("Account successfully added: {0}", JsonHelper.ToJson(result)));
-			}
+			//	Console.WriteLine(string.Format("Account successfully added: {0}", JsonHelper.ToJson(result)));
+			//}
 			return;
 		}
 
@@ -313,27 +313,27 @@ namespace TradingBot.CommandPrompt
 				accName = list[0].ToLowerInvariant();
 			}
 
-			using (var accService = new AccountService())
-			{
-				var account = accId > 0 ? accService.GetById(accId) : accService.GetByName(CurrentUser.Id, accName);
-				if (account == null)
-				{
-					Console.WriteLine("Can't find such account");
-					return;
-				}
+			//using (var accService = new AccountService())
+			//{
+			//	var account = accId > 0 ? accService.GetById(accId) : accService.GetByName(CurrentUser.Id, accName);
+			//	if (account == null)
+			//	{
+			//		Console.WriteLine("Can't find such account");
+			//		return;
+			//	}
 
-				if (!ClientFactory.IsExists(account.ExchangeType))
-				{
-					Console.WriteLine("It's not registered Exchange");
-					return;
-				}
+			//	if (!ClientFactory.IsExists(account.ExchangeType))
+			//	{
+			//		Console.WriteLine("It's not registered Exchange");
+			//		return;
+			//	}
 
-				var apiSettings = GetAccountSettings(account);
-				var exchange = new ClientFactory().Create(account.ExchangeType, apiSettings);
+			//	var apiSettings = GetAccountSettings(account);
+			//	var exchange = new ClientFactory().Create(account.ExchangeType, apiSettings);
 
-				//var result = exchange.GetActiveOrdersOfUserAsync(pair).Result;
-				//Console.WriteLine("Done: " + JsonHelper.ToJson(result));
-			}
+			//	//var result = exchange.GetActiveOrdersOfUserAsync(pair).Result;
+			//	//Console.WriteLine("Done: " + JsonHelper.ToJson(result));
+			//}
 		}
 
 		public void GetPairInfo(params string[] list)
@@ -352,14 +352,14 @@ namespace TradingBot.CommandPrompt
 				return;
 			}
 
-			using (var pairService = new PairService())
-			{
-				var info = pairService.GetPair((ExchangeType)type, tickerCode);
-				if (info == null)
-					Console.WriteLine("Nothing found");
-				else
-					Console.WriteLine(string.Format("Ticker info: {0}", JsonHelper.ToJson(info)));
-			}
+			//using (var pairService = new PairService())
+			//{
+			//	var info = pairService.GetPair((ExchangeType)type, tickerCode);
+			//	if (info == null)
+			//		Console.WriteLine("Nothing found");
+			//	else
+			//		Console.WriteLine(string.Format("Ticker info: {0}", JsonHelper.ToJson(info)));
+			//}
 		}
 
 		public void GetPairs(params string[] list)
@@ -391,10 +391,10 @@ namespace TradingBot.CommandPrompt
 			try
 			{
 				dynamic result = null;
-				using (var pairService = new PairService())
-				{
-					result = pairService.PullPairs(exchange);
-				}
+				//using (var pairService = new PairService())
+				//{
+				//	result = pairService.PullPairs(exchange);
+				//}
 				if (result != null)
 					Console.WriteLine("Pairs info received, you can use /tickerInfo [tickerCode] to get appropriate info");
 				else

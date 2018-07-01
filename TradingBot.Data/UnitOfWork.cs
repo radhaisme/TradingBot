@@ -1,7 +1,10 @@
-﻿
+﻿using System.Threading;
+using System.Threading.Tasks;
+using TradingBot.Data.Entities;
+
 namespace TradingBot.Data
 {
-	using Entities;
+
 
 	public sealed class UnitOfWork : IUnitOfWork
 	{
@@ -13,9 +16,9 @@ namespace TradingBot.Data
 			context.Database.EnsureCreated();
 			_context = context;
 
-			Accounts = new Repository<Account>(_context); //Add IoC
-			Users = new Repository<User>(_context); //Add IoC
-			PairInfos = new Repository<PairInfo>(_context); //Add IoC
+			//Accounts = new Repository<Account>(_context); //Add IoC
+			//Users = new Repository<User>(_context); //Add IoC
+			//PairInfos = new Repository<PairInfo>(_context); //Add IoC
 		}
 
 		public Repository<Account> Accounts { get; private set; }
@@ -24,9 +27,9 @@ namespace TradingBot.Data
 
 		public Repository<PairInfo> PairInfos { get; private set; }
 
-		public int SaveChanges()
+		public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
-			return _context.SaveChanges();
+			return await _context.SaveChangesAsync(cancellationToken);
 		}
 
 		public void Dispose()
