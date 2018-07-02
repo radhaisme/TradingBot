@@ -59,7 +59,7 @@ namespace TradingBot.Services
 
    //     public dynamic PullPairs(object api)
    //     {
-	  //      var method = api.GetType().GetMethod("GetPairs");
+	  //      var method = api.GetType().GetMethod("GetPairsAsync");
 	  //      var result = (PairsInfo)method.Invoke(api, null);
 			//string[] names = Enum.GetNames(typeof(ExchangeType));
 	  //      var name = names.Single(x => api.GetType().Name.StartsWith(x));

@@ -9,11 +9,11 @@ namespace Binance.Api
 		public BinanceApi(string publicEndpoint, string privateEndpoint) : base(publicEndpoint, privateEndpoint)
 		{ }
 
-		public async Task<bool> Ping()
+		public async Task<HttpResponseMessage> Ping()
 		{
 			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "ping");
 
-			return response.IsSuccessStatusCode;
+			return response.EnsureSuccessStatusCode();
 		}
 
 		public async Task<HttpResponseMessage> Time()

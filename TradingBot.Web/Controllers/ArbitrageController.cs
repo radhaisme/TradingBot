@@ -48,4 +48,14 @@ namespace TradingBot.Web.Controllers
 
 		}
 	}
+
+	public class Exchange
+	{
+
+
+		public Exchange()
+		{
+
+		}
+	}
 }

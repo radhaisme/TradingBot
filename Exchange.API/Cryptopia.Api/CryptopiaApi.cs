@@ -11,7 +11,7 @@ namespace Cryptopia.Api
 
 		public async Task<HttpResponseMessage> GetPairs()
 		{
-			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "GetPairs");
+			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "GetPairsAsync");
 
 			return response.EnsureSuccessStatusCode();
 		}

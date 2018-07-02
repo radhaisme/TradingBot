@@ -32,7 +32,7 @@ namespace TradingBot.Core
 			GC.SuppressFinalize(this);
 		}
 
-		private string NormalizeUrl(string url)
+		protected string NormalizeUrl(string url)
 		{
 			if (!url.EndsWith("/"))
 			{
