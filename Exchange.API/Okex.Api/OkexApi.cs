@@ -4,7 +4,7 @@ using TradingBot.Core;
 
 namespace Okex.Api
 {
-	internal class OkexApi : ExchangeApi
+	internal sealed class OkexApi : ExchangeApi
 	{
 		public OkexApi(string publicEndpoint, string privateEndpoint) : base(publicEndpoint, privateEndpoint)
 		{ }

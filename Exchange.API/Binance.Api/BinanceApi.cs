@@ -1,11 +1,10 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
-using TradingBot.Common;
 using TradingBot.Core;
 
 namespace Binance.Api
 {
-	internal class BinanceApi : ExchangeApi
+	internal sealed class BinanceApi : ExchangeApi
 	{
 		public BinanceApi(string publicEndpoint, string privateEndpoint) : base(publicEndpoint, privateEndpoint)
 		{ }
@@ -17,22 +16,17 @@ namespace Binance.Api
 			return response.IsSuccessStatusCode;
 		}
 
-		public async Task<string> Time()
+		public async Task<HttpResponseMessage> Time()
 		{
 			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "time");
 
-			if (response.IsSuccessStatusCode)
-			{
-				return await HttpHelper.AcquireStringAsync(response);
-			}
-
-			return null;
+			return response.EnsureSuccessStatusCode();
 		}
 
 		public async Task<HttpResponseMessage> GetPairs()
 		{
 			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "exchangeInfo");
-			
+
 			return response.EnsureSuccessStatusCode();
 		}
 

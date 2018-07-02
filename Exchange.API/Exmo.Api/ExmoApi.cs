@@ -4,7 +4,7 @@ using TradingBot.Core;
 
 namespace Exmo.Api
 {
-	internal class ExmoApi : ExchangeApi
+	internal sealed class ExmoApi : ExchangeApi
 	{
 		public ExmoApi(string publicEndpoint, string privateEndpoint) : base(publicEndpoint, privateEndpoint)
 		{ }

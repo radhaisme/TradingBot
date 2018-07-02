@@ -4,7 +4,7 @@ using TradingBot.Core;
 
 namespace Kucoin.Api
 {
-	internal class KucoinApi : ExchangeApi
+	internal sealed class KucoinApi : ExchangeApi
 	{
 		public KucoinApi(string publicEndpoint, string privateEndpoint) : base(publicEndpoint, privateEndpoint)
 		{ }

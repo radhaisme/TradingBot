@@ -4,7 +4,7 @@ using TradingBot.Core;
 
 namespace Bitfinex.Api
 {
-	internal class BitfinexApi : ExchangeApi
+	internal sealed class BitfinexApi : ExchangeApi
 	{
 		public BitfinexApi(string publicEndpoint, string privateEndpoint) : base(publicEndpoint, privateEndpoint)
 		{ }

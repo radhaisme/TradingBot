@@ -1,9 +1,8 @@
-﻿
+﻿using System;
+using System.Net.Http;
+
 namespace TradingBot.Core
 {
-	using System;
-	using System.Net.Http;
-
 	public abstract class ExchangeApi : IDisposable
 	{
 		protected readonly HttpClient HttpClient = new HttpClient();
@@ -12,23 +11,35 @@ namespace TradingBot.Core
 
 		protected ExchangeApi(string publicEndpoint, string privateEndpoint)
 		{
-			PrivateUrl = new Uri(privateEndpoint);
-			PublicUrl = new Uri(publicEndpoint);
-			HttpClient.DefaultRequestHeaders.ConnectionClose = false;
-		}
-
-		protected virtual void Dispose(bool disposing)
-		{
-			if (disposing)
+			if (String.IsNullOrEmpty(publicEndpoint))
 			{
-				HttpClient.Dispose();
+				throw new ArgumentNullException(nameof(publicEndpoint));
 			}
+
+			if (String.IsNullOrEmpty(privateEndpoint))
+			{
+				throw new ArgumentNullException(nameof(privateEndpoint));
+			}
+
+			PrivateUrl = new Uri(NormalizeUrl(privateEndpoint));
+			PublicUrl = new Uri(NormalizeUrl(publicEndpoint));
+			HttpClient.DefaultRequestHeaders.ConnectionClose = false;
 		}
 
 		public void Dispose()
 		{
-			Dispose(true);
+			HttpClient.Dispose();
 			GC.SuppressFinalize(this);
+		}
+
+		private string NormalizeUrl(string url)
+		{
+			if (!url.EndsWith("/"))
+			{
+				return url + "/";
+			}
+
+			return url;
 		}
 	}
 }
