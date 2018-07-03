@@ -6,6 +6,6 @@ namespace TradingBot.Core
 {
 	public interface ICurrencyProvider
 	{
-		Task<IEnumerable<Currency>> GetCurrenciesAsync();
+		Task<IReadOnlyDictionary<string, IList<Currency>>> GetCurrenciesAsync();
 	}
 }

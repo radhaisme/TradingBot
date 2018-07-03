@@ -49,13 +49,45 @@ namespace TradingBot.Web.Controllers
 		}
 	}
 
-	public class Exchange
+	public class Exchange : IExchange
 	{
+		private readonly IExchangeClient _client;
+		private static IReadOnlyDictionary<string, IList<Currency>> _currencies;
+
+		public Exchange(IReadOnlyDictionary<string, IList<Currency>> currencies, IExchangeClient client)
+		{
+			_currencies = currencies;
+			_client = client;
+		}
+
+		public async void Initialize()
+		{
+			var pairs = await _client.GetPairsAsync();
 
 
-		public Exchange()
+		}
+	}
+
+	public interface IExchange
+	{
+		void Initialize();
+	}
+
+	public class ExchangeFactory : IExchangeFactory
+	{
+		public ExchangeFactory()
 		{
 
 		}
+
+		public IExchange Create()
+		{
+			return null;
+		}
+	}
+
+	public interface IExchangeFactory
+	{
+		IExchange Create();
 	}
 }

@@ -9,7 +9,7 @@ namespace TradingBot.CurrencyProvider
 		public CoinMarketCapApi(string publicEndpoint, string privateEndpoint) : base(publicEndpoint, privateEndpoint)
 		{ }
 
-		public async Task<HttpResponseMessage> GetCurrencies()
+		public async Task<HttpResponseMessage> GetCurrenciesAsync()
 		{
 			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "listings");
 
