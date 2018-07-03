@@ -48,7 +48,6 @@ namespace Cryptopia.Api
 			detail.Bid = content.Data.BidPrice;
 			detail.High = content.Data.High;
 			detail.Low = content.Data.Low;
-			detail.Avg = (detail.High + detail.Low) / 2;
 			detail.LastPrice = content.Data.LastPrice;
 			detail.Volume = content.Data.Volume;
 

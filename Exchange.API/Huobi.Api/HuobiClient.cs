@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using TradingBot.Common;
+using TradingBot.Core;
 using TradingBot.Core.Entities;
 
 namespace Huobi.Api
 {
-	public class HuobiClient
+	public sealed class HuobiClient : IExchangeClient
 	{
 		private readonly HuobiApi _api;
 		private readonly IHuobiSettings _settings;
@@ -17,7 +19,7 @@ namespace Huobi.Api
 			_api = new HuobiApi(_settings.PublicUrl, _settings.PrivateUrl);
 		}
 
-		public async Task<IEnumerable<Pair>> GetPairs()
+		public async Task<IEnumerable<Pair>> GetPairsAsync()
 		{
 			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairs());
 			var pairs = new List<Pair>();
@@ -25,16 +27,16 @@ namespace Huobi.Api
 			foreach (dynamic item in content.data)
 			{
 				var pair = new Pair((string)item["base-currency"] + (string)item["quote-currency"]);
-				pair.BaseAsset = item["base-currency"];
-				pair.QuoteAsset = item["quote-currency"];
-				pair.Precision = item["price-precision"];
+				pair.BaseAsset = ((string)item["base-currency"]).ToUpper();
+				pair.QuoteAsset = ((string)item["quote-currency"]).ToUpper();
+				//pair.Precision = item["price-precision"];
 				pairs.Add(pair);
 			}
 
 			return pairs;
 		}
 
-		public async Task<PairDetail> GetPairDetail(string pair)
+		public async Task<PairDetail> GetPairDetailAsync(string pair)
 		{
 			if (String.IsNullOrEmpty(pair))
 			{
@@ -51,6 +53,24 @@ namespace Huobi.Api
 			detail.Low = content.tick.low;
 
 			return detail;
+		}
+
+		public async Task<IReadOnlyCollection<PairDetail>> GetPairsDetails(params string[] pairs)
+		{
+			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairsDetails());
+			var details = new List<PairDetail>();
+			
+			foreach (dynamic item in content.data)
+			{
+				var detail = new PairDetail();
+				detail.LastPrice = item.close;
+				//detail.Low = item.low;
+				//detail.High = item.high;
+				//detail.Volume = item.vol;
+				details.Add(detail);
+			}
+
+			return new ReadOnlyCollection<PairDetail>(details);
 		}
 	}
 }

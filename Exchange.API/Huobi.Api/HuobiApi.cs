@@ -22,5 +22,12 @@ namespace Huobi.Api
 
 			return response.EnsureSuccessStatusCode();
 		}
+
+		public async Task<HttpResponseMessage> GetPairsDetails()
+		{
+			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "market/tickers");
+
+			return response.EnsureSuccessStatusCode();
+		}
 	}
 }

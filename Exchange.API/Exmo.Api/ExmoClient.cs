@@ -46,7 +46,6 @@ namespace Exmo.Api
 				detail.High = item.high;
 				detail.Low = item.low;
 				detail.Volume = item.vol;
-				detail.Avg = item.avg;
 				detail.Ask = item.buy_price;
 				detail.Bid = item.sell_price;
 				details.Add(detail);

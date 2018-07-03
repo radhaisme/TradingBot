@@ -57,7 +57,6 @@ namespace Yobit.Api
 				detail.Bid = content[pair].sell;
 				detail.High = content[pair].high;
 				detail.Low = content[pair].low;
-				detail.Avg = content[pair].avg;
 
 				return detail;
 			}
@@ -65,6 +64,11 @@ namespace Yobit.Api
 			{
 				throw new HttpRequestException(ex.Message, ex);
 			}
+		}
+
+		public Task<IReadOnlyCollection<PairDetail>> GetPairsDetails(params string[] pairs)
+		{
+			throw new NotImplementedException();
 		}
 
 		//public async Task<OrderDetails> GetOrderInfoAsync(int orderId)

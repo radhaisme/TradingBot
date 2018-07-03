@@ -25,6 +25,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Exchange.API\Binance.Api\Binance.Api.csproj" />
+    <ProjectReference Include="..\Exchange.API\Huobi.Api\Huobi.Api.csproj" />
     <ProjectReference Include="..\Exchange.API\Yobit.Api\Yobit.Api.csproj" />
   </ItemGroup>
 

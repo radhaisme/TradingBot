@@ -40,45 +40,28 @@ namespace TradingBot.Data.Entities
 			QuoteAsset = quoteAsset;
 		}
 
+		public string Label => $"{BaseAsset.Symbol}/{QuoteAsset.Symbol}";
 		public Currency BaseAsset { get; }
 		public Currency QuoteAsset { get; }
 
-		public bool Equals(Pair x, Pair y)
-		{
-			if (x == null || y == null)
-			{
-				return false;
-			}
-
-			return x.BaseAsset.Id == y.BaseAsset.Id && x.QuoteAsset.Id == y.QuoteAsset.Id;
-		}
-
 		public override bool Equals(object obj)
 		{
-			if (ReferenceEquals(null, obj)) return false;
-			if (ReferenceEquals(this, obj)) return true;
-			if (obj.GetType() != this.GetType()) return false;
-			return Equals((Pair) obj);
+			return Equals((Pair)obj);
 		}
 
 		public override int GetHashCode()
 		{
-			unchecked
-			{
-				return ((BaseAsset != null ? BaseAsset.GetHashCode() : 0) * 397) ^ (QuoteAsset != null ? QuoteAsset.GetHashCode() : 0);
-			}
-		}
-
-		public int GetHashCode(Pair obj)
-		{
-			return GetHashCode() ^ obj.GetHashCode();
+			return BaseAsset.Id ^ QuoteAsset.Id;
 		}
 
 		public bool Equals(Pair other)
 		{
-			if (ReferenceEquals(null, other)) return false;
-			if (ReferenceEquals(this, other)) return true;
-			return Equals(BaseAsset, other.BaseAsset) && Equals(QuoteAsset, other.QuoteAsset);
+			if (other == null)
+			{
+				return false;
+			}
+
+			return BaseAsset.Id == other.BaseAsset.Id && QuoteAsset.Id == other.QuoteAsset.Id;
 		}
 	}
 }

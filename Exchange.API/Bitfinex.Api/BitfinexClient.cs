@@ -59,7 +59,6 @@ namespace Bitfinex.Api
 			detail.LastPrice = content.last_price;
 			detail.Ask = content.ask;
 			detail.Bid = content.bid;
-			detail.Avg = content.mid;
 			detail.Volume = content.volume;
 			detail.High = content.high;
 			detail.Low = content.low;

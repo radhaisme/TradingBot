@@ -25,7 +25,7 @@ namespace TradingBot.CurrencyProvider
 
 			foreach (dynamic item in content.data)
 			{
-				var currency = new Currency((int)item.id, (string)item.symbol, (string)item.name);
+				var currency = new Currency((int)item.id, (string)item.symbol);
 
 				if (!currencies.ContainsKey((string)item.symbol))
 				{

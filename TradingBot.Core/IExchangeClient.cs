@@ -13,6 +13,7 @@ namespace TradingBot.Core
 		//Task<TradeInfo> GetTradesAsync(string pair, uint limit = 150);
 		Task<IEnumerable<Pair>> GetPairsAsync();
 		Task<PairDetail> GetPairDetailAsync(string pair);
+		//Task<IReadOnlyCollection<PairDetail>> GetPairsDetails(params string[] pairs);
 		//Task<PairOrders> GetPairOrdersAsync(string pair, uint limit = 150);
 		//Task<OrderDetails> GetActiveOrdersOfUserAsync(string pair);
 	}

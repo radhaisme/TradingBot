@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using TradingBot.Common;
+using TradingBot.Core;
 using TradingBot.Core.Entities;
 
 namespace Binance.Api
 {
-	public sealed class BinanceClient
+	public sealed class BinanceClient : IExchangeClient
 	{
 		private readonly BinanceApi _api;
 		private readonly IBinanceSettings _settings;
@@ -18,7 +19,7 @@ namespace Binance.Api
 			_api = new BinanceApi(_settings.PublicUrl, _settings.PrivateUrl);
 		}
 
-		public async Task<IEnumerable<Pair>> GetPairs()
+		public async Task<IEnumerable<Pair>> GetPairsAsync()
 		{
 			HttpResponseMessage response = await _api.GetPairs();
 			var content = await HttpHelper.AcquireContentAsync<dynamic>(response);
@@ -38,7 +39,7 @@ namespace Binance.Api
 			return pairs;
 		}
 
-		public async Task<PairDetail> GetPairDetail(string pair)
+		public async Task<PairDetail> GetPairDetailAsync(string pair)
 		{
 			if (String.IsNullOrEmpty(pair))
 			{
