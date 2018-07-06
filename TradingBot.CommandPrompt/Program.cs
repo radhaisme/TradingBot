@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Binance.Api;
 using Huobi.Api;
@@ -10,6 +12,7 @@ using TradingBot.Core.Entities;
 using TradingBot.Core.Enums;
 using TradingBot.CurrencyProvider;
 using Pair = TradingBot.Data.Entities.Pair;
+using SymbolFormatter = Huobi.Api.SymbolFormatter;
 
 namespace TradingBot.CommandPrompt
 {
@@ -20,23 +23,24 @@ namespace TradingBot.CommandPrompt
 			var provider = new CoinMarketCapClient();
 			var factory = new ExchangeFactory(provider);
 			var scanner = new ArbitrageScanner(factory);
-			
+			scanner.Start();
+
 			Console.ReadLine();
 		}
 	}
 
 	public class ExchangePair
 	{
-		private readonly IExchange _first;
-		private readonly IExchange _second;
-		private readonly IEnumerable<Pair> _pairs;
-
 		public ExchangePair(IExchange first, IExchange second)
 		{
-			_first = first;
-			_second = second;
-			_pairs = first.Pairs.Intersect(second.Pairs).ToList();
+			First = first;
+			Second = second;
+			Pairs = new ReadOnlyCollection<Pair>(first.Pairs.Intersect(second.Pairs).ToList());
 		}
+
+		public IReadOnlyCollection<Pair> Pairs { get; }
+		public IExchange First { get; }
+		public IExchange Second { get; }
 
 		public void Transfer(string symbol, bool swap)
 		{
@@ -51,6 +55,20 @@ namespace TradingBot.CommandPrompt
 		}
 	}
 
+	public class ArbitrageInfo
+	{
+		public string Symbol { get; set; }
+		public string Route { get; set; }
+		public decimal Ask { get; set; }
+		public decimal Bid { get; set; }
+		public decimal Percent { get; set; }
+
+		public override string ToString()
+		{
+			return $"{Symbol};{Route};{Ask};{Bid};{Percent:0.##}";
+		}
+	}
+
 	public class ArbitrageScanner
 	{
 		private readonly List<IExchange> _exchanges = new List<IExchange>();
@@ -58,9 +76,65 @@ namespace TradingBot.CommandPrompt
 
 		public ArbitrageScanner(IExchangeFactory factory)
 		{
+			CreateExchanges(factory);
+			GenerateExchangePairs();
+		}
+
+		public void Start()
+		{
+			var exchangePair = _exchangePairs.First();
+			var prices = new Dictionary<Pair, ArbitrageInfo>();
+
+			foreach (Pair pair in exchangePair.Pairs)
+			{
+				decimal first = exchangePair.First.GetPrice(pair);
+				decimal second = exchangePair.Second.GetPrice(pair);
+				var info = new ArbitrageInfo();
+				info.Symbol = pair.Label;
+
+				if (first > second)
+				{
+					info.Route = $"Binance->Huobi";
+					info.Bid = first;
+					info.Ask = second;
+					info.Percent = (first - second) / second * 100;
+				}
+				else
+				{
+					info.Route = $"Huobi->Binance";
+					info.Bid = second;
+					info.Ask = first;
+					info.Percent = (second - first) / first * 100;
+				}
+
+				prices.Add(pair, info);
+				Thread.Sleep(500);
+			}
+
+			using (StreamWriter sw = File.CreateText("Arbitrage.log"))
+			{
+				foreach (ArbitrageInfo info in prices.Values)
+				{
+					sw.WriteLine(info);
+				}
+			}
+		}
+
+		public void Stop()
+		{
+
+		}
+
+		#region Private methods
+
+		private void CreateExchanges(IExchangeFactory factory)
+		{
 			_exchanges.Add(factory.Create(ExchangeType.Binance));
 			_exchanges.Add(factory.Create(ExchangeType.Huobi));
+		}
 
+		private void GenerateExchangePairs()
+		{
 			for (var i = 0; i < _exchanges.Count; i++)
 			{
 				for (var j = i + 1; j < _exchanges.Count; j++)
@@ -70,6 +144,8 @@ namespace TradingBot.CommandPrompt
 				}
 			}
 		}
+
+		#endregion
 	}
 
 	public class Exchange : IExchange
@@ -82,6 +158,8 @@ namespace TradingBot.CommandPrompt
 			_currencies = currencies;
 			_client = client;
 		}
+
+		public ExchangeType Type { get; set; }
 
 		public IReadOnlyCollection<Pair> Pairs { get; private set; }
 
@@ -110,12 +188,32 @@ namespace TradingBot.CommandPrompt
 
 			Pairs = new ReadOnlyCollection<Pair>(pairs);
 		}
+
+		public decimal GetPrice(Pair pair)
+		{
+			ISymbolFormatter formatter;
+
+			if (Type == ExchangeType.Binance)
+			{
+				formatter = new Binance.Api.SymbolFormatter();
+			}
+			else
+			{
+				formatter = new Huobi.Api.SymbolFormatter();
+			}
+
+			PairDetail detail = _client.GetPairDetailAsync(pair.GetSymbol(formatter)).Result;
+
+			return detail.LastPrice;
+		}
 	}
 
 	public interface IExchange
 	{
+		ExchangeType Type { get; set; }
 		IReadOnlyCollection<Pair> Pairs { get; }
 		void Initialize();
+		decimal GetPrice(Pair pair);
 	}
 
 	public class ExchangeFactory : IExchangeFactory
@@ -141,6 +239,7 @@ namespace TradingBot.CommandPrompt
 				case ExchangeType.Binance:
 					{
 						IExchange ex = new Exchange(_currencies, new BinanceClient());
+						ex.Type = type;
 						ex.Initialize();
 						_exchanges.Add(type, ex);
 
@@ -149,6 +248,7 @@ namespace TradingBot.CommandPrompt
 				case ExchangeType.Huobi:
 					{
 						IExchange ex = new Exchange(_currencies, new HuobiClient());
+						ex.Type = type;
 						ex.Initialize();
 						_exchanges.Add(type, ex);
 

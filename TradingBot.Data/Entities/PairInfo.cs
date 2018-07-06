@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using TradingBot.Core;
 using TradingBot.Core.Entities;
 using TradingBot.Core.Enums;
 
@@ -43,6 +44,16 @@ namespace TradingBot.Data.Entities
 		public string Label => $"{BaseAsset.Symbol}/{QuoteAsset.Symbol}";
 		public Currency BaseAsset { get; }
 		public Currency QuoteAsset { get; }
+
+		public string GetSymbol(ISymbolFormatter formatter)
+		{
+			if (formatter == null)
+			{
+				return null;
+			}
+
+			return formatter.Format(BaseAsset.Symbol, QuoteAsset.Symbol);
+		}
 
 		public override bool Equals(object obj)
 		{
