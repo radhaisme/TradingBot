@@ -111,9 +111,9 @@ namespace TradingBot.CommandPrompt
 				Thread.Sleep(500);
 			}
 
-			using (StreamWriter sw = File.CreateText("Arbitrage.log"))
+			using (StreamWriter sw = File.CreateText($"Arbitrage-{DateTime.UtcNow:yy-MM-dd}.log"))
 			{
-				foreach (ArbitrageInfo info in prices.Values)
+				foreach (ArbitrageInfo info in prices.Values.OrderByDescending(x => x.Percent))
 				{
 					sw.WriteLine(info);
 				}
