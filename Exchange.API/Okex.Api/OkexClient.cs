@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using TradingBot.Common;
+using TradingBot.Core;
 using TradingBot.Core.Entities;
 
 namespace Okex.Api
 {
-	public sealed class OkexClient
+	public sealed class OkexClient : IExchangeClient
 	{
 		private readonly OkexApi _api;
 		private readonly IOkexSettings _settings;
@@ -17,7 +19,7 @@ namespace Okex.Api
 			_api = new OkexApi(_settings.PublicUrl, _settings.PrivateUrl);
 		}
 
-		public async Task<IEnumerable<Pair>> GetPairs()
+		public async Task<IReadOnlyCollection<Pair>> GetPairsAsync()
 		{
 			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairs());
 			var pairs = new List<Pair>();
@@ -25,13 +27,16 @@ namespace Okex.Api
 			foreach (dynamic item in content.tickers)
 			{
 				var pair = new Pair((string)item.symbol);
+				string[] assets = ((string)item.symbol).Split('_');
+				pair.BaseAsset = assets[0];
+				pair.QuoteAsset = assets[1];
 				pairs.Add(pair);
 			}
 
-			return pairs;
+			return new ReadOnlyCollection<Pair>(pairs);
 		}
 
-		public async Task<PairDetail> GetPairDetail(string pair)
+		public async Task<PairDetail> GetPairDetailAsync(string pair)
 		{
 			if (String.IsNullOrEmpty(pair))
 			{

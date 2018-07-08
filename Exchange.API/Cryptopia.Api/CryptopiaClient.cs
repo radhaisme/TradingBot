@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using TradingBot.Common;
+using TradingBot.Core;
 using TradingBot.Core.Entities;
 
 namespace Cryptopia.Api
 {
-	public class CryptopiaClient
+	public sealed class CryptopiaClient : IExchangeClient
 	{
 		private readonly CryptopiaApi _api;
 		private readonly ICryptopiaSettings _settings;
@@ -17,7 +19,7 @@ namespace Cryptopia.Api
 			_api = new CryptopiaApi(_settings.PublicUrl, _settings.PrivateUrl);
 		}
 
-		public async Task<IEnumerable<Pair>> GetPairs()
+		public async Task<IReadOnlyCollection<Pair>> GetPairsAsync()
 		{
 			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetTradePairs());
 			var pairs = new List<Pair>();
@@ -25,17 +27,17 @@ namespace Cryptopia.Api
 			foreach (dynamic item in content.Data)
 			{
 				var pair = new Pair($"{item.Symbol}_{item.BaseSymbol}");
-				pair.BaseAsset = item.BaseSymbol;
-				pair.QuoteAsset = item.Symbol;
+				pair.BaseAsset = item.Symbol;
+				pair.QuoteAsset = item.BaseSymbol;
 				pair.MaxOrderSize = item.MaximumTrade;
 				pair.MinOrderSize = item.MinimumTrade;
 				pairs.Add(pair);
 			}
 
-			return pairs;
+			return new ReadOnlyCollection<Pair>(pairs);
 		}
 
-		public async Task<PairDetail> GetPairDetail(string pair)
+		public async Task<PairDetail> GetPairDetailAsync(string pair)
 		{
 			if (String.IsNullOrEmpty(pair))
 			{

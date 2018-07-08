@@ -120,7 +120,7 @@ namespace Yobit.Api
 			return response;
 		}
 
-		internal async Task<HttpResponseMessage> GetPairDataAsync(string pair)
+		internal async Task<HttpResponseMessage> GetPairDetailAsync(string pair)
 		{
 			HttpResponseMessage response = await HttpClient.GetAsync(new Uri(String.Format(PublicUrl + "ticker/{0}?ignore_invalid=1", pair)));
 

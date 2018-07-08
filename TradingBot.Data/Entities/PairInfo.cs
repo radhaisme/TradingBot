@@ -45,14 +45,37 @@ namespace TradingBot.Data.Entities
 		public Currency BaseAsset { get; }
 		public Currency QuoteAsset { get; }
 
-		public string GetSymbol(ISymbolFormatter formatter)
+		public string GetSymbol(ExchangeType type)
 		{
-			if (formatter == null)
+			switch (type)
 			{
-				return null;
+				case ExchangeType.Binance:
+					{
+						return (BaseAsset.Symbol + QuoteAsset.Symbol).ToUpper();
+					}
+				case ExchangeType.Huobi:
+				case ExchangeType.Bitfinex:
+					{
+						return (BaseAsset.Symbol + QuoteAsset.Symbol).ToLower();
+					}
+				case ExchangeType.Cryptopia:
+					{
+						return $"{BaseAsset.Symbol}_{QuoteAsset.Symbol}".ToUpper();
+					}
+				case ExchangeType.Kucoin:
+					{
+						return $"{BaseAsset.Symbol}-{QuoteAsset.Symbol}".ToUpper();
+					}
+				case ExchangeType.Yobit:
+				case ExchangeType.Okex:
+					{
+						return $"{BaseAsset.Symbol}_{QuoteAsset.Symbol}".ToLower();
+					}
+				default:
+					{
+						return null;
+					}
 			}
-
-			return formatter.Format(BaseAsset.Symbol, QuoteAsset.Symbol);
 		}
 
 		public override bool Equals(object obj)

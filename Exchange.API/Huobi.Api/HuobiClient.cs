@@ -19,7 +19,7 @@ namespace Huobi.Api
 			_api = new HuobiApi(_settings.PublicUrl, _settings.PrivateUrl);
 		}
 
-		public async Task<IEnumerable<Pair>> GetPairsAsync()
+		public async Task<IReadOnlyCollection<Pair>> GetPairsAsync()
 		{
 			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairs());
 			var pairs = new List<Pair>();
@@ -33,7 +33,7 @@ namespace Huobi.Api
 				pairs.Add(pair);
 			}
 
-			return pairs;
+			return new ReadOnlyCollection<Pair>(pairs);
 		}
 
 		public async Task<PairDetail> GetPairDetailAsync(string pair)
@@ -59,7 +59,7 @@ namespace Huobi.Api
 		{
 			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairsDetails());
 			var details = new List<PairDetail>();
-			
+
 			foreach (dynamic item in content.data)
 			{
 				var detail = new PairDetail();

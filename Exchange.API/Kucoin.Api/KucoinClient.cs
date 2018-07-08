@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using TradingBot.Common;
+using TradingBot.Core;
 using TradingBot.Core.Entities;
 
 namespace Kucoin.Api
 {
-	public sealed class KucoinClient
+	public sealed class KucoinClient : IExchangeClient
 	{
 		private readonly KucoinApi _api;
 		private readonly IKucoinSettings _settings;
@@ -17,7 +19,7 @@ namespace Kucoin.Api
 			_api = new KucoinApi(_settings.PublicUrl, _settings.PrivateUrl);
 		}
 
-		public async Task<IEnumerable<Pair>> GetPairs()
+		public async Task<IReadOnlyCollection<Pair>> GetPairsAsync()
 		{
 			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairs());
 			var pairs = new List<Pair>();
@@ -35,10 +37,10 @@ namespace Kucoin.Api
 				pairs.Add(pair);
 			}
 
-			return pairs;
+			return new ReadOnlyCollection<Pair>(pairs);
 		}
 
-		public async Task<PairDetail> GetPairDetail(string pair)
+		public async Task<PairDetail> GetPairDetailAsync(string pair)
 		{
 			if (String.IsNullOrEmpty(pair))
 			{

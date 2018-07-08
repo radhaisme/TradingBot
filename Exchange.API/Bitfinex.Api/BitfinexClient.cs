@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using TradingBot.Common;
+using TradingBot.Core;
 using TradingBot.Core.Entities;
 
 namespace Bitfinex.Api
 {
-	public class BitfinexClient
+	public sealed class BitfinexClient : IExchangeClient
 	{
 		private readonly BitfinexApi _api;
 		private readonly IBitfinexSettings _settings;
@@ -18,7 +21,7 @@ namespace Bitfinex.Api
 			_api = new BitfinexApi(_settings.PublicUrl, _settings.PrivateUrl);
 		}
 
-		public async Task<IEnumerable<Pair>> GetPairs()
+		public async Task<IReadOnlyCollection<Pair>> GetPairsAsync()
 		{
 			HttpResponseMessage[] results = await Task.WhenAll(_api.GetPairs(), _api.GetPairsDetails());
 			var items = await HttpHelper.AcquireContentAsync<string[]>(results[0]);
@@ -28,6 +31,8 @@ namespace Bitfinex.Api
 			foreach (var item in items)
 			{
 				var pair = new Pair(item);
+				pair.BaseAsset = item.Substring(0, item.Length - 3);
+				pair.QuoteAsset = item.Substring(item.Length - 3, 3);
 				pairs.Add(item, pair);
 			}
 
@@ -44,10 +49,10 @@ namespace Bitfinex.Api
 				pair.MinOrderSize = detail.minimum_order_size;
 			}
 
-			return pairs.Values;
+			return new ReadOnlyCollection<Pair>(pairs.Values.ToList());
 		}
 
-		public async Task<PairDetail> GetPairDetail(string pair)
+		public async Task<PairDetail> GetPairDetailAsync(string pair)
 		{
 			if (String.IsNullOrEmpty(pair))
 			{

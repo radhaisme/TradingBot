@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Threading.Tasks;
 using TradingBot.Common;
@@ -19,7 +20,7 @@ namespace Yobit.Api
 			_api = new YobitApi(_settings.PublicUrl, _settings.PrivateUrl);
 		}
 
-		public async Task<IEnumerable<Pair>> GetPairsAsync()
+		public async Task<IReadOnlyCollection<Pair>> GetPairsAsync()
 		{
 			try
 			{
@@ -29,10 +30,13 @@ namespace Yobit.Api
 				foreach (dynamic item in content.pairs)
 				{
 					var pair = new Pair((string)item.Name);
+					string[] assets = ((string)item.Name).Split('_');
+					pair.BaseAsset = assets[0];
+					pair.QuoteAsset = assets[1];
 					pairs.Add(pair);
 				}
 
-				return pairs;
+				return new ReadOnlyCollection<Pair>(pairs);
 			}
 			catch (YobitException ex)
 			{
@@ -49,7 +53,7 @@ namespace Yobit.Api
 
 			try
 			{
-				var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairDataAsync(pair));
+				var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairDetailAsync(pair));
 				var detail = new PairDetail();
 				detail.LastPrice = content[pair].last;
 				detail.Volume = content[pair].vol;

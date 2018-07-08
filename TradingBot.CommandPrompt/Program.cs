@@ -1,18 +1,24 @@
-﻿using System;
+﻿using Binance.Api;
+using Bitfinex.Api;
+using Cryptopia.Api;
+using Huobi.Api;
+using Kucoin.Api;
+using Okex.Api;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Binance.Api;
-using Huobi.Api;
 using TradingBot.Core;
 using TradingBot.Core.Entities;
 using TradingBot.Core.Enums;
 using TradingBot.CurrencyProvider;
+using Yobit.Api;
 using Pair = TradingBot.Data.Entities.Pair;
-using SymbolFormatter = Huobi.Api.SymbolFormatter;
 
 namespace TradingBot.CommandPrompt
 {
@@ -31,16 +37,16 @@ namespace TradingBot.CommandPrompt
 
 	public class ExchangePair
 	{
-		public ExchangePair(IExchange first, IExchange second)
+		public ExchangePair(IExchange from, IExchange to)
 		{
-			First = first;
-			Second = second;
-			Pairs = new ReadOnlyCollection<Pair>(first.Pairs.Intersect(second.Pairs).ToList());
+			From = from;
+			To = to;
+			Pairs = new ReadOnlyCollection<Pair>(from.Pairs.Intersect(to.Pairs).ToList());
 		}
 
 		public IReadOnlyCollection<Pair> Pairs { get; }
-		public IExchange First { get; }
-		public IExchange Second { get; }
+		public IExchange From { get; }
+		public IExchange To { get; }
 
 		public void Transfer(string symbol, bool swap)
 		{
@@ -51,7 +57,7 @@ namespace TradingBot.CommandPrompt
 				return;
 			}
 
-			//TODO: Transfer coins from the firs to the second exchange
+			//TODO: Transfer coins from the firs to the to exchange
 		}
 	}
 
@@ -61,11 +67,11 @@ namespace TradingBot.CommandPrompt
 		public string Route { get; set; }
 		public decimal Ask { get; set; }
 		public decimal Bid { get; set; }
-		public decimal Percent { get; set; }
+		public float Rate { get; set; }
 
 		public override string ToString()
 		{
-			return $"{Symbol};{Route};{Ask};{Bid};{Percent:0.##}";
+			return $"{Symbol},{Route},{Ask},{Bid},{Rate:0.##}";
 		}
 	}
 
@@ -73,6 +79,7 @@ namespace TradingBot.CommandPrompt
 	{
 		private readonly List<IExchange> _exchanges = new List<IExchange>();
 		private readonly List<ExchangePair> _exchangePairs = new List<ExchangePair>();
+		private readonly CancellationTokenSource _tokenSource = new CancellationTokenSource();
 
 		public ArbitrageScanner(IExchangeFactory factory)
 		{
@@ -80,49 +87,73 @@ namespace TradingBot.CommandPrompt
 			GenerateExchangePairs();
 		}
 
-		public void Start()
+		public async void Start()
 		{
-			var exchangePair = _exchangePairs.First();
-			var prices = new Dictionary<Pair, ArbitrageInfo>();
+			var output = new ConcurrentBag<ArbitrageInfo>();
+			var tasks = new List<Task>();
 
-			foreach (Pair pair in exchangePair.Pairs)
+			var watcher = new Stopwatch();
+			watcher.Start();
+
+			foreach (ExchangePair exchangePair in _exchangePairs)
 			{
-				decimal first = exchangePair.First.GetPrice(pair);
-				decimal second = exchangePair.Second.GetPrice(pair);
-				var info = new ArbitrageInfo();
-				info.Symbol = pair.Label;
-
-				if (first > second)
-				{
-					info.Route = $"Binance->Huobi";
-					info.Bid = first;
-					info.Ask = second;
-					info.Percent = (first - second) / second * 100;
-				}
-				else
-				{
-					info.Route = $"Huobi->Binance";
-					info.Bid = second;
-					info.Ask = first;
-					info.Percent = (second - first) / first * 100;
-				}
-
-				prices.Add(pair, info);
-				Thread.Sleep(500);
+				var task = Task.Run(() => ProcessItem(exchangePair, output), _tokenSource.Token);
+				tasks.Add(task);
 			}
 
-			using (StreamWriter sw = File.CreateText($"Arbitrage-{DateTime.UtcNow:yy-MM-dd}.log"))
+			await Task.WhenAll(tasks);
+			watcher.Stop();
+			Console.WriteLine("Elapsed time: {0}", watcher.Elapsed);
+
+			using (StreamWriter sw = File.CreateText($"Arbitrage-{DateTime.UtcNow:MM-dd-yyyy}.csv"))
 			{
-				foreach (ArbitrageInfo info in prices.Values.OrderByDescending(x => x.Percent))
+				sw.WriteLine("Symbol,Route,Ask,Bid,Rate(%)");
+
+				foreach (ArbitrageInfo info in output.OrderByDescending(x => x.Rate))
 				{
 					sw.WriteLine(info);
 				}
 			}
 		}
 
+		private async Task ProcessItem(ExchangePair exchangePair, IProducerConsumerCollection<ArbitrageInfo> output)
+		{
+			foreach (Pair pair in exchangePair.Pairs)
+			{
+				decimal from = await exchangePair.From.GetPriceAsync(pair);
+				decimal to = await exchangePair.To.GetPriceAsync(pair);
+				var model = new ArbitrageInfo();
+				model.Symbol = pair.Label;
+
+				if (from > to)
+				{
+					model.Route = $"{exchangePair.From.Type}->{exchangePair.To.Type}";
+					model.Bid = from;
+					model.Ask = to;
+					model.Rate = GetPercent(from, to);
+				}
+				else
+				{
+					model.Route = $"{exchangePair.To.Type}->{exchangePair.From.Type}";
+					model.Bid = to;
+					model.Ask = from;
+					model.Rate = GetPercent(to, from);
+				}
+
+				output.TryAdd(model);
+				Console.WriteLine($"{output.Count}. {model}");
+				Thread.Sleep(1000);
+			}
+		}
+
+		private float GetPercent(decimal a, decimal b)
+		{
+			return (float)((a - b) / a * 100);
+		}
+
 		public void Stop()
 		{
-
+			_tokenSource.Cancel();
 		}
 
 		#region Private methods
@@ -131,6 +162,11 @@ namespace TradingBot.CommandPrompt
 		{
 			_exchanges.Add(factory.Create(ExchangeType.Binance));
 			_exchanges.Add(factory.Create(ExchangeType.Huobi));
+			_exchanges.Add(factory.Create(ExchangeType.Yobit));
+			_exchanges.Add(factory.Create(ExchangeType.Bitfinex));
+			_exchanges.Add(factory.Create(ExchangeType.Cryptopia));
+			_exchanges.Add(factory.Create(ExchangeType.Kucoin));
+			_exchanges.Add(factory.Create(ExchangeType.Okex));
 		}
 
 		private void GenerateExchangePairs()
@@ -160,7 +196,6 @@ namespace TradingBot.CommandPrompt
 		}
 
 		public ExchangeType Type { get; set; }
-
 		public IReadOnlyCollection<Pair> Pairs { get; private set; }
 
 		void IExchange.Initialize()
@@ -189,20 +224,9 @@ namespace TradingBot.CommandPrompt
 			Pairs = new ReadOnlyCollection<Pair>(pairs);
 		}
 
-		public decimal GetPrice(Pair pair)
+		public async Task<decimal> GetPriceAsync(Pair pair)
 		{
-			ISymbolFormatter formatter;
-
-			if (Type == ExchangeType.Binance)
-			{
-				formatter = new Binance.Api.SymbolFormatter();
-			}
-			else
-			{
-				formatter = new Huobi.Api.SymbolFormatter();
-			}
-
-			PairDetail detail = _client.GetPairDetailAsync(pair.GetSymbol(formatter)).Result;
+			PairDetail detail = await _client.GetPairDetailAsync(pair.GetSymbol(Type));
 
 			return detail.LastPrice;
 		}
@@ -213,7 +237,7 @@ namespace TradingBot.CommandPrompt
 		ExchangeType Type { get; set; }
 		IReadOnlyCollection<Pair> Pairs { get; }
 		void Initialize();
-		decimal GetPrice(Pair pair);
+		Task<decimal> GetPriceAsync(Pair pair);
 	}
 
 	public class ExchangeFactory : IExchangeFactory
@@ -248,6 +272,51 @@ namespace TradingBot.CommandPrompt
 				case ExchangeType.Huobi:
 					{
 						IExchange ex = new Exchange(_currencies, new HuobiClient());
+						ex.Type = type;
+						ex.Initialize();
+						_exchanges.Add(type, ex);
+
+						return ex;
+					}
+				case ExchangeType.Yobit:
+					{
+						IExchange ex = new Exchange(_currencies, new YobitClient());
+						ex.Type = type;
+						ex.Initialize();
+						_exchanges.Add(type, ex);
+
+						return ex;
+					}
+				case ExchangeType.Bitfinex:
+					{
+						IExchange ex = new Exchange(_currencies, new BitfinexClient());
+						ex.Type = type;
+						ex.Initialize();
+						_exchanges.Add(type, ex);
+
+						return ex;
+					}
+				case ExchangeType.Kucoin:
+					{
+						IExchange ex = new Exchange(_currencies, new KucoinClient());
+						ex.Type = type;
+						ex.Initialize();
+						_exchanges.Add(type, ex);
+
+						return ex;
+					}
+				case ExchangeType.Okex:
+					{
+						IExchange ex = new Exchange(_currencies, new OkexClient());
+						ex.Type = type;
+						ex.Initialize();
+						_exchanges.Add(type, ex);
+
+						return ex;
+					}
+				case ExchangeType.Cryptopia:
+					{
+						IExchange ex = new Exchange(_currencies, new CryptopiaClient());
 						ex.Type = type;
 						ex.Initialize();
 						_exchanges.Add(type, ex);
