@@ -30,7 +30,7 @@ namespace Bitfinex.Api
 
 			foreach (var item in items)
 			{
-				var pair = new Pair(item);
+				var pair = new Pair();
 				pair.BaseAsset = item.Substring(0, item.Length - 3);
 				pair.QuoteAsset = item.Substring(item.Length - 3, 3);
 				pairs.Add(item, pair);

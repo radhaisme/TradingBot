@@ -26,7 +26,7 @@ namespace Huobi.Api
 
 			foreach (dynamic item in content.data)
 			{
-				var pair = new Pair((string)item["base-currency"] + (string)item["quote-currency"]);
+				var pair = new Pair();
 				pair.BaseAsset = ((string)item["base-currency"]).ToUpper();
 				pair.QuoteAsset = ((string)item["quote-currency"]).ToUpper();
 				//pair.Precision = item["price-precision"];

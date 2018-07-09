@@ -29,7 +29,7 @@ namespace Yobit.Api
 
 				foreach (dynamic item in content.pairs)
 				{
-					var pair = new Pair((string)item.Name);
+					var pair = new Pair();
 					string[] assets = ((string)item.Name).Split('_');
 					pair.BaseAsset = assets[0];
 					pair.QuoteAsset = assets[1];

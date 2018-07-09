@@ -21,13 +21,15 @@ namespace Cryptopia.Api
 
 		public async Task<IReadOnlyCollection<Pair>> GetPairsAsync()
 		{
-			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetTradePairs());
+			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairsAsync());
 			var pairs = new List<Pair>();
 
 			foreach (dynamic item in content.Data)
 			{
-				var pair = new Pair($"{item.Symbol}_{item.BaseSymbol}");
+				var pair = new Pair();
+				pair.BaseAssetName = item.Currency;
 				pair.BaseAsset = item.Symbol;
+				pair.QuoteAssetName = item.BaseCurrency;
 				pair.QuoteAsset = item.BaseSymbol;
 				pair.MaxOrderSize = item.MaximumTrade;
 				pair.MinOrderSize = item.MinimumTrade;

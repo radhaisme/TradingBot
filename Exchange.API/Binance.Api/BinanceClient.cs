@@ -28,7 +28,7 @@ namespace Binance.Api
 
 			foreach (dynamic item in content.symbols)
 			{
-				var pair = new Pair((string)item.symbol);
+				var pair = new Pair();
 				pair.BaseAsset = item.baseAsset;
 				pair.QuoteAsset = item.quoteAsset;
 				pair.Precision = item.baseAssetPrecision;

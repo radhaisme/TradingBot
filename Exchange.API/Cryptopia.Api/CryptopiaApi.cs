@@ -11,12 +11,12 @@ namespace Cryptopia.Api
 
 		public async Task<HttpResponseMessage> GetPairs()
 		{
-			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "GetPairsAsync");
+			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "GetPairs");
 
 			return response.EnsureSuccessStatusCode();
 		}
 
-		public async Task<HttpResponseMessage> GetTradePairs()
+		public async Task<HttpResponseMessage> GetPairsAsync()
 		{
 			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "GetTradePairs");
 

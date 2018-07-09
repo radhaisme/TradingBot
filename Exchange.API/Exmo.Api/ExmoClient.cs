@@ -24,7 +24,7 @@ namespace Exmo.Api
 			foreach (string key in content.Keys)
 			{
 				dynamic item = content[key];
-				var pair = new Pair(key);
+				var pair = new Pair();
 				pair.MinOrderSize = item.min_quantity;
 				pair.MaxOrderSize = item.max_quantity;
 				pairs.Add(pair);

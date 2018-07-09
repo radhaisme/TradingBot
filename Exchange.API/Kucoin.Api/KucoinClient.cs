@@ -31,7 +31,7 @@ namespace Kucoin.Api
 					continue;
 				}
 
-				var pair = new Pair($"{item.coinType}-{item.coinTypePair}");
+				var pair = new Pair();
 				pair.BaseAsset = item.coinType;
 				pair.QuoteAsset = item.coinTypePair;
 				pairs.Add(pair);

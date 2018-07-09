@@ -26,7 +26,7 @@ namespace Okex.Api
 
 			foreach (dynamic item in content.tickers)
 			{
-				var pair = new Pair((string)item.symbol);
+				var pair = new Pair();
 				string[] assets = ((string)item.symbol).Split('_');
 				pair.BaseAsset = assets[0];
 				pair.QuoteAsset = assets[1];

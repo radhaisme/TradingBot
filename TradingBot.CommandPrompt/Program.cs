@@ -26,10 +26,10 @@ namespace TradingBot.CommandPrompt
 	{
 		private static async Task Main(string[] args)
 		{
-			var provider = new CoinMarketCapClient();
-			var factory = new ExchangeFactory(provider);
-			var scanner = new ArbitrageScanner(factory);
-			scanner.Start();
+			//var provider = new CoinMarketCapClient();
+			//var factory = new ExchangeFactory(provider);
+			//var scanner = new ArbitrageScanner(factory);
+			//scanner.Start();
 
 			Console.ReadLine();
 		}
@@ -198,11 +198,11 @@ namespace TradingBot.CommandPrompt
 		public ExchangeType Type { get; set; }
 		public IReadOnlyCollection<Pair> Pairs { get; private set; }
 
-		void IExchange.Initialize()
+		async void IExchange.Initialize()
 		{
 			var pairs = new List<Pair>();
 
-			foreach (Core.Entities.Pair item in _client.GetPairsAsync().Result)
+			foreach (Core.Entities.Pair item in await _client.GetPairsAsync())
 			{
 				if (!_currencies.ContainsKey(item.BaseAsset) || !_currencies.ContainsKey(item.QuoteAsset))
 				{
@@ -213,6 +213,11 @@ namespace TradingBot.CommandPrompt
 				IList<Currency> quotes = _currencies[item.QuoteAsset];
 
 				if (bases.Count > 1 || quotes.Count > 1)
+				{
+					continue;
+				}
+
+				if (!String.IsNullOrEmpty(item.BaseAssetName) && !String.IsNullOrEmpty(item.QuoteAssetName) && !item.BaseAssetName.Equals(bases[0].Name) && !item.QuoteAssetName.Equals(quotes[0].Name))
 				{
 					continue;
 				}
