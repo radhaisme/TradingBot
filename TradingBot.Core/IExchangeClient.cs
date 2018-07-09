@@ -11,10 +11,11 @@ namespace TradingBot.Core
 		//Task<CreateOrder> CreateOrderAsync(string pair, OrderType type, decimal price, decimal amount);
 		//Task<Balance> GetInfoAsync();
 		//Task<TradeInfo> GetTradesAsync(string pair, uint limit = 150);
-		Task<IReadOnlyCollection<Pair>> GetPairsAsync();
-		Task<PairDetail> GetPairDetailAsync(string pair);
+		Task<IReadOnlyCollection<PairDto>> GetPairsAsync();
+		Task<PairDetailDto> GetPairDetailAsync(string pair);
+		Task<OrderBookDto> GetOrderBookAsync(string pair, uint limit = 100);
 		//Task<IReadOnlyCollection<PairDetail>> GetPairsDetails(params string[] pairs);
-		//Task<PairOrders> GetPairOrdersAsync(string pair, uint limit = 150);
+		//Task<OrderBookDto> GetPairOrdersAsync(string pair, uint limit = 150);
 		//Task<OrderDetails> GetActiveOrdersOfUserAsync(string pair);
 	}
 }

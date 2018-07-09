@@ -132,13 +132,9 @@ namespace Yobit.Api
 			return response;
 		}
 
-		internal async Task<HttpResponseMessage> GetPairOrdersAsync(string pair, uint? limit = null)
+		internal async Task<HttpResponseMessage> GetOrderBookAsync(string pair, uint limit)
 		{
-			string queryString = limit.HasValue
-				? String.Format(PublicUrl + "depth/{0}?limit={1}&ignore_invalid=1", pair, limit.Value)
-				: String.Format(PublicUrl + "depth/{0}?ignore_invalid=1", pair);
-
-			HttpResponseMessage response = await HttpClient.GetAsync(new Uri(queryString));
+			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + $"depth/{pair}?limit={limit}&ignore_invalid=1");
 
 			if (!response.IsSuccessStatusCode)
 			{

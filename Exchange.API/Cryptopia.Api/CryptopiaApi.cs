@@ -23,9 +23,16 @@ namespace Cryptopia.Api
 			return response.EnsureSuccessStatusCode();
 		}
 
-		public async Task<HttpResponseMessage> GetPairDetail(string pair)
+		public async Task<HttpResponseMessage> GetPairDetailAsync(string pair)
 		{
 			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + $"GetMarket/{pair}");
+
+			return response.EnsureSuccessStatusCode();
+		}
+
+		public async Task<HttpResponseMessage> GetOrderBookAsync(string pair, uint limit)
+		{
+			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + $"GetMarketOrders/{pair}/{limit}");
 
 			return response.EnsureSuccessStatusCode();
 		}

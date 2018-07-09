@@ -19,40 +19,69 @@ namespace Okex.Api
 			_api = new OkexApi(_settings.PublicUrl, _settings.PrivateUrl);
 		}
 
-		public async Task<IReadOnlyCollection<Pair>> GetPairsAsync()
+		public async Task<IReadOnlyCollection<PairDto>> GetPairsAsync()
 		{
-			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairs());
-			var pairs = new List<Pair>();
+			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairsAsync());
+			var pairs = new List<PairDto>();
 
 			foreach (dynamic item in content.tickers)
 			{
-				var pair = new Pair();
+				var pair = new PairDto();
 				string[] assets = ((string)item.symbol).Split('_');
-				pair.BaseAsset = assets[0];
-				pair.QuoteAsset = assets[1];
+				pair.BaseAsset = assets[0].ToUpper();
+				pair.QuoteAsset = assets[1].ToUpper();
 				pairs.Add(pair);
 			}
 
-			return new ReadOnlyCollection<Pair>(pairs);
+			return new ReadOnlyCollection<PairDto>(pairs);
 		}
 
-		public async Task<PairDetail> GetPairDetailAsync(string pair)
+		public async Task<PairDetailDto> GetPairDetailAsync(string pair)
 		{
 			if (String.IsNullOrEmpty(pair))
 			{
 				throw new ArgumentNullException(nameof(pair));
 			}
 
-			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairDetail(pair));
-			var detail = new PairDetail();
-			detail.LastPrice = content.ticker.last;
-			detail.Ask = content.ticker.buy;
-			detail.Bid = content.ticker.sell;
-			detail.High = content.ticker.high;
-			detail.Low = content.ticker.low;
-			detail.Volume = content.ticker.vol;
+			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairDetailAsync(pair));
+			var dto = new PairDetailDto();
+			dto.LastPrice = content.ticker.last;
+			dto.Ask = content.ticker.buy;
+			dto.Bid = content.ticker.sell;
+			dto.High = content.ticker.high;
+			dto.Low = content.ticker.low;
+			dto.Volume = content.ticker.vol;
 
-			return detail;
+			return dto;
+		}
+
+		public async Task<OrderBookDto> GetOrderBookAsync(string pair, uint limit = 100)
+		{
+			if (String.IsNullOrEmpty(pair))
+			{
+				throw new ArgumentNullException(nameof(pair));
+			}
+
+			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetOrderBookAsync(pair, limit));
+			var model = new OrderBookDto();
+
+			foreach (dynamic item in content.asks)
+			{
+				var dto = new OrderDto();
+				dto.Price = item[0];
+				dto.Amount = item[1];
+				model.Asks.Add(dto);
+			}
+
+			foreach (dynamic item in content.bids)
+			{
+				var dto = new OrderDto();
+				dto.Price = item[0];
+				dto.Amount = item[1];
+				model.Bids.Add(dto);
+			}
+
+			return model;
 		}
 	}
 }

@@ -23,16 +23,23 @@ namespace Binance.Api
 			return response.EnsureSuccessStatusCode();
 		}
 
-		public async Task<HttpResponseMessage> GetPairs()
+		public async Task<HttpResponseMessage> GetPairsAsync()
 		{
 			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + "exchangeInfo");
 
 			return response.EnsureSuccessStatusCode();
 		}
 
-		public async Task<HttpResponseMessage> GetPairDetail(string pair)
+		public async Task<HttpResponseMessage> GetPairDetailAsync(string pair)
 		{
 			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + $"ticker/price?symbol={pair}");
+
+			return response.EnsureSuccessStatusCode();
+		}
+
+		public async Task<HttpResponseMessage> GetOrderBookAsync(string pair, uint limit)
+		{
+			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + $"depth?symbol={pair}&limit={limit}");
 
 			return response.EnsureSuccessStatusCode();
 		}

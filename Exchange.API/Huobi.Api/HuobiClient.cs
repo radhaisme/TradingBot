@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Net.Http;
 using System.Threading.Tasks;
 using TradingBot.Common;
 using TradingBot.Core;
@@ -19,32 +20,32 @@ namespace Huobi.Api
 			_api = new HuobiApi(_settings.PublicUrl, _settings.PrivateUrl);
 		}
 
-		public async Task<IReadOnlyCollection<Pair>> GetPairsAsync()
+		public async Task<IReadOnlyCollection<PairDto>> GetPairsAsync()
 		{
-			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairs());
-			var pairs = new List<Pair>();
+			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairsAsync());
+			var pairs = new List<PairDto>();
 
 			foreach (dynamic item in content.data)
 			{
-				var pair = new Pair();
+				var pair = new PairDto();
 				pair.BaseAsset = ((string)item["base-currency"]).ToUpper();
 				pair.QuoteAsset = ((string)item["quote-currency"]).ToUpper();
 				//pair.Precision = item["price-precision"];
 				pairs.Add(pair);
 			}
 
-			return new ReadOnlyCollection<Pair>(pairs);
+			return new ReadOnlyCollection<PairDto>(pairs);
 		}
 
-		public async Task<PairDetail> GetPairDetailAsync(string pair)
+		public async Task<PairDetailDto> GetPairDetailAsync(string pair)
 		{
 			if (String.IsNullOrEmpty(pair))
 			{
 				throw new ArgumentNullException(nameof(pair));
 			}
 
-			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairDetail(pair));
-			var detail = new PairDetail();
+			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairDetailAsync(pair));
+			var detail = new PairDetailDto();
 			detail.LastPrice = content.tick.close;
 			detail.Ask = content.tick.ask[0];
 			detail.Bid = content.tick.bid[0];
@@ -55,14 +56,43 @@ namespace Huobi.Api
 			return detail;
 		}
 
-		public async Task<IReadOnlyCollection<PairDetail>> GetPairsDetails(params string[] pairs)
+		public async Task<OrderBookDto> GetOrderBookAsync(string pair, uint limit = 100)
 		{
-			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairsDetails());
-			var details = new List<PairDetail>();
+			if (String.IsNullOrEmpty(pair))
+			{
+				throw new ArgumentNullException(nameof(pair));
+			}
+
+			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetOrderBookAsync(pair, limit));
+			var model = new OrderBookDto();
+
+			foreach (dynamic item in content.tick.bids)
+			{
+				var dto = new OrderDto();
+				dto.Price = item[0];
+				dto.Amount = item[1];
+				model.Bids.Add(dto);
+			}
+
+			foreach (dynamic item in content.tick.asks)
+			{
+				var dto = new OrderDto();
+				dto.Price = item[0];
+				dto.Amount = item[1];
+				model.Asks.Add(dto);
+			}
+
+			return model;
+		}
+
+		public async Task<IReadOnlyCollection<PairDetailDto>> GetPairsDetails(params string[] pairs)
+		{
+			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairsDetailsAsync());
+			var details = new List<PairDetailDto>();
 
 			foreach (dynamic item in content.data)
 			{
-				var detail = new PairDetail();
+				var detail = new PairDetailDto();
 				detail.LastPrice = item.close;
 				//detail.Low = item.low;
 				//detail.High = item.high;
@@ -70,7 +100,7 @@ namespace Huobi.Api
 				details.Add(detail);
 			}
 
-			return new ReadOnlyCollection<PairDetail>(details);
+			return new ReadOnlyCollection<PairDetailDto>(details);
 		}
 	}
 }

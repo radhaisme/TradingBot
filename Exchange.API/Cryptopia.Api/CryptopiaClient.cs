@@ -19,14 +19,14 @@ namespace Cryptopia.Api
 			_api = new CryptopiaApi(_settings.PublicUrl, _settings.PrivateUrl);
 		}
 
-		public async Task<IReadOnlyCollection<Pair>> GetPairsAsync()
+		public async Task<IReadOnlyCollection<PairDto>> GetPairsAsync()
 		{
 			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairsAsync());
-			var pairs = new List<Pair>();
+			var pairs = new List<PairDto>();
 
 			foreach (dynamic item in content.Data)
 			{
-				var pair = new Pair();
+				var pair = new PairDto();
 				pair.BaseAssetName = item.Currency;
 				pair.BaseAsset = item.Symbol;
 				pair.QuoteAssetName = item.BaseCurrency;
@@ -36,18 +36,18 @@ namespace Cryptopia.Api
 				pairs.Add(pair);
 			}
 
-			return new ReadOnlyCollection<Pair>(pairs);
+			return new ReadOnlyCollection<PairDto>(pairs);
 		}
 
-		public async Task<PairDetail> GetPairDetailAsync(string pair)
+		public async Task<PairDetailDto> GetPairDetailAsync(string pair)
 		{
 			if (String.IsNullOrEmpty(pair))
 			{
 				throw new ArgumentNullException(nameof(pair));
 			}
 
-			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairDetail(pair));
-			var detail = new PairDetail();
+			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairDetailAsync(pair));
+			var detail = new PairDetailDto();
 			detail.Ask = content.Data.AskPrice;
 			detail.Bid = content.Data.BidPrice;
 			detail.High = content.Data.High;
@@ -56,6 +56,35 @@ namespace Cryptopia.Api
 			detail.Volume = content.Data.Volume;
 
 			return detail;
+		}
+
+		public async Task<OrderBookDto> GetOrderBookAsync(string pair, uint limit = 100)
+		{
+			if (String.IsNullOrEmpty(pair))
+			{
+				throw new ArgumentNullException(nameof(pair));
+			}
+
+			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetOrderBookAsync(pair, limit));
+			var model = new OrderBookDto();
+
+			foreach (dynamic item in content.Data.Sell)
+			{
+				var dto = new OrderDto();
+				dto.Price = item.Price;
+				dto.Amount = item.Volume;
+				model.Bids.Add(dto);
+			}
+
+			foreach (dynamic item in content.Data.Buy)
+			{
+				var dto = new OrderDto();
+				dto.Price = item.Price;
+				dto.Amount = item.Volume;
+				model.Asks.Add(dto);
+			}
+
+			return model;
 		}
 	}
 }

@@ -12028,23 +12028,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\user\\.nuget\\packages\\": {},
+    "C:\\Users\\Roman\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Projects\\TradingBot\\TradingBot.Web\\TradingBot.Web.csproj",
+      "projectUniqueName": "E:\\Projects\\TradingBot\\TradingBot.Web\\TradingBot.Web.csproj",
       "projectName": "TradingBot.Web",
-      "projectPath": "c:\\Projects\\TradingBot\\TradingBot.Web\\TradingBot.Web.csproj",
-      "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-      "outputPath": "c:\\Projects\\TradingBot\\TradingBot.Web\\obj\\",
+      "projectPath": "E:\\Projects\\TradingBot\\TradingBot.Web\\TradingBot.Web.csproj",
+      "packagesPath": "C:\\Users\\Roman\\.nuget\\packages\\",
+      "outputPath": "E:\\Projects\\TradingBot\\TradingBot.Web\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Roman\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -12057,14 +12057,14 @@
       "frameworks": {
         "netcoreapp2.1": {
           "projectReferences": {
-            "c:\\Projects\\TradingBot\\Exchange.API\\Binance.Api\\Binance.Api.csproj": {
-              "projectPath": "c:\\Projects\\TradingBot\\Exchange.API\\Binance.Api\\Binance.Api.csproj"
+            "E:\\Projects\\TradingBot\\Exchange.API\\Binance.Api\\Binance.Api.csproj": {
+              "projectPath": "E:\\Projects\\TradingBot\\Exchange.API\\Binance.Api\\Binance.Api.csproj"
             },
-            "c:\\Projects\\TradingBot\\Exchange.API\\Huobi.Api\\Huobi.Api.csproj": {
-              "projectPath": "c:\\Projects\\TradingBot\\Exchange.API\\Huobi.Api\\Huobi.Api.csproj"
+            "E:\\Projects\\TradingBot\\Exchange.API\\Huobi.Api\\Huobi.Api.csproj": {
+              "projectPath": "E:\\Projects\\TradingBot\\Exchange.API\\Huobi.Api\\Huobi.Api.csproj"
             },
-            "c:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj": {
-              "projectPath": "c:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj"
+            "E:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj": {
+              "projectPath": "E:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj"
             }
           }
         }

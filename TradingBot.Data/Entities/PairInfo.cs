@@ -58,6 +58,7 @@ namespace TradingBot.Data.Entities
 					{
 						return (BaseAsset.Symbol + QuoteAsset.Symbol).ToLower();
 					}
+				case ExchangeType.Exmo:
 				case ExchangeType.Cryptopia:
 					{
 						return $"{BaseAsset.Symbol}_{QuoteAsset.Symbol}".ToUpper();

@@ -1,6 +1,7 @@
 ﻿using Binance.Api;
 using Bitfinex.Api;
 using Cryptopia.Api;
+using Exmo.Api;
 using Huobi.Api;
 using Kucoin.Api;
 using Okex.Api;
@@ -17,8 +18,8 @@ using TradingBot.Core;
 using TradingBot.Core.Entities;
 using TradingBot.Core.Enums;
 using TradingBot.CurrencyProvider;
+using TradingBot.Data.Entities;
 using Yobit.Api;
-using Pair = TradingBot.Data.Entities.Pair;
 
 namespace TradingBot.CommandPrompt
 {
@@ -47,18 +48,6 @@ namespace TradingBot.CommandPrompt
 		public IReadOnlyCollection<Pair> Pairs { get; }
 		public IExchange From { get; }
 		public IExchange To { get; }
-
-		public void Transfer(string symbol, bool swap)
-		{
-			if (swap)
-			{
-				//TODO: Swap exchanges
-
-				return;
-			}
-
-			//TODO: Transfer coins from the firs to the to exchange
-		}
 	}
 
 	public class ArbitrageInfo
@@ -67,11 +56,13 @@ namespace TradingBot.CommandPrompt
 		public string Route { get; set; }
 		public decimal Ask { get; set; }
 		public decimal Bid { get; set; }
+		public float Spread { get; set; }
 		public float Rate { get; set; }
+		public bool CanTransfer { get; set; }
 
 		public override string ToString()
 		{
-			return $"{Symbol},{Route},{Ask},{Bid},{Rate:0.##}";
+			return $"{Symbol},{Route},{Ask},{Bid},{Rate:0.##},{(CanTransfer ? "+" : "-")}";
 		}
 	}
 
@@ -85,6 +76,14 @@ namespace TradingBot.CommandPrompt
 		{
 			CreateExchanges(factory);
 			GenerateExchangePairs();
+
+			//using (StreamWriter sw = File.CreateText($"Pairs.csv"))
+			//{
+			//	foreach (var info in _exchangePairs)
+			//	{
+			//		sw.WriteLine($"{info.From.Type}->{info.To.Type}");
+			//	}
+			//}
 		}
 
 		public async void Start()
@@ -107,7 +106,7 @@ namespace TradingBot.CommandPrompt
 
 			using (StreamWriter sw = File.CreateText($"Arbitrage-{DateTime.UtcNow:MM-dd-yyyy}.csv"))
 			{
-				sw.WriteLine("Symbol,Route,Ask,Bid,Rate(%)");
+				sw.WriteLine("Symbol,Route,Buy Price,Sell Price,Spread(Book),Rate,I/O");
 
 				foreach (ArbitrageInfo info in output.OrderByDescending(x => x.Rate))
 				{
@@ -127,22 +126,22 @@ namespace TradingBot.CommandPrompt
 
 				if (from > to)
 				{
-					model.Route = $"{exchangePair.From.Type}->{exchangePair.To.Type}";
-					model.Bid = from;
-					model.Ask = to;
+					model.Route = $"{exchangePair.To.Type}->{exchangePair.From.Type}";
+					model.Bid = to;
+					model.Ask = from;
 					model.Rate = GetPercent(from, to);
 				}
 				else
 				{
-					model.Route = $"{exchangePair.To.Type}->{exchangePair.From.Type}";
-					model.Bid = to;
-					model.Ask = from;
+					model.Route = $"{exchangePair.From.Type}->{exchangePair.To.Type}";
+					model.Bid = from;
+					model.Ask = to;
 					model.Rate = GetPercent(to, from);
 				}
 
 				output.TryAdd(model);
 				Console.WriteLine($"{output.Count}. {model}");
-				Thread.Sleep(1000);
+				Thread.Sleep(3000);
 			}
 		}
 
@@ -167,6 +166,7 @@ namespace TradingBot.CommandPrompt
 			_exchanges.Add(factory.Create(ExchangeType.Cryptopia));
 			_exchanges.Add(factory.Create(ExchangeType.Kucoin));
 			_exchanges.Add(factory.Create(ExchangeType.Okex));
+			_exchanges.Add(factory.Create(ExchangeType.Exmo));
 		}
 
 		private void GenerateExchangePairs()
@@ -198,11 +198,11 @@ namespace TradingBot.CommandPrompt
 		public ExchangeType Type { get; set; }
 		public IReadOnlyCollection<Pair> Pairs { get; private set; }
 
-		async void IExchange.Initialize()
+		void IExchange.Initialize()
 		{
 			var pairs = new List<Pair>();
 
-			foreach (Core.Entities.Pair item in await _client.GetPairsAsync())
+			foreach (PairDto item in _client.GetPairsAsync().Result)
 			{
 				if (!_currencies.ContainsKey(item.BaseAsset) || !_currencies.ContainsKey(item.QuoteAsset))
 				{
@@ -231,9 +231,9 @@ namespace TradingBot.CommandPrompt
 
 		public async Task<decimal> GetPriceAsync(Pair pair)
 		{
-			PairDetail detail = await _client.GetPairDetailAsync(pair.GetSymbol(Type));
+			PairDetailDto detailDto = await _client.GetPairDetailAsync(pair.GetSymbol(Type));
 
-			return detail.LastPrice;
+			return detailDto.LastPrice;
 		}
 	}
 
@@ -322,6 +322,15 @@ namespace TradingBot.CommandPrompt
 				case ExchangeType.Cryptopia:
 					{
 						IExchange ex = new Exchange(_currencies, new CryptopiaClient());
+						ex.Type = type;
+						ex.Initialize();
+						_exchanges.Add(type, ex);
+
+						return ex;
+					}
+				case ExchangeType.Exmo:
+					{
+						IExchange ex = new Exchange(_currencies, new ExmoClient());
 						ex.Type = type;
 						ex.Initialize();
 						_exchanges.Add(type, ex);

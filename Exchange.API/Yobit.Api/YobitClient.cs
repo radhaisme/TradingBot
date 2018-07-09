@@ -20,23 +20,23 @@ namespace Yobit.Api
 			_api = new YobitApi(_settings.PublicUrl, _settings.PrivateUrl);
 		}
 
-		public async Task<IReadOnlyCollection<Pair>> GetPairsAsync()
+		public async Task<IReadOnlyCollection<PairDto>> GetPairsAsync()
 		{
 			try
 			{
 				var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairsAsync());
-				var pairs = new List<Pair>();
+				var pairs = new List<PairDto>();
 
 				foreach (dynamic item in content.pairs)
 				{
-					var pair = new Pair();
+					var pair = new PairDto();
 					string[] assets = ((string)item.Name).Split('_');
 					pair.BaseAsset = assets[0];
 					pair.QuoteAsset = assets[1];
 					pairs.Add(pair);
 				}
 
-				return new ReadOnlyCollection<Pair>(pairs);
+				return new ReadOnlyCollection<PairDto>(pairs);
 			}
 			catch (YobitException ex)
 			{
@@ -44,7 +44,7 @@ namespace Yobit.Api
 			}
 		}
 
-		public async Task<PairDetail> GetPairDetailAsync(string pair)
+		public async Task<PairDetailDto> GetPairDetailAsync(string pair)
 		{
 			if (String.IsNullOrEmpty(pair))
 			{
@@ -54,7 +54,7 @@ namespace Yobit.Api
 			try
 			{
 				var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairDetailAsync(pair));
-				var detail = new PairDetail();
+				var detail = new PairDetailDto();
 				detail.LastPrice = content[pair].last;
 				detail.Volume = content[pair].vol;
 				detail.Ask = content[pair].buy;
@@ -70,9 +70,33 @@ namespace Yobit.Api
 			}
 		}
 
-		public Task<IReadOnlyCollection<PairDetail>> GetPairsDetails(params string[] pairs)
+		public async Task<OrderBookDto> GetOrderBookAsync(string pair, uint limit = 100)
 		{
-			throw new NotImplementedException();
+			if (String.IsNullOrEmpty(pair))
+			{
+				throw new ArgumentNullException(nameof(pair));
+			}
+
+			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetOrderBookAsync(pair, limit));
+			var model = new OrderBookDto();
+
+			foreach (dynamic item in content[pair].asks)
+			{
+				var dto = new OrderDto();
+				dto.Price = item[0];
+				dto.Amount = item[1];
+				model.Asks.Add(dto);
+			}
+
+			foreach (dynamic item in content[pair].bids)
+			{
+				var dto = new OrderDto();
+				dto.Price = item[0];
+				dto.Amount = item[1];
+				model.Bids.Add(dto);
+			}
+
+			return model;
 		}
 
 		//public async Task<OrderDetails> GetOrderInfoAsync(int orderId)
@@ -239,36 +263,6 @@ namespace Yobit.Api
 		//				Timestamp = DateTimeOffset.FromUnixTimeSeconds((long)item.timestamp)
 		//			};
 		//			model.Trades.Add(trade);
-		//		}
-
-		//		return model;
-		//	}
-		//	catch (YobitException ex)
-		//	{
-		//		throw new HttpRequestException(ex.Message, ex);
-		//	}
-		//}
-
-		//public async Task<PairOrders> GetPairOrdersAsync(string pair, uint limit = 150)
-		//{
-		//	if (String.IsNullOrEmpty(pair))
-		//	{
-		//		throw new ArgumentNullException(nameof(pair));
-		//	}
-
-		//	try
-		//	{
-		//		var result = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairOrdersAsync(pair, limit));
-		//		var model = new PairOrders();
-
-		//		foreach (dynamic order in result[pair].asks)
-		//		{
-		//			model.Asks.Add(new Order { Rate = order[0], Amount = order[1] });
-		//		}
-
-		//		foreach (dynamic order in result[pair].bids)
-		//		{
-		//			model.Bids.Add(new Order { Rate = order[0], Amount = order[1] });
 		//		}
 
 		//		return model;
