@@ -25,7 +25,7 @@ namespace TradingBot.Data
 
 		public Repository<User> Users { get; private set; }
 
-		public Repository<PairInfo> PairInfos { get; private set; }
+		//public Repository<PairInfo> PairInfos { get; private set; }
 
 		public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{

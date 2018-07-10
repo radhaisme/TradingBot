@@ -32,7 +32,7 @@ namespace Huobi.Api
 
 		public async Task<HttpResponseMessage> GetOrderBookAsync(string pair, uint limit)
 		{
-			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + $"market/depth?symbol={pair}&type=step5");
+			HttpResponseMessage response = await HttpClient.GetAsync(PublicUrl + $"market/depth?symbol={pair}&type=step1");
 
 			return response.EnsureSuccessStatusCode();
 		}

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using TradingBot.Common;
 using TradingBot.Core;
@@ -73,23 +74,7 @@ namespace Kucoin.Api
 			}
 
 			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetOrderBookAsync(pair, limit));
-			var model = new OrderBookDto();
-
-			foreach (dynamic item in content.data.SELL)
-			{
-				var dto = new OrderDto();
-				dto.Price = item[0];
-				dto.Amount = item[1];
-				model.Bids.Add(dto);
-			}
-
-			foreach (dynamic item in content.data.BUY)
-			{
-				var dto = new OrderDto();
-				dto.Price = item[0];
-				dto.Amount = item[1];
-				model.Asks.Add(dto);
-			}
+			var model = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.data.BUY).Take((int)limit), ((IEnumerable<dynamic>)content.data.SELL).Take((int)limit), item => new OrderDto { Price = item[0], Amount = item[1] });
 
 			return model;
 		}

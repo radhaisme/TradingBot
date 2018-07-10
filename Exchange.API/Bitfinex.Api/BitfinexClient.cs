@@ -79,23 +79,7 @@ namespace Bitfinex.Api
 			}
 
 			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetOrderBookAsync(pair, limit));
-			var model = new OrderBookDto();
-
-			foreach (dynamic item in content.asks)
-			{
-				var dto = new OrderDto();
-				dto.Price = item.price;
-				dto.Amount = item.amount;
-				model.Asks.Add(dto);
-			}
-
-			foreach (dynamic item in content.bids)
-			{
-				var dto = new OrderDto();
-				dto.Price = item.price;
-				dto.Amount = item.amount;
-				model.Bids.Add(dto);
-			}
+			var model = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.asks).Take((int)limit), ((IEnumerable<dynamic>)content.bids).Take((int)limit), item => new OrderDto { Price = item.price, Amount = item.amount });
 
 			return model;
 		}

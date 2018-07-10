@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using TradingBot.Common;
@@ -62,23 +63,7 @@ namespace Binance.Api
 			}
 
 			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetOrderBookAsync(pair, limit));
-			var model = new OrderBookDto();
-
-			foreach (dynamic item in content.bids)
-			{
-				var dto = new OrderDto();
-				dto.Price = item[0];
-				dto.Amount = item[1];
-				model.Bids.Add(dto);
-			}
-
-			foreach (dynamic item in content.asks)
-			{
-				var dto = new OrderDto();
-				dto.Price = item[0];
-				dto.Amount = item[1];
-				model.Asks.Add(dto);
-			}
+			var model = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.asks).Take((int)limit), ((IEnumerable<dynamic>)content.bids).Take((int)limit), item => new OrderDto { Price = item[0], Amount = item[1] });
 
 			return model;
 		}

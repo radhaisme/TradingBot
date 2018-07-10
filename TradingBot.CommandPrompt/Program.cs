@@ -10,6 +10,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -27,10 +28,10 @@ namespace TradingBot.CommandPrompt
 	{
 		private static async Task Main(string[] args)
 		{
-			//var provider = new CoinMarketCapClient();
-			//var factory = new ExchangeFactory(provider);
-			//var scanner = new ArbitrageScanner(factory);
-			//scanner.Start();
+			var provider = new CoinMarketCapClient();
+			var factory = new ExchangeFactory(provider);
+			var scanner = new ArbitrageScanner(factory);
+			scanner.Start();
 
 			Console.ReadLine();
 		}
@@ -38,31 +39,30 @@ namespace TradingBot.CommandPrompt
 
 	public class ExchangePair
 	{
-		public ExchangePair(IExchange from, IExchange to)
+		public ExchangePair(IExchange first, IExchange second)
 		{
-			From = from;
-			To = to;
-			Pairs = new ReadOnlyCollection<Pair>(from.Pairs.Intersect(to.Pairs).ToList());
+			First = first;
+			Second = second;
+			Pairs = new ReadOnlyCollection<Pair>(first.Pairs.Intersect(second.Pairs).ToList());
 		}
 
 		public IReadOnlyCollection<Pair> Pairs { get; }
-		public IExchange From { get; }
-		public IExchange To { get; }
+		public IExchange First { get; }
+		public IExchange Second { get; }
 	}
 
 	public class ArbitrageInfo
 	{
 		public string Symbol { get; set; }
 		public string Route { get; set; }
-		public decimal Ask { get; set; }
-		public decimal Bid { get; set; }
-		public float Spread { get; set; }
+		public decimal BuyPrice { get; set; }
+		public decimal SellPrice { get; set; }
 		public float Rate { get; set; }
 		public bool CanTransfer { get; set; }
 
 		public override string ToString()
 		{
-			return $"{Symbol},{Route},{Ask},{Bid},{Rate:0.##},{(CanTransfer ? "+" : "-")}";
+			return $"{Symbol},{Route},{BuyPrice},{SellPrice},{Rate:0.##} %";
 		}
 	}
 
@@ -81,7 +81,7 @@ namespace TradingBot.CommandPrompt
 			//{
 			//	foreach (var info in _exchangePairs)
 			//	{
-			//		sw.WriteLine($"{info.From.Type}->{info.To.Type}");
+			//		sw.WriteLine($"{info.First.Type}->{info.Second.Type}");
 			//	}
 			//}
 		}
@@ -106,7 +106,7 @@ namespace TradingBot.CommandPrompt
 
 			using (StreamWriter sw = File.CreateText($"Arbitrage-{DateTime.UtcNow:MM-dd-yyyy}.csv"))
 			{
-				sw.WriteLine("Symbol,Route,Buy Price,Sell Price,Spread(Book),Rate,I/O");
+				sw.WriteLine("Symbol,Route,Buy,Sell,Profit");
 
 				foreach (ArbitrageInfo info in output.OrderByDescending(x => x.Rate))
 				{
@@ -119,35 +119,39 @@ namespace TradingBot.CommandPrompt
 		{
 			foreach (Pair pair in exchangePair.Pairs)
 			{
-				decimal from = await exchangePair.From.GetPriceAsync(pair);
-				decimal to = await exchangePair.To.GetPriceAsync(pair);
+				(decimal buy, decimal sell) first = await exchangePair.First.GetBookOrderPriceAsync(pair);
+				(decimal buy, decimal sell) second = await exchangePair.Second.GetBookOrderPriceAsync(pair);
+
+				if (first.buy == 0 && first.sell == 0 || second.buy == 0 && second.sell == 0)
+				{
+					continue;
+				}
+
 				var model = new ArbitrageInfo();
 				model.Symbol = pair.Label;
+				model.BuyPrice = first.sell > second.sell ? second.sell : first.sell;
+				model.SellPrice = first.buy > second.buy ? first.buy : second.buy;
 
-				if (from > to)
+				if (model.BuyPrice < model.SellPrice)
 				{
-					model.Route = $"{exchangePair.To.Type}->{exchangePair.From.Type}";
-					model.Bid = to;
-					model.Ask = from;
-					model.Rate = GetPercent(from, to);
+					model.Route = $"{exchangePair.Second.Type}->{exchangePair.First.Type}";
+					model.Rate = GetPercent(model.SellPrice, model.BuyPrice);
 				}
 				else
 				{
-					model.Route = $"{exchangePair.From.Type}->{exchangePair.To.Type}";
-					model.Bid = from;
-					model.Ask = to;
-					model.Rate = GetPercent(to, from);
+					model.Route = $"{exchangePair.First.Type}->{exchangePair.Second.Type}";
+					model.Rate = GetPercent(model.BuyPrice, model.SellPrice);
 				}
 
 				output.TryAdd(model);
 				Console.WriteLine($"{output.Count}. {model}");
-				Thread.Sleep(3000);
+				Thread.Sleep(1000);
 			}
 		}
 
 		private float GetPercent(decimal a, decimal b)
 		{
-			return (float)((a - b) / a * 100);
+			return (float)((a - b) / b * 100);
 		}
 
 		public void Stop()
@@ -159,14 +163,14 @@ namespace TradingBot.CommandPrompt
 
 		private void CreateExchanges(IExchangeFactory factory)
 		{
-			_exchanges.Add(factory.Create(ExchangeType.Binance));
+			//_exchanges.Add(factory.Create(ExchangeType.Binance));
 			_exchanges.Add(factory.Create(ExchangeType.Huobi));
-			_exchanges.Add(factory.Create(ExchangeType.Yobit));
-			_exchanges.Add(factory.Create(ExchangeType.Bitfinex));
-			_exchanges.Add(factory.Create(ExchangeType.Cryptopia));
-			_exchanges.Add(factory.Create(ExchangeType.Kucoin));
+			//_exchanges.Add(factory.Create(ExchangeType.Yobit));
+			//_exchanges.Add(factory.Create(ExchangeType.Bitfinex));
+			//_exchanges.Add(factory.Create(ExchangeType.Cryptopia));
+			//_exchanges.Add(factory.Create(ExchangeType.Kucoin));
 			_exchanges.Add(factory.Create(ExchangeType.Okex));
-			_exchanges.Add(factory.Create(ExchangeType.Exmo));
+			//_exchanges.Add(factory.Create(ExchangeType.Exmo));
 		}
 
 		private void GenerateExchangePairs()
@@ -223,6 +227,12 @@ namespace TradingBot.CommandPrompt
 				}
 
 				var pair = new Pair(bases[0], quotes[0]);
+
+				if (pair.Label != "GNX/ETH")
+				{
+					continue;
+				}
+
 				pairs.Add(pair);
 			}
 
@@ -235,6 +245,30 @@ namespace TradingBot.CommandPrompt
 
 			return detailDto.LastPrice;
 		}
+
+		public async Task<(decimal ask, decimal bid)> GetBookOrderPriceAsync(Pair pair)
+		{
+			OrderBookDto dto = await _client.GetOrderBookAsync(pair.GetSymbol(Type), 5);
+			decimal ask = 0;
+			decimal bid = 0;
+
+			if (dto.Asks.Count == 0 || dto.Bids.Count == 0)
+			{
+				return (0, 0);
+			}
+
+			foreach (OrderDto item in dto.Asks)
+			{
+				ask += item.Price;
+			}
+
+			foreach (OrderDto item in dto.Bids)
+			{
+				bid += item.Price;
+			}
+
+			return (ask / dto.Asks.Count, bid / dto.Bids.Count);
+		}
 	}
 
 	public interface IExchange
@@ -243,6 +277,7 @@ namespace TradingBot.CommandPrompt
 		IReadOnlyCollection<Pair> Pairs { get; }
 		void Initialize();
 		Task<decimal> GetPriceAsync(Pair pair);
+		Task<(decimal ask, decimal bid)> GetBookOrderPriceAsync(Pair pair);
 	}
 
 	public class ExchangeFactory : IExchangeFactory

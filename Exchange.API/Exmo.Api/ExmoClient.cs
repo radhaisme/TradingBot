@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using TradingBot.Common;
 using TradingBot.Core;
@@ -67,23 +68,7 @@ namespace Exmo.Api
 			}
 
 			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetOrderBookAsync(pair, limit));
-			var model = new OrderBookDto();
-
-			foreach (dynamic item in content[pair].ask)
-			{
-				var dto = new OrderDto();
-				dto.Price = item[0];
-				dto.Amount = item[2];
-				model.Asks.Add(dto);
-			}
-
-			foreach (dynamic item in content[pair].bid)
-			{
-				var dto = new OrderDto();
-				dto.Price = item[0];
-				dto.Amount = item[2];
-				model.Bids.Add(dto);
-			}
+			var model = Helper.BuildOrderBook(((IEnumerable<dynamic>)content[pair].ask).Take((int)limit), ((IEnumerable<dynamic>)content[pair].bid).Take((int)limit), item => new OrderDto { Price = item[0], Amount = item[2] });
 
 			return model;
 		}

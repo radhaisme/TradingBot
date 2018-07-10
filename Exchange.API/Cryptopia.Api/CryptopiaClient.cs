@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using TradingBot.Common;
 using TradingBot.Core;
@@ -66,23 +67,7 @@ namespace Cryptopia.Api
 			}
 
 			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetOrderBookAsync(pair, limit));
-			var model = new OrderBookDto();
-
-			foreach (dynamic item in content.Data.Sell)
-			{
-				var dto = new OrderDto();
-				dto.Price = item.Price;
-				dto.Amount = item.Volume;
-				model.Bids.Add(dto);
-			}
-
-			foreach (dynamic item in content.Data.Buy)
-			{
-				var dto = new OrderDto();
-				dto.Price = item.Price;
-				dto.Amount = item.Volume;
-				model.Asks.Add(dto);
-			}
+			var model = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.Data.Buy).Take((int)limit), ((IEnumerable<dynamic>)content.Data.Sell).Take((int)limit), item => new OrderDto { Price = item.Price, Amount = item.Volume });
 
 			return model;
 		}

@@ -10,7 +10,7 @@ namespace TradingBot.Core.Entities
 			Bids = new List<OrderDto>();
 		}
 
-		public ICollection<OrderDto> Asks { get; set; }
-		public ICollection<OrderDto> Bids { get; set; }
+		public List<OrderDto> Asks { get; }
+		public List<OrderDto> Bids { get; }
 	}
 }
