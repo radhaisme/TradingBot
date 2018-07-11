@@ -10,7 +10,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -127,8 +126,14 @@ namespace TradingBot.CommandPrompt
 					continue;
 				}
 
+				//decimal first = await exchangePair.First.GetPriceAsync(pair);
+				//decimal second = await exchangePair.Second.GetPriceAsync(pair);
+
 				var model = new ArbitrageInfo();
 				model.Symbol = pair.Label;
+				//model.BuyPrice = first < second ? first : second;
+				//model.SellPrice = first > second ? first : second;
+
 				model.BuyPrice = first.sell > second.sell ? second.sell : first.sell;
 				model.SellPrice = first.buy > second.buy ? first.buy : second.buy;
 
@@ -163,14 +168,14 @@ namespace TradingBot.CommandPrompt
 
 		private void CreateExchanges(IExchangeFactory factory)
 		{
-			//_exchanges.Add(factory.Create(ExchangeType.Binance));
+			_exchanges.Add(factory.Create(ExchangeType.Binance));
 			_exchanges.Add(factory.Create(ExchangeType.Huobi));
-			//_exchanges.Add(factory.Create(ExchangeType.Yobit));
-			//_exchanges.Add(factory.Create(ExchangeType.Bitfinex));
-			//_exchanges.Add(factory.Create(ExchangeType.Cryptopia));
-			//_exchanges.Add(factory.Create(ExchangeType.Kucoin));
+			_exchanges.Add(factory.Create(ExchangeType.Yobit));
+			_exchanges.Add(factory.Create(ExchangeType.Bitfinex));
+			_exchanges.Add(factory.Create(ExchangeType.Cryptopia));
+			_exchanges.Add(factory.Create(ExchangeType.Kucoin));
+			_exchanges.Add(factory.Create(ExchangeType.Exmo));
 			_exchanges.Add(factory.Create(ExchangeType.Okex));
-			//_exchanges.Add(factory.Create(ExchangeType.Exmo));
 		}
 
 		private void GenerateExchangePairs()
@@ -227,12 +232,6 @@ namespace TradingBot.CommandPrompt
 				}
 
 				var pair = new Pair(bases[0], quotes[0]);
-
-				if (pair.Label != "GNX/ETH")
-				{
-					continue;
-				}
-
 				pairs.Add(pair);
 			}
 
