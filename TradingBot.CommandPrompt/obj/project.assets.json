@@ -1179,6 +1179,27 @@
           "bin/placeholder/TradingBot.Data.dll": {}
         }
       },
+      "TradingBot.Scanner/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "dependencies": {
+          "Binance.Api": "1.0.0",
+          "Bitfinex.Api": "1.0.0",
+          "Cryptopia.Api": "1.0.0",
+          "Exmo.Api": "1.0.0",
+          "Huobi.Api": "1.0.0",
+          "Kucoin.Api": "1.0.0",
+          "Okex.Api": "1.0.0",
+          "TradingBot.Core": "1.0.0",
+          "Yobit.Api": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/TradingBot.Scanner.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/TradingBot.Scanner.dll": {}
+        }
+      },
       "TradingBot.Services/1.0.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
@@ -3898,6 +3919,11 @@
       "path": "../TradingBot.Data/TradingBot.Data.csproj",
       "msbuildProject": "../TradingBot.Data/TradingBot.Data.csproj"
     },
+    "TradingBot.Scanner/1.0.0": {
+      "type": "project",
+      "path": "../TradingBot.Scanner/TradingBot.Scanner.csproj",
+      "msbuildProject": "../TradingBot.Scanner/TradingBot.Scanner.csproj"
+    },
     "TradingBot.Services/1.0.0": {
       "type": "project",
       "path": "../TradingBot.Services/TradingBot.Services.csproj",
@@ -3922,6 +3948,7 @@
       "TradingBot.Common >= 1.0.0",
       "TradingBot.CurrencyProvider >= 1.0.0",
       "TradingBot.Data >= 1.0.0",
+      "TradingBot.Scanner >= 1.0.0",
       "TradingBot.Services >= 1.0.0",
       "Yobit.Api >= 1.0.0"
     ]
@@ -3988,6 +4015,9 @@
             },
             "E:\\Projects\\TradingBot\\TradingBot.Data\\TradingBot.Data.csproj": {
               "projectPath": "E:\\Projects\\TradingBot\\TradingBot.Data\\TradingBot.Data.csproj"
+            },
+            "E:\\Projects\\TradingBot\\TradingBot.Scanner\\TradingBot.Scanner.csproj": {
+              "projectPath": "E:\\Projects\\TradingBot\\TradingBot.Scanner\\TradingBot.Scanner.csproj"
             },
             "E:\\Projects\\TradingBot\\TradingBot.Services\\TradingBot.Services.csproj": {
               "projectPath": "E:\\Projects\\TradingBot\\TradingBot.Services\\TradingBot.Services.csproj"

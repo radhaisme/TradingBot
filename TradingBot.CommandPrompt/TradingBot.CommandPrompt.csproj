@@ -26,6 +26,7 @@
 		<ProjectReference Include="..\TradingBot.Common\TradingBot.Common.csproj" />
 		<ProjectReference Include="..\TradingBot.CurrencyProvider\TradingBot.CurrencyProvider.csproj" />
 		<ProjectReference Include="..\TradingBot.Data\TradingBot.Data.csproj" />
+		<ProjectReference Include="..\TradingBot.Scanner\TradingBot.Scanner.csproj" />
 		<ProjectReference Include="..\TradingBot.Services\TradingBot.Services.csproj" />
 	</ItemGroup>
 

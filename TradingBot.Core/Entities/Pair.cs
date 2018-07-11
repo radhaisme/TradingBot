@@ -1,8 +1,7 @@
 ﻿using System;
-using TradingBot.Core.Entities;
 using TradingBot.Core.Enums;
 
-namespace TradingBot.Data.Entities
+namespace TradingBot.Core.Entities
 {
 	public class Pair : IEquatable<Pair>
 	{
