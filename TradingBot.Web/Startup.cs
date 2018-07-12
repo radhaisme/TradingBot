@@ -1,11 +1,12 @@
 ﻿using Autofac;
-using log4net;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using TradingBot.Common;
 
 namespace TradingBot.Web
 {
@@ -27,13 +28,14 @@ namespace TradingBot.Web
 				options.CheckConsentNeeded = context => true;
 				options.MinimumSameSitePolicy = SameSiteMode.None;
 			});
+			services.AddMvc()
+					.SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+					.AddControllersAsServices();
+		}
 
-			var builder = new ContainerBuilder();
-			builder.RegisterType<ILog>().As<ILog>();
-			//builder.Populate(services);
-			var r = builder.Build();
-
-			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+		public void ConfigureContainer(ContainerBuilder builder)
+		{
+			builder.RegisterType<Logger>().As<ILog>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,17 +47,14 @@ namespace TradingBot.Web
 			}
 			else
 			{
-				app.UseExceptionHandler("/Home/Error");
+				app.UseExceptionHandler("/Arbitrage/Error");
 			}
 
 			app.UseStaticFiles();
 			app.UseCookiePolicy();
-
 			app.UseMvc(routes =>
 			{
-				routes.MapRoute(
-					name: "default",
-					template: "{controller=Home}/{action=Index}/{id?}");
+				routes.MapRoute("default", "{controller=Arbitrage}/{action=Index}/{id?}");
 			});
 		}
 	}

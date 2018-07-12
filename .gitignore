@@ -102,3 +102,4 @@ Newtonsoft.Json.10.0.3
 /packages/Newtonsoft.Json.11.0.1
 /TradingBot.Data/Db/BotDb_log.ldf
 /TradingBot.Data/Db/BotDb.mdf
+/TradingBot.Web/Logs

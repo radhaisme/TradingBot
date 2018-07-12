@@ -9,10 +9,10 @@ namespace TradingBot.CommandPrompt
 	{
 		private static async Task Main(string[] args)
 		{
-			var provider = new CoinMarketCapClient();
-			var factory = new ExchangeFactory(provider);
-			var scanner = new ArbitrageScanner(factory);
-			scanner.Start();
+			//var provider = new CoinMarketCapClient();
+			//var factory = new ExchangeFactory(provider);
+			//var scanner = new ArbitrageScanner(factory);
+			//scanner.Start();
 
 			Console.ReadLine();
 		}

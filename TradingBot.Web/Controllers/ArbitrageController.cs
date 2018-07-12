@@ -1,5 +1,5 @@
-﻿using log4net;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using TradingBot.Common;
 
 namespace TradingBot.Web.Controllers
 {
