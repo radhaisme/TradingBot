@@ -13,8 +13,6 @@ namespace TradingBot.Data
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
-			
-			
 			//builder.ApplyConfiguration(new UserMapping());
 			//builder.ApplyConfiguration(new AccountMapping());
 			//builder.ApplyConfiguration(new PairInfoMapping());

@@ -22,5 +22,8 @@
 	  <ProjectReference Include="..\TradingBot.Common\TradingBot.Common.csproj" />
 	  <ProjectReference Include="..\TradingBot.Core\TradingBot.Core.csproj" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Migrations\" />
+	</ItemGroup>
 
 </Project>

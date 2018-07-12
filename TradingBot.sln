@@ -43,7 +43,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Binance.Api", "Exchange.API
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradingBot.CurrencyProvider", "TradingBot.CurrencyProvider\TradingBot.CurrencyProvider.csproj", "{4757BB23-8BF0-46BB-8EF7-21EA2251531F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingBot.Scanner", "TradingBot.Scanner\TradingBot.Scanner.csproj", "{3E747610-8CF6-41D9-BA61-16824A3F95B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradingBot.Scanner", "TradingBot.Scanner\TradingBot.Scanner.csproj", "{3E747610-8CF6-41D9-BA61-16824A3F95B2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

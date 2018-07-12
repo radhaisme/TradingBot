@@ -100,3 +100,5 @@ EntityFramework.6.2.0
 Newtonsoft.Json.10.0.3
 /.vs
 /packages/Newtonsoft.Json.11.0.1
+/TradingBot.Data/Db/BotDb_log.ldf
+/TradingBot.Data/Db/BotDb.mdf
