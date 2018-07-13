@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
@@ -36,13 +36,7 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="wwwroot\ts\Ticker.ts" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="C:\Users\Roman\.nuget\packages\nlog.config\4.5.6\contentFiles\any\any\NLog.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+  </ItemGroup>  
 
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <TypeScriptTarget>ES5</TypeScriptTarget>
