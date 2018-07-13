@@ -1174,9 +1174,6 @@
       "TradingBot.Core/1.0.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
-        "dependencies": {
-          "NLog.Config": "4.5.6"
-        },
         "compile": {
           "bin/placeholder/TradingBot.Core.dll": {}
         },

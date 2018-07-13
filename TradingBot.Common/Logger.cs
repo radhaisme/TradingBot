@@ -3,7 +3,7 @@ using NLog.Web;
 
 namespace TradingBot.Common
 {
-	public class Logger : ILog
+	public sealed class Logger : ILog
 	{
 		private readonly ILogger _logger;
 
