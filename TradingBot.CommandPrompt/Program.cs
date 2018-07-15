@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Kucoin.Api;
 using TradingBot.CurrencyProvider;
 using TradingBot.Scanner;
 
@@ -13,6 +14,10 @@ namespace TradingBot.CommandPrompt
 			//var factory = new ExchangeFactory(provider);
 			//var scanner = new ArbitrageScanner(factory);
 			//scanner.Start();
+
+			var client = new KucoinClient();
+			//var r = await client.GetPairsAsync();
+			var r = await client.GetOrderBookAsync("ETH-BTCH");
 
 			Console.ReadLine();
 		}

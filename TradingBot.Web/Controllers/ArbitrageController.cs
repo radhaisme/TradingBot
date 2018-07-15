@@ -14,6 +14,8 @@ namespace TradingBot.Web.Controllers
 
 		public IActionResult Index()
 		{
+			_log.Info("dasda");
+
 			return View();
 		}
 	}
