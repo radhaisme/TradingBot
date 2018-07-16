@@ -23,7 +23,7 @@ namespace Yobit.Api
 
 			if (!response.IsSuccessStatusCode)
 			{
-				throw new YobitException("Ocurred some error...");
+				//throw new YobitException("Ocurred some error...");
 			}
 
 			return response;
@@ -38,7 +38,7 @@ namespace Yobit.Api
 
 			if (!response.IsSuccessStatusCode)
 			{
-				throw new YobitException("Ocurred some error...");
+				//throw new YobitException("Ocurred some error...");
 			}
 
 			return response;
@@ -52,7 +52,7 @@ namespace Yobit.Api
 
 			if (!response.IsSuccessStatusCode)
 			{
-				throw new YobitException("Ocurred some error...");
+				//throw new YobitException("Ocurred some error...");
 			}
 
 			return response;
@@ -74,7 +74,7 @@ namespace Yobit.Api
 
 			if (!response.IsSuccessStatusCode)
 			{
-				throw new YobitException("Ocurred some error...");
+				//throw new YobitException("Ocurred some error...");
 			}
 
 			return response;
@@ -88,7 +88,7 @@ namespace Yobit.Api
 
 			if (!response.IsSuccessStatusCode)
 			{
-				throw new YobitException("Ocurred some error...");
+				//throw new YobitException("Ocurred some error...");
 			}
 
 			return response;
@@ -102,7 +102,7 @@ namespace Yobit.Api
 
 			if (!response.IsSuccessStatusCode)
 			{
-				throw new YobitException("Ocurred some error...");
+				//throw new YobitException("Ocurred some error...");
 			}
 
 			return response;
@@ -114,7 +114,7 @@ namespace Yobit.Api
 
 			if (!response.IsSuccessStatusCode)
 			{
-				throw new YobitException("Occured some error...");
+				//throw new YobitException("Occured some error...");
 			}
 
 			return response;
@@ -126,7 +126,7 @@ namespace Yobit.Api
 
 			if (!response.IsSuccessStatusCode)
 			{
-				throw new YobitException("Occured some error...");
+				//throw new YobitException("Occured some error...");
 			}
 
 			return response;
@@ -138,7 +138,7 @@ namespace Yobit.Api
 
 			if (!response.IsSuccessStatusCode)
 			{
-				throw new YobitException("Occured some error...");
+				//throw new YobitException("Occured some error...");
 			}
 
 			return response;

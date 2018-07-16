@@ -11,37 +11,8 @@ namespace TradingBot.Core
 
 		protected ApiClient()
 		{
-			//if (String.IsNullOrEmpty(publicEndpoint))
-			//{
-			//	throw new ArgumentNullException(nameof(publicEndpoint));
-			//}
-
-			//if (String.IsNullOrEmpty(privateEndpoint))
-			//{
-			//	throw new ArgumentNullException(nameof(privateEndpoint));
-			//}
-
-			//PrivateUrl = new Uri(NormalizeUrl(privateEndpoint));
-			//PublicUrl = new Uri(NormalizeUrl(publicEndpoint));
-
 			_client.DefaultRequestHeaders.ConnectionClose = false;
 		}
-
-		protected async Task<TContent> CallAsync<TContent>(HttpMethod method, Uri uri, HttpContent content = null)
-		{
-			var request = new HttpRequestMessage(method, uri);
-			request.Content = content;
-			HttpResponseMessage response = await _client.SendAsync(request);
-
-			if (!response.IsSuccessStatusCode)
-			{
-				HandleError(response);
-			}
-
-			return await HttpHelper.AcquireContentAsync<TContent>(response);
-		}
-
-		protected abstract void HandleError(HttpResponseMessage response);
 
 		public void Dispose()
 		{
@@ -49,8 +20,34 @@ namespace TradingBot.Core
 			GC.SuppressFinalize(this);
 		}
 
+		#region Private methods
+
+		protected async Task<TContent> CallAsync<TContent>(HttpMethod method, Uri uri, HttpContent content = null)
+		{
+			var request = new HttpRequestMessage(method, uri) { Content = content };
+			HttpResponseMessage response = await _client.SendAsync(request);
+			HandleError(response);
+
+			return await HttpHelper.AcquireContentAsync<TContent>(response);
+		}
+
+		protected virtual void HandleError(HttpResponseMessage response)
+		{
+			response.EnsureSuccessStatusCode();
+		}
+
 		protected Uri BuildUrl(string baseUrl, string url)
 		{
+			if (String.IsNullOrEmpty(baseUrl))
+			{
+				throw new ArgumentNullException(nameof(baseUrl));
+			}
+
+			if (String.IsNullOrEmpty(url))
+			{
+				throw new ArgumentNullException(nameof(url));
+			}
+
 			var current = baseUrl;
 
 			if (!current.EndsWith("/"))
@@ -60,5 +57,7 @@ namespace TradingBot.Core
 
 			return new Uri(current + url);
 		}
+
+		#endregion
 	}
 }

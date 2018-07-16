@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using TradingBot.Common;
 using TradingBot.Core;
@@ -9,32 +10,41 @@ using TradingBot.Core.Entities;
 
 namespace Okex.Api
 {
-	public sealed class OkexClient : IExchangeClient
+	public sealed class OkexClient : ApiClient, IExchangeClient
 	{
-		private readonly OkexApi _api;
 		private readonly IOkexSettings _settings;
 
 		public OkexClient()
 		{
 			_settings = new OkexSettings();
-			_api = new OkexApi(_settings.PublicUrl, _settings.PrivateUrl);
 		}
 
 		public async Task<IReadOnlyCollection<PairDto>> GetPairsAsync()
 		{
-			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairsAsync());
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "tickers.do"));
 			var pairs = new List<PairDto>();
 
 			foreach (dynamic item in content.tickers)
 			{
-				var pair = new PairDto();
+				var dto = new PairDto();
 				string[] assets = ((string)item.symbol).Split('_');
-				pair.BaseAsset = assets[0].ToUpper();
-				pair.QuoteAsset = assets[1].ToUpper();
-				pairs.Add(pair);
+				dto.BaseAsset = assets[0].ToUpper();
+				dto.QuoteAsset = assets[1].ToUpper();
+				pairs.Add(dto);
 			}
 
-			return new ReadOnlyCollection<PairDto>(pairs);
+			return pairs.AsReadOnly();
+		}
+
+		protected override async void HandleError(HttpResponseMessage response)
+		{
+			var content = await HttpHelper.AcquireContentAsync<ErrorModel>(response);
+
+			if (content.ErrorCode > 0)
+			{
+				string message = content.GetMessage();
+				throw new HttpRequestException(message);
+			}
 		}
 
 		public async Task<PairDetailDto> GetPairDetailAsync(string pair)
@@ -44,7 +54,7 @@ namespace Okex.Api
 				throw new ArgumentNullException(nameof(pair));
 			}
 
-			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairDetailAsync(pair));
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"ticker.do?symbol={pair}"));
 			var dto = new PairDetailDto();
 			dto.LastPrice = content.ticker.last;
 			dto.Ask = content.ticker.buy;
@@ -63,7 +73,7 @@ namespace Okex.Api
 				throw new ArgumentNullException(nameof(pair));
 			}
 
-			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetOrderBookAsync(pair, limit));
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"depth.do?symbol={pair}&size={limit}"));
 			var model = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.asks).Take((int)limit), ((IEnumerable<dynamic>)content.bids).Take((int)limit), item => new OrderDto { Price = item[0], Amount = item[1] });
 
 			return model;

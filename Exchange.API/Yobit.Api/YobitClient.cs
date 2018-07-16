@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -10,39 +9,35 @@ using TradingBot.Core.Entities;
 
 namespace Yobit.Api
 {
-	public sealed class YobitClient : IExchangeClient
+	public sealed class YobitClient : ApiClient, IExchangeClient
 	{
-		private readonly YobitApi _api;
 		private readonly IYobitSettings _settings;
 
 		public YobitClient()
 		{
 			_settings = new YobitSettings();
-			_api = new YobitApi(_settings.PublicUrl, _settings.PrivateUrl);
 		}
 
 		public async Task<IReadOnlyCollection<PairDto>> GetPairsAsync()
 		{
-			try
-			{
-				var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairsAsync());
-				var pairs = new List<PairDto>();
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "info?ignore_invalid=1"));
+			var pairs = new List<PairDto>();
 
-				foreach (dynamic item in content.pairs)
+			foreach (dynamic item in content.pairs)
+			{
+				if ((bool)item.hidden)
 				{
-					var pair = new PairDto();
-					string[] assets = ((string)item.Name).Split('_');
-					pair.BaseAsset = assets[0];
-					pair.QuoteAsset = assets[1];
-					pairs.Add(pair);
+					continue;
 				}
 
-				return new ReadOnlyCollection<PairDto>(pairs);
+				var dto = new PairDto();
+				string[] assets = ((string)item.Name).Split('_');
+				dto.BaseAsset = assets[0];
+				dto.QuoteAsset = assets[1];
+				pairs.Add(dto);
 			}
-			catch (YobitException ex)
-			{
-				throw new HttpRequestException(ex.Message, ex);
-			}
+
+			return pairs.AsReadOnly();
 		}
 
 		public async Task<PairDetailDto> GetPairDetailAsync(string pair)
@@ -52,23 +47,17 @@ namespace Yobit.Api
 				throw new ArgumentNullException(nameof(pair));
 			}
 
-			try
-			{
-				var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairDetailAsync(pair));
-				var detail = new PairDetailDto();
-				detail.LastPrice = content[pair].last;
-				detail.Volume = content[pair].vol;
-				detail.Ask = content[pair].buy;
-				detail.Bid = content[pair].sell;
-				detail.High = content[pair].high;
-				detail.Low = content[pair].low;
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"ticker/{pair}?ignore_invalid=1"));
+			dynamic data = content[pair];
+			var dto = new PairDetailDto();
+			dto.LastPrice = data.last;
+			dto.Volume = data.vol;
+			dto.Ask = data.buy;
+			dto.Bid = data.sell;
+			dto.High = data.high;
+			dto.Low = data.low;
 
-				return detail;
-			}
-			catch (YobitException ex)
-			{
-				throw new HttpRequestException(ex.Message, ex);
-			}
+			return dto;
 		}
 
 		public async Task<OrderBookDto> GetOrderBookAsync(string pair, uint limit = 100)
@@ -78,10 +67,21 @@ namespace Yobit.Api
 				throw new ArgumentNullException(nameof(pair));
 			}
 
-			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetOrderBookAsync(pair, limit));
-			var model = Helper.BuildOrderBook(((IEnumerable<dynamic>)content[pair].asks).Take((int)limit), ((IEnumerable<dynamic>)content[pair].bids).Take((int)limit), item => new OrderDto { Price = item[0], Amount = item[1] });
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"depth/{pair}?limit={limit}&ignore_invalid=1"));
+			dynamic data = content[pair];
+			OrderBookDto dto = Helper.BuildOrderBook(((IEnumerable<dynamic>)data.asks).Take((int)limit), ((IEnumerable<dynamic>)data.bids).Take((int)limit), item => new OrderDto { Price = item[0], Amount = item[1] });
 
-			return model;
+			return dto;
+		}
+
+		protected override async void HandleError(HttpResponseMessage response)
+		{
+			var content = await HttpHelper.AcquireContentAsync<ErrorModel>(response);
+
+			if (!content.Success && !String.IsNullOrEmpty(content.Error))
+			{
+				throw new HttpRequestException(content.Error);
+			}
 		}
 
 		//public async Task<OrderDetails> GetOrderInfoAsync(int orderId)

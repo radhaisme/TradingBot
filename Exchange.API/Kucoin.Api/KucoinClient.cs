@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -12,47 +11,50 @@ namespace Kucoin.Api
 {
 	public sealed class KucoinClient : ApiClient, IExchangeClient
 	{
-		private readonly KucoinApi _api;
 		private readonly IKucoinSettings _settings;
 
 		public KucoinClient()
 		{
 			_settings = new KucoinSettings();
-			_api = new KucoinApi(_settings.PublicUrl, _settings.PrivateUrl);
 		}
 
 		public async Task<IReadOnlyCollection<PairDto>> GetPairsAsync()
 		{
-			try
+			var content = await CallAsync<ResponseModel>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "market/open/symbols"));
+			var pairs = new List<PairDto>();
+
+			foreach (dynamic item in content.Data)
 			{
-				var content = await CallAsync<ResponseModel>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "market/open/symbols2"));
-				var pairs = new List<PairDto>();
-
-				foreach (dynamic item in content.Data)
+				if (!(bool)item.trading)
 				{
-					if (!(bool)item.trading)
-					{
-						continue;
-					}
-
-					var pair = new PairDto();
-					pair.BaseAsset = item.coinType;
-					pair.QuoteAsset = item.coinTypePair;
-					pairs.Add(pair);
+					continue;
 				}
 
-				return new ReadOnlyCollection<PairDto>(pairs);
+				var pair = new PairDto();
+				pair.BaseAsset = item.coinType;
+				pair.QuoteAsset = item.coinTypePair;
+				pairs.Add(pair);
 			}
-			catch (HttpRequestException ex)
-			{
-				throw;
-			}
+
+			return pairs.AsReadOnly();
 		}
 
 		protected override async void HandleError(HttpResponseMessage response)
 		{
-			var content = (ResponseModel)await HttpHelper.AcquireContentAsync(response, typeof(ResponseModel));
-			throw new HttpRequestException(content.Msg);
+			if (response.IsSuccessStatusCode)
+			{
+				return;
+			}
+
+			var content = await HttpHelper.AcquireContentAsync<ResponseModel>(response);
+			string message = content.Msg;
+
+			if (String.IsNullOrEmpty(content.Msg))
+			{
+				message = "Some error occurred.";
+			}
+
+			throw new HttpRequestException(message);
 		}
 
 		public async Task<PairDetailDto> GetPairDetailAsync(string pair)
@@ -62,22 +64,23 @@ namespace Kucoin.Api
 				throw new ArgumentNullException(nameof(pair));
 			}
 
-			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairDetailAsync(pair));
+			var content = await CallAsync<ResponseModel>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"{pair}/open/tick"));
 
-			if (!(bool)content.data.trading)
+			if (!(bool)content.Data.trading)
 			{
 				return null;
 			}
 
-			var detail = new PairDetailDto();
-			detail.LastPrice = content.data.lastDealPrice;
-			detail.Ask = content.data.buy;
-			detail.Bid = content.data.sell;
-			detail.Volume = content.data.vol;
-			detail.Low = ((decimal?)content.data.low).GetValueOrDefault();
-			detail.High = ((decimal?)content.data.high).GetValueOrDefault();
+			dynamic data = content.Data;
+			var dto = new PairDetailDto();
+			dto.LastPrice = data.lastDealPrice;
+			dto.Ask = data.buy;
+			dto.Bid = data.sell;
+			dto.Volume = data.vol;
+			dto.Low = ((decimal?)data.low).GetValueOrDefault();
+			dto.High = ((decimal?)data.high).GetValueOrDefault();
 
-			return detail;
+			return dto;
 		}
 
 		public async Task<OrderBookDto> GetOrderBookAsync(string pair, uint limit = 100)
@@ -88,9 +91,10 @@ namespace Kucoin.Api
 			}
 
 			var content = await CallAsync<ResponseModel>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"open/orders?symbol={pair}&limit={limit}"));
-			var model = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.Data.BUY).Take((int)limit), ((IEnumerable<dynamic>)content.Data.SELL).Take((int)limit), item => new OrderDto { Price = item[0], Amount = item[1] });
+			dynamic data = content.Data;
+			var dto = Helper.BuildOrderBook(((IEnumerable<dynamic>)data.BUY).Take((int)limit), ((IEnumerable<dynamic>)data.SELL).Take((int)limit), item => new OrderDto { Price = item[0], Amount = item[1] });
 
-			return model;
+			return dto;
 		}
 	}
 }

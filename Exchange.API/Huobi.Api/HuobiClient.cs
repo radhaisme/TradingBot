@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using TradingBot.Common;
 using TradingBot.Core;
@@ -9,7 +10,7 @@ using TradingBot.Core.Entities;
 
 namespace Huobi.Api
 {
-	public sealed class HuobiClient : IExchangeClient
+	public sealed class HuobiClient : ApiClient, IExchangeClient
 	{
 		private readonly HuobiApi _api;
 		private readonly IHuobiSettings _settings;
@@ -22,19 +23,18 @@ namespace Huobi.Api
 
 		public async Task<IReadOnlyCollection<PairDto>> GetPairsAsync()
 		{
-			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairsAsync());
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "v1/common/symbols"));
 			var pairs = new List<PairDto>();
 
 			foreach (dynamic item in content.data)
 			{
-				var pair = new PairDto();
-				pair.BaseAsset = ((string)item["base-currency"]).ToUpper();
-				pair.QuoteAsset = ((string)item["quote-currency"]).ToUpper();
-				//pair.Precision = item["price-precision"];
-				pairs.Add(pair);
+				var dto = new PairDto();
+				dto.BaseAsset = ((string)item["base-currency"]).ToUpper();
+				dto.QuoteAsset = ((string)item["quote-currency"]).ToUpper();
+				pairs.Add(dto);
 			}
 
-			return new ReadOnlyCollection<PairDto>(pairs);
+			return pairs.AsReadOnly();
 		}
 
 		public async Task<PairDetailDto> GetPairDetailAsync(string pair)
@@ -45,15 +45,15 @@ namespace Huobi.Api
 			}
 
 			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairDetailAsync(pair));
-			var detail = new PairDetailDto();
-			detail.LastPrice = content.tick.close;
-			detail.Ask = content.tick.ask[0];
-			detail.Bid = content.tick.bid[0];
-			detail.Volume = content.tick.vol;
-			detail.High = content.tick.high;
-			detail.Low = content.tick.low;
+			var dto = new PairDetailDto();
+			dto.LastPrice = content.tick.close;
+			dto.Ask = content.tick.ask[0];
+			dto.Bid = content.tick.bid[0];
+			dto.Volume = content.tick.vol;
+			dto.High = content.tick.high;
+			dto.Low = content.tick.low;
 
-			return detail;
+			return dto;
 		}
 
 		public async Task<OrderBookDto> GetOrderBookAsync(string pair, uint limit = 100)
@@ -76,12 +76,12 @@ namespace Huobi.Api
 
 			foreach (dynamic item in content.data)
 			{
-				var detail = new PairDetailDto();
-				detail.LastPrice = item.close;
+				var dto = new PairDetailDto();
+				dto.LastPrice = item.close;
 				//detail.Low = item.low;
 				//detail.High = item.high;
 				//detail.Volume = item.vol;
-				details.Add(detail);
+				details.Add(dto);
 			}
 
 			return new ReadOnlyCollection<PairDetailDto>(details);

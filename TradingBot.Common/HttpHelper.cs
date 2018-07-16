@@ -8,25 +8,25 @@ namespace TradingBot.Common
 {
 	public static class HttpHelper
 	{
-		public static async Task<TModel> AcquireContentAsync<TModel>(HttpResponseMessage message)
+		public static async Task<TModel> AcquireContentAsync<TModel>(HttpResponseMessage response)
 		{
-			string json = await AcquireStringAsync(message);
+			string json = await AcquireStringAsync(response);
 			var content = JsonHelper.FromJson<TModel>(json);
 
 			return content;
 		}
 
-		public static async Task<string> AcquireStringAsync(HttpResponseMessage message)
+		public static async Task<string> AcquireStringAsync(HttpResponseMessage response)
 		{
-			byte[] buffer = await message.Content.ReadAsByteArrayAsync();
+			byte[] buffer = await response.Content.ReadAsByteArrayAsync();
 			string json = Encoding.Default.GetString(buffer);
 
 			return json;
 		}
 
-		public static async Task<object> AcquireContentAsync(HttpResponseMessage message, Type type)
+		public static async Task<object> AcquireContentAsync(HttpResponseMessage response, Type type)
 		{
-			string json = await AcquireStringAsync(message);
+			string json = await AcquireStringAsync(response);
 			object content = JsonHelper.FromJson(json, type);
 
 			return content;
