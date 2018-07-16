@@ -39,24 +39,6 @@ namespace Kucoin.Api
 			return pairs.AsReadOnly();
 		}
 
-		protected override async void HandleError(HttpResponseMessage response)
-		{
-			if (response.IsSuccessStatusCode)
-			{
-				return;
-			}
-
-			var content = await HttpHelper.AcquireContentAsync<ResponseModel>(response);
-			string message = content.Msg;
-
-			if (String.IsNullOrEmpty(content.Msg))
-			{
-				message = "Some error occurred.";
-			}
-
-			throw new HttpRequestException(message);
-		}
-
 		public async Task<PairDetailDto> GetPairDetailAsync(string pair)
 		{
 			if (String.IsNullOrEmpty(pair))
@@ -95,6 +77,24 @@ namespace Kucoin.Api
 			var dto = Helper.BuildOrderBook(((IEnumerable<dynamic>)data.BUY).Take((int)limit), ((IEnumerable<dynamic>)data.SELL).Take((int)limit), item => new OrderDto { Price = item[0], Amount = item[1] });
 
 			return dto;
+		}
+
+		protected override async void HandleError(HttpResponseMessage response)
+		{
+			if (response.IsSuccessStatusCode)
+			{
+				return;
+			}
+
+			var content = await HttpHelper.AcquireContentAsync<ResponseModel>(response);
+			string message = content.Msg;
+
+			if (String.IsNullOrEmpty(content.Msg))
+			{
+				message = "Some error occurred.";
+			}
+
+			throw new HttpRequestException(message);
 		}
 	}
 }

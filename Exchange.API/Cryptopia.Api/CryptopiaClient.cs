@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using TradingBot.Common;
 using TradingBot.Core;
@@ -9,35 +9,33 @@ using TradingBot.Core.Entities;
 
 namespace Cryptopia.Api
 {
-	public sealed class CryptopiaClient : IExchangeClient
+	public sealed class CryptopiaClient : ApiClient, IExchangeClient
 	{
-		private readonly CryptopiaApi _api;
 		private readonly ICryptopiaSettings _settings;
 
 		public CryptopiaClient()
 		{
 			_settings = new CryptopiaSettings();
-			_api = new CryptopiaApi(_settings.PublicUrl, _settings.PrivateUrl);
 		}
 
 		public async Task<IReadOnlyCollection<PairDto>> GetPairsAsync()
 		{
-			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairsAsync());
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "GetTradePairs"));
 			var pairs = new List<PairDto>();
 
 			foreach (dynamic item in content.Data)
 			{
-				var pair = new PairDto();
-				pair.BaseAssetName = item.Currency;
-				pair.BaseAsset = item.Symbol;
-				pair.QuoteAssetName = item.BaseCurrency;
-				pair.QuoteAsset = item.BaseSymbol;
-				pair.MaxOrderSize = item.MaximumTrade;
-				pair.MinOrderSize = item.MinimumTrade;
-				pairs.Add(pair);
+				var dto = new PairDto();
+				dto.BaseAssetName = item.Currency;
+				dto.BaseAsset = item.Symbol;
+				dto.QuoteAssetName = item.BaseCurrency;
+				dto.QuoteAsset = item.BaseSymbol;
+				dto.MaxOrderSize = item.MaximumTrade;
+				dto.MinOrderSize = item.MinimumTrade;
+				pairs.Add(dto);
 			}
 
-			return new ReadOnlyCollection<PairDto>(pairs);
+			return pairs.AsReadOnly();
 		}
 
 		public async Task<PairDetailDto> GetPairDetailAsync(string pair)
@@ -47,16 +45,16 @@ namespace Cryptopia.Api
 				throw new ArgumentNullException(nameof(pair));
 			}
 
-			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairDetailAsync(pair));
-			var detail = new PairDetailDto();
-			detail.Ask = content.Data.AskPrice;
-			detail.Bid = content.Data.BidPrice;
-			detail.High = content.Data.High;
-			detail.Low = content.Data.Low;
-			detail.LastPrice = content.Data.LastPrice;
-			detail.Volume = content.Data.Volume;
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"GetMarket/{pair}"));
+			var dto = new PairDetailDto();
+			dto.Ask = content.Data.AskPrice;
+			dto.Bid = content.Data.BidPrice;
+			dto.High = content.Data.High;
+			dto.Low = content.Data.Low;
+			dto.LastPrice = content.Data.LastPrice;
+			dto.Volume = content.Data.Volume;
 
-			return detail;
+			return dto;
 		}
 
 		public async Task<OrderBookDto> GetOrderBookAsync(string pair, uint limit = 100)
@@ -66,10 +64,20 @@ namespace Cryptopia.Api
 				throw new ArgumentNullException(nameof(pair));
 			}
 
-			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetOrderBookAsync(pair, limit));
-			var model = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.Data.Buy).Take((int)limit), ((IEnumerable<dynamic>)content.Data.Sell).Take((int)limit), item => new OrderDto { Price = item.Price, Amount = item.Volume });
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"GetMarketOrders/{pair}/{limit}"));
+			var dto = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.Data.Buy).Take((int)limit), ((IEnumerable<dynamic>)content.Data.Sell).Take((int)limit), item => new OrderDto { Price = item.Price, Amount = item.Volume });
 
-			return model;
+			return dto;
+		}
+
+		protected override async void HandleError(HttpResponseMessage response)
+		{
+			var content = await HttpHelper.AcquireContentAsync<ResponseModel>(response);
+
+			if (!String.IsNullOrEmpty(content.Error))
+			{
+				throw new HttpRequestException(content.Error);
+			}
 		}
 	}
 }

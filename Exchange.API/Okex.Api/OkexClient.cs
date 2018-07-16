@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -36,17 +35,6 @@ namespace Okex.Api
 			return pairs.AsReadOnly();
 		}
 
-		protected override async void HandleError(HttpResponseMessage response)
-		{
-			var content = await HttpHelper.AcquireContentAsync<ErrorModel>(response);
-
-			if (content.ErrorCode > 0)
-			{
-				string message = content.GetMessage();
-				throw new HttpRequestException(message);
-			}
-		}
-
 		public async Task<PairDetailDto> GetPairDetailAsync(string pair)
 		{
 			if (String.IsNullOrEmpty(pair))
@@ -77,6 +65,17 @@ namespace Okex.Api
 			var model = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.asks).Take((int)limit), ((IEnumerable<dynamic>)content.bids).Take((int)limit), item => new OrderDto { Price = item[0], Amount = item[1] });
 
 			return model;
+		}
+
+		protected override async void HandleError(HttpResponseMessage response)
+		{
+			var content = await HttpHelper.AcquireContentAsync<ErrorModel>(response);
+
+			if (content.ErrorCode > 0)
+			{
+				string message = content.GetMessage();
+				throw new HttpRequestException(message);
+			}
 		}
 	}
 }

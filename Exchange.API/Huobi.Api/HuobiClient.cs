@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using TradingBot.Common;
 using TradingBot.Core;
 using TradingBot.Core.Entities;
 
@@ -12,13 +10,11 @@ namespace Huobi.Api
 {
 	public sealed class HuobiClient : ApiClient, IExchangeClient
 	{
-		private readonly HuobiApi _api;
 		private readonly IHuobiSettings _settings;
 
 		public HuobiClient()
 		{
 			_settings = new HuobiSettings();
-			_api = new HuobiApi(_settings.PublicUrl, _settings.PrivateUrl);
 		}
 
 		public async Task<IReadOnlyCollection<PairDto>> GetPairsAsync()
@@ -44,7 +40,7 @@ namespace Huobi.Api
 				throw new ArgumentNullException(nameof(pair));
 			}
 
-			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairDetailAsync(pair));
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"market/detail/merged?symbol={pair}"));
 			var dto = new PairDetailDto();
 			dto.LastPrice = content.tick.close;
 			dto.Ask = content.tick.ask[0];
@@ -63,28 +59,28 @@ namespace Huobi.Api
 				throw new ArgumentNullException(nameof(pair));
 			}
 
-			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetOrderBookAsync(pair, limit));
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"market/depth?symbol={pair}&type=step1"));
 			OrderBookDto model = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.tick.asks).Take((int)limit), ((IEnumerable<dynamic>)content.tick.bids).Take((int)limit), item => new OrderDto { Price = item[0], Amount = item[1] });
 
 			return model;
 		}
 
-		public async Task<IReadOnlyCollection<PairDetailDto>> GetPairsDetails(params string[] pairs)
-		{
-			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairsDetailsAsync());
-			var details = new List<PairDetailDto>();
+		//public async Task<IReadOnlyCollection<PairDetailDto>> GetPairsDetails(params string[] pairs)
+		//{
+		//	var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairsDetailsAsync());
+		//	var details = new List<PairDetailDto>();
 
-			foreach (dynamic item in content.data)
-			{
-				var dto = new PairDetailDto();
-				dto.LastPrice = item.close;
-				//detail.Low = item.low;
-				//detail.High = item.high;
-				//detail.Volume = item.vol;
-				details.Add(dto);
-			}
+		//	foreach (dynamic item in content.data)
+		//	{
+		//		var dto = new PairDetailDto();
+		//		dto.LastPrice = item.close;
+		//		//detail.Low = item.low;
+		//		//detail.High = item.high;
+		//		//detail.Volume = item.vol;
+		//		details.Add(dto);
+		//	}
 
-			return new ReadOnlyCollection<PairDetailDto>(details);
-		}
+		//	return new ReadOnlyCollection<PairDetailDto>(details);
+		//}
 	}
 }
