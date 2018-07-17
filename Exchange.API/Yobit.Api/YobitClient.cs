@@ -23,15 +23,17 @@ namespace Yobit.Api
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "info?ignore_invalid=1"));
 			var pairs = new List<PairDto>();
 
-			foreach (dynamic item in content.pairs)
+			foreach (dynamic key in content.pairs)
 			{
-				if ((bool)item.hidden)
+				dynamic pair = content.pairs[(string)key.Name];
+
+				if ((bool)pair.hidden)
 				{
 					continue;
 				}
 
 				var dto = new PairDto();
-				string[] assets = ((string)item.Name).Split('_');
+				string[] assets = ((string)key.Name).Split('_');
 				dto.BaseAsset = assets[0];
 				dto.QuoteAsset = assets[1];
 				pairs.Add(dto);

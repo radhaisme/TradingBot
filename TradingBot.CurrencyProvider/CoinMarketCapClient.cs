@@ -1,26 +1,24 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Net.Http;
 using System.Threading.Tasks;
-using TradingBot.Common;
 using TradingBot.Core;
 using TradingBot.Core.Entities;
 
 namespace TradingBot.CurrencyProvider
 {
-	public class CoinMarketCapClient : ICurrencyProvider
+	public sealed class CoinMarketCapClient : ApiClient, ICurrencyProvider
 	{
-		private readonly CoinMarketCapApi _api;
 		private readonly ICoinMarketCapSettings _settings;
 
 		public CoinMarketCapClient()
 		{
 			_settings = new CoinMarketCapSettings();
-			_api = new CoinMarketCapApi(_settings.PublicUrl, _settings.PublicUrl);
 		}
 
 		public async Task<IReadOnlyDictionary<string, IList<Currency>>> GetCurrenciesAsync()
 		{
-			var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetCurrenciesAsync());
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "listings"));
 			var currencies = new Dictionary<string, IList<Currency>>();
 
 			foreach (dynamic item in content.data)

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TradingBot.Core;
@@ -22,14 +19,6 @@ namespace TradingBot.Scanner
 		{
 			CreateExchanges(factory);
 			GenerateExchangePairs();
-
-			//using (StreamWriter sw = File.CreateText($"Pairs.csv"))
-			//{
-			//	foreach (var info in _exchangePairs)
-			//	{
-			//		sw.WriteLine($"{info.First.Type}->{info.Second.Type}");
-			//	}
-			//}
 		}
 
 		public async void Start()
@@ -37,28 +26,13 @@ namespace TradingBot.Scanner
 			var output = new ConcurrentBag<ArbitrageInfo>();
 			var tasks = new List<Task>();
 
-			var watcher = new Stopwatch();
-			watcher.Start();
-
-			foreach (ExchangePair exchangePair in _exchangePairs)
+			foreach (ExchangePair pair in _exchangePairs)
 			{
-				var task = Task.Run(() => ProcessItem(exchangePair, output), _tokenSource.Token);
+				var task = Task.Run(() => ProcessItem(pair, output), _tokenSource.Token);
 				tasks.Add(task);
 			}
 
 			await Task.WhenAll(tasks);
-			watcher.Stop();
-			Console.WriteLine("Elapsed time: {0}", watcher.Elapsed);
-
-			using (StreamWriter sw = File.CreateText($"Arbitrage-{DateTime.UtcNow:MM-dd-yyyy}.csv"))
-			{
-				sw.WriteLine("Symbol,Route,Buy,Sell,Profit");
-
-				foreach (ArbitrageInfo info in output.OrderByDescending(x => x.Rate))
-				{
-					sw.WriteLine(info);
-				}
-			}
 		}
 
 		private async Task ProcessItem(ExchangePair exchangePair, IProducerConsumerCollection<ArbitrageInfo> output)

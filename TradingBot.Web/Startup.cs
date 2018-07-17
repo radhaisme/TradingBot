@@ -6,7 +6,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using TradingBot.Common;
+using TradingBot.Tasks;
+using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace TradingBot.Web
 {
@@ -31,6 +34,7 @@ namespace TradingBot.Web
 			services.AddMvc()
 					.SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
 					.AddControllersAsServices();
+			services.AddSingleton<IHostedService, SomeTask>();
 		}
 
 		public void ConfigureContainer(ContainerBuilder builder)

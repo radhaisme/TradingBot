@@ -45,6 +45,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradingBot.CurrencyProvider
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradingBot.Scanner", "TradingBot.Scanner\TradingBot.Scanner.csproj", "{3E747610-8CF6-41D9-BA61-16824A3F95B2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingBot.Tasks", "TradingBot.Tasks\TradingBot.Tasks.csproj", "{5029F47B-E1C5-4AFC-AB69-AAEF9D85DD48}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -119,6 +121,10 @@ Global
 		{3E747610-8CF6-41D9-BA61-16824A3F95B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E747610-8CF6-41D9-BA61-16824A3F95B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E747610-8CF6-41D9-BA61-16824A3F95B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5029F47B-E1C5-4AFC-AB69-AAEF9D85DD48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5029F47B-E1C5-4AFC-AB69-AAEF9D85DD48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5029F47B-E1C5-4AFC-AB69-AAEF9D85DD48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5029F47B-E1C5-4AFC-AB69-AAEF9D85DD48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -141,6 +147,7 @@ Global
 		{FCE5DA40-AC91-4DF9-A315-CC4594D71625} = {9061B569-A4A3-47B9-8F23-5C04F3526046}
 		{4757BB23-8BF0-46BB-8EF7-21EA2251531F} = {DA2B2593-4642-4C9F-9D15-2F64D8B9CA1C}
 		{3E747610-8CF6-41D9-BA61-16824A3F95B2} = {DA2B2593-4642-4C9F-9D15-2F64D8B9CA1C}
+		{5029F47B-E1C5-4AFC-AB69-AAEF9D85DD48} = {DA2B2593-4642-4C9F-9D15-2F64D8B9CA1C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BDE7EDEE-E5DB-4F69-8BE2-21FE15B3001B}
