@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using TradingBot.Common;
@@ -56,6 +57,24 @@ namespace TradingBot.Core
 			}
 
 			return new Uri(current + url);
+		}
+
+		protected void SetHeaders(IDictionary<string, string> headers)
+		{
+			if (headers == null)
+			{
+				throw new ArgumentNullException(nameof(headers));
+			}
+
+			foreach (KeyValuePair<string, string> header in headers)
+			{
+				if (_client.DefaultRequestHeaders.Contains(header.Key))
+				{
+					_client.DefaultRequestHeaders.Remove(header.Key);
+				}
+
+				_client.DefaultRequestHeaders.Add(header.Key, header.Value);
+			}
 		}
 
 		#endregion

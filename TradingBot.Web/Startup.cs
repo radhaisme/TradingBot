@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -8,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TradingBot.Common;
-using TradingBot.Tasks;
+using TradingBot.Jobs;
 using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace TradingBot.Web
@@ -34,7 +33,7 @@ namespace TradingBot.Web
 			services.AddMvc()
 					.SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
 					.AddControllersAsServices();
-			services.AddSingleton<IHostedService, SomeTask>();
+			//services.AddSingleton<IHostedService, SomeTask>();
 		}
 
 		public void ConfigureContainer(ContainerBuilder builder)

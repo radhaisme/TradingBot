@@ -4695,17 +4695,17 @@
           "bin/placeholder/TradingBot.Data.dll": {}
         }
       },
-      "TradingBot.Tasks/1.0.0": {
+      "TradingBot.Jobs/1.0.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
           "TradingBot.Core": "1.0.0"
         },
         "compile": {
-          "bin/placeholder/TradingBot.Tasks.dll": {}
+          "bin/placeholder/TradingBot.Jobs.dll": {}
         },
         "runtime": {
-          "bin/placeholder/TradingBot.Tasks.dll": {}
+          "bin/placeholder/TradingBot.Jobs.dll": {}
         }
       },
       "Yobit.Api/1.0.0": {
@@ -12302,10 +12302,10 @@
       "path": "../TradingBot.Data/TradingBot.Data.csproj",
       "msbuildProject": "../TradingBot.Data/TradingBot.Data.csproj"
     },
-    "TradingBot.Tasks/1.0.0": {
+    "TradingBot.Jobs/1.0.0": {
       "type": "project",
-      "path": "../TradingBot.Tasks/TradingBot.Tasks.csproj",
-      "msbuildProject": "../TradingBot.Tasks/TradingBot.Tasks.csproj"
+      "path": "../TradingBot.Tasks/TradingBot.Jobs.csproj",
+      "msbuildProject": "../TradingBot.Tasks/TradingBot.Jobs.csproj"
     },
     "Yobit.Api/1.0.0": {
       "type": "project",
@@ -12321,7 +12321,7 @@
       "Huobi.Api >= 1.0.0",
       "Microsoft.AspNetCore.App >= 2.1.1",
       "Microsoft.NETCore.App >= 2.1.0",
-      "TradingBot.Tasks >= 1.0.0",
+      "TradingBot.Jobs >= 1.0.0",
       "Yobit.Api >= 1.0.0"
     ]
   },
@@ -12364,8 +12364,8 @@
             "D:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj": {
               "projectPath": "D:\\Projects\\TradingBot\\Exchange.API\\Yobit.Api\\Yobit.Api.csproj"
             },
-            "D:\\Projects\\TradingBot\\TradingBot.Tasks\\TradingBot.Tasks.csproj": {
-              "projectPath": "D:\\Projects\\TradingBot\\TradingBot.Tasks\\TradingBot.Tasks.csproj"
+            "D:\\Projects\\TradingBot\\TradingBot.Tasks\\TradingBot.Jobs.csproj": {
+              "projectPath": "D:\\Projects\\TradingBot\\TradingBot.Tasks\\TradingBot.Jobs.csproj"
             }
           }
         }

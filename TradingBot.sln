@@ -45,7 +45,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradingBot.CurrencyProvider
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradingBot.Scanner", "TradingBot.Scanner\TradingBot.Scanner.csproj", "{3E747610-8CF6-41D9-BA61-16824A3F95B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingBot.Tasks", "TradingBot.Tasks\TradingBot.Tasks.csproj", "{5029F47B-E1C5-4AFC-AB69-AAEF9D85DD48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradingBot.Jobs", "TradingBot.Tasks\TradingBot.Jobs.csproj", "{5029F47B-E1C5-4AFC-AB69-AAEF9D85DD48}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

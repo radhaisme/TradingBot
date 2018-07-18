@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using TradingBot.Common;
 using TradingBot.Core;
 
-namespace TradingBot.Tasks
+namespace TradingBot.Jobs
 {
 	public class SomeTask : ScopedService
 	{

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,14 +21,6 @@ namespace TradingBot.Common
 			string json = Encoding.Default.GetString(buffer);
 
 			return json;
-		}
-
-		public static async Task<object> AcquireContentAsync(HttpResponseMessage response, Type type)
-		{
-			string json = await AcquireStringAsync(response);
-			object content = JsonHelper.FromJson(json, type);
-
-			return content;
 		}
 
 		public static string QueryString(IDictionary<string, string> items, bool skip = false)

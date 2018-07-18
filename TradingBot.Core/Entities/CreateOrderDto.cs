@@ -1,11 +1,10 @@
-﻿
+﻿using System.Collections.Generic;
+
 namespace TradingBot.Core.Entities
 {
-	using System.Collections.Generic;
-
-	public class CreateOrder
+	public class CreateOrderDto
 	{
-		public CreateOrder()
+		public CreateOrderDto()
 		{
 			Funds = new Dictionary<string, decimal>();
 		}
@@ -13,6 +12,6 @@ namespace TradingBot.Core.Entities
 		public decimal Received { get; set; }
 		public decimal Remains { get; set; }
 		public int OrderId { get; set; }
-		public IDictionary<string, decimal> Funds { get; set; }
+		public IDictionary<string, decimal> Funds { get; }
 	}
 }

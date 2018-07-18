@@ -7,8 +7,8 @@ namespace TradingBot.Core
 	public interface IExchangeClient
 	{
 		//Task<OrderDetails> GetOrderInfoAsync(int orderId);
-		//Task<CancelOrder> CancelOrderAsync(int orderId);
-		//Task<CreateOrder> CreateOrderAsync(string pair, OrderType type, decimal price, decimal amount);
+		//Task<CancelOrderDto> CancelOrderAsync(int orderId);
+		//Task<CreateOrderDto> CreateOrderAsync(string pair, OrderType type, decimal price, decimal amount);
 		//Task<Balance> GetInfoAsync();
 		//Task<TradeInfo> GetTradesAsync(string pair, uint limit = 150);
 		Task<IReadOnlyCollection<PairDto>> GetPairsAsync();
