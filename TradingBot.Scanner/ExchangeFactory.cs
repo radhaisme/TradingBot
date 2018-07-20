@@ -36,7 +36,6 @@ namespace TradingBot.Scanner
 				case ExchangeType.Binance:
 					{
 						IExchange ex = new Exchange(_currencies, new BinanceClient());
-						ex.Type = type;
 						ex.Initialize();
 						_exchanges.Add(type, ex);
 
@@ -45,7 +44,6 @@ namespace TradingBot.Scanner
 				case ExchangeType.Huobi:
 					{
 						IExchange ex = new Exchange(_currencies, new HuobiClient());
-						ex.Type = type;
 						ex.Initialize();
 						_exchanges.Add(type, ex);
 
@@ -54,7 +52,6 @@ namespace TradingBot.Scanner
 				case ExchangeType.Yobit:
 					{
 						IExchange ex = new Exchange(_currencies, new YobitClient());
-						ex.Type = type;
 						ex.Initialize();
 						_exchanges.Add(type, ex);
 
@@ -63,7 +60,6 @@ namespace TradingBot.Scanner
 				case ExchangeType.Bitfinex:
 					{
 						IExchange ex = new Exchange(_currencies, new BitfinexClient());
-						ex.Type = type;
 						ex.Initialize();
 						_exchanges.Add(type, ex);
 
@@ -72,7 +68,6 @@ namespace TradingBot.Scanner
 				case ExchangeType.Kucoin:
 					{
 						IExchange ex = new Exchange(_currencies, new KucoinClient());
-						ex.Type = type;
 						ex.Initialize();
 						_exchanges.Add(type, ex);
 
@@ -81,7 +76,6 @@ namespace TradingBot.Scanner
 				case ExchangeType.Okex:
 					{
 						IExchange ex = new Exchange(_currencies, new OkexClient());
-						ex.Type = type;
 						ex.Initialize();
 						_exchanges.Add(type, ex);
 
@@ -90,7 +84,6 @@ namespace TradingBot.Scanner
 				case ExchangeType.Cryptopia:
 					{
 						IExchange ex = new Exchange(_currencies, new CryptopiaClient());
-						ex.Type = type;
 						ex.Initialize();
 						_exchanges.Add(type, ex);
 
@@ -99,7 +92,6 @@ namespace TradingBot.Scanner
 				case ExchangeType.Exmo:
 					{
 						IExchange ex = new Exchange(_currencies, new ExmoClient());
-						ex.Type = type;
 						ex.Initialize();
 						_exchanges.Add(type, ex);
 

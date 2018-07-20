@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TradingBot.Common;
 using TradingBot.Core;
 using TradingBot.Core.Entities;
+using TradingBot.Core.Enums;
 
 namespace Okex.Api
 {
@@ -17,6 +18,8 @@ namespace Okex.Api
 		{
 			_settings = new OkexSettings();
 		}
+
+		public ExchangeType Type => _settings.Type;
 
 		public async Task<IReadOnlyCollection<PairDto>> GetPairsAsync()
 		{

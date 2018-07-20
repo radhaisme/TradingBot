@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using TradingBot.Common;
 using TradingBot.Core;
 using TradingBot.Core.Entities;
+using TradingBot.Core.Enums;
 
 namespace Yobit.Api
 {
@@ -20,6 +21,8 @@ namespace Yobit.Api
 		{
 			_settings = new YobitSettings();
 		}
+
+		public ExchangeType Type => _settings.Type;
 
 		public async Task<IReadOnlyCollection<PairDto>> GetPairsAsync()
 		{
@@ -96,17 +99,17 @@ namespace Yobit.Api
 				{"nonce", GenerateNonce(_settings.CreatedAt)}
 			}, true);
 			var content = await MakePrivateCallAsync(queryString);
-			var model = new CreateOrderDto();
-			model.Received = content.received;
-			model.Remains = content.remains;
-			model.OrderId = content.order_id;
+			var dto = new CreateOrderDto();
+			dto.Received = content.received;
+			dto.Remains = content.remains;
+			dto.OrderId = content.order_id;
 
 			//foreach (dynamic item in content.@return.funds)
 			//{
 			//	model.Funds.Add(item.Key, item.Value);
 			//}
 
-			return model;
+			return dto;
 		}
 
 		public async Task<CancelOrderDto> CancelOrderAsync(int orderId)
@@ -118,15 +121,15 @@ namespace Yobit.Api
 
 			string queryString = HttpHelper.QueryString(new Dictionary<string, string> { { "method", "CancelOrderDto" }, { "order_id", orderId.ToString() }, { "nonce", GenerateNonce(_settings.CreatedAt) } }, true);
 			var content = await MakePrivateCallAsync(queryString);
-			var model = new CancelOrderDto();
-			model.OrderId = content.@return.order_id;
+			var dto = new CancelOrderDto();
+			dto.OrderId = content.@return.order_id;
 
 			//foreach (dynamic item in result.@return.funds)
 			//{
 			//	model.Funds.Add(item.Key, item.Value);
 			//}
 
-			return model;
+			return dto;
 		}
 
 		private Task<dynamic> MakePrivateCallAsync(string content)

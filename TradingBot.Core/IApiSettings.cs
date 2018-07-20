@@ -1,13 +1,15 @@
 ﻿using System;
+using TradingBot.Core.Enums;
 
 namespace TradingBot.Core
 {
 	public interface IApiSettings
 	{
-		string PublicUrl { get; set; }
+		ExchangeType Type { get; set; }
+		string PublicUrl { get; }
 		string PrivateUrl { get; set; }
 		string ApiKey { get; set; }
 		string Secret { get; set; }
-		DateTimeOffset CreatedAt { get; set; }
+		DateTimeOffset CreatedAt { get; }
 	}
 }

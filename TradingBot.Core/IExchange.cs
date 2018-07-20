@@ -7,7 +7,7 @@ namespace TradingBot.Core
 {
 	public interface IExchange
 	{
-		ExchangeType Type { get; set; }
+		ExchangeType Type { get; }
 		IReadOnlyCollection<Pair> Pairs { get; }
 		void Initialize();
 		Task<decimal> GetPriceAsync(Pair pair);

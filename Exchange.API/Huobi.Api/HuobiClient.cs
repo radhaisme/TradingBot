@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using TradingBot.Core;
 using TradingBot.Core.Entities;
+using TradingBot.Core.Enums;
 
 namespace Huobi.Api
 {
@@ -16,6 +17,8 @@ namespace Huobi.Api
 		{
 			_settings = new HuobiSettings();
 		}
+
+		public ExchangeType Type => _settings.Type;
 
 		public async Task<IReadOnlyCollection<PairDto>> GetPairsAsync()
 		{

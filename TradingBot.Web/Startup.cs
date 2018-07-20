@@ -33,7 +33,7 @@ namespace TradingBot.Web
 			services.AddMvc()
 					.SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
 					.AddControllersAsServices();
-			//services.AddSingleton<IHostedService, SomeTask>();
+			//services.AddSingleton<IHostedService, SomeJob>();
 		}
 
 		public void ConfigureContainer(ContainerBuilder builder)

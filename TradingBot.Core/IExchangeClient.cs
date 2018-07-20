@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using TradingBot.Core.Entities;
+using TradingBot.Core.Enums;
 
 namespace TradingBot.Core
 {
 	public interface IExchangeClient
 	{
+		ExchangeType Type { get; }
 		//Task<OrderDetails> GetOrderInfoAsync(int orderId);
 		//Task<CancelOrderDto> CancelOrderAsync(int orderId);
 		//Task<CreateOrderDto> CreateOrderAsync(string pair, OrderType type, decimal price, decimal amount);

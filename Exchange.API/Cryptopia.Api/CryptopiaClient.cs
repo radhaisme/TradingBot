@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TradingBot.Common;
 using TradingBot.Core;
 using TradingBot.Core.Entities;
+using TradingBot.Core.Enums;
 
 namespace Cryptopia.Api
 {
@@ -17,6 +18,8 @@ namespace Cryptopia.Api
 		{
 			_settings = new CryptopiaSettings();
 		}
+
+		public ExchangeType Type => _settings.Type;
 
 		public async Task<IReadOnlyCollection<PairDto>> GetPairsAsync()
 		{

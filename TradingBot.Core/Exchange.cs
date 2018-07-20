@@ -7,7 +7,7 @@ using TradingBot.Core.Enums;
 
 namespace TradingBot.Core
 {
-	public class Exchange : IExchange
+	public sealed class Exchange : IExchange
 	{
 		private readonly IExchangeClient _client;
 		private readonly IReadOnlyDictionary<string, IList<Currency>> _currencies;
@@ -18,7 +18,7 @@ namespace TradingBot.Core
 			_client = client;
 		}
 
-		public ExchangeType Type { get; set; }
+		public ExchangeType Type => _client.Type;
 		public IReadOnlyCollection<Pair> Pairs { get; private set; }
 
 		void IExchange.Initialize()

@@ -1,14 +1,14 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using TradingBot.Common;
 using TradingBot.Core;
 
 namespace TradingBot.Jobs
 {
-	public class SomeTask : ScopedService
+	public class SomeJob : ScopedService
 	{
-		public SomeTask(IServiceScopeFactory factory) : base(factory)
+		public SomeJob(IServiceScopeFactory factory) : base(factory)
 		{ }
 
 		public override Task ProcessInScope(IServiceProvider serviceProvider)
