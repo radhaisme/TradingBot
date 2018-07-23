@@ -11,5 +11,6 @@ namespace TradingBot.Core
 		string ApiKey { get; set; }
 		string Secret { get; set; }
 		DateTimeOffset CreatedAt { get; }
+		uint RequestLimit { get; }
 	}
 }

@@ -69,13 +69,8 @@ namespace TradingBot.Scanner
 				}
 
 				output.TryAdd(model);
-				Thread.Sleep(1000);
+				await Task.Delay(1000);
 			}
-		}
-
-		private float GetPercent(decimal a, decimal b)
-		{
-			return (float)((a - b) / b * 100);
 		}
 
 		public void Stop()
@@ -84,6 +79,11 @@ namespace TradingBot.Scanner
 		}
 
 		#region Private methods
+
+		private float GetPercent(decimal a, decimal b)
+		{
+			return (float)((a - b) / b * 100);
+		}
 
 		private void CreateExchanges(IExchangeFactory factory)
 		{

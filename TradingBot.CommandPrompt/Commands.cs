@@ -340,7 +340,7 @@ namespace TradingBot.CommandPrompt
 		{
 			if (list.Length != 2)
 			{
-				Console.WriteLine("You must enter Exchange type and Ticker code");
+				Console.WriteLine("You must enter Exchange type and PriceScanner code");
 				return;
 			}
 			var tickerCode = list[1];
@@ -358,7 +358,7 @@ namespace TradingBot.CommandPrompt
 			//	if (info == null)
 			//		Console.WriteLine("Nothing found");
 			//	else
-			//		Console.WriteLine(string.Format("Ticker info: {0}", JsonHelper.ToJson(info)));
+			//		Console.WriteLine(string.Format("PriceScanner info: {0}", JsonHelper.ToJson(info)));
 			//}
 		}
 

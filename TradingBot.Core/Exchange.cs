@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using TradingBot.Core.Entities;
 using TradingBot.Core.Enums;
@@ -49,7 +48,7 @@ namespace TradingBot.Core
 				pairs.Add(pair);
 			}
 
-			Pairs = new ReadOnlyCollection<Pair>(pairs);
+			Pairs = pairs.AsReadOnly();
 		}
 
 		public async Task<decimal> GetPriceAsync(Pair pair)
