@@ -8,10 +8,10 @@ namespace TradingBot.Core
 {
 	public sealed class Exchange : IExchange
 	{
-		private readonly IExchangeClient _client;
+		private readonly IApiClient _client;
 		private readonly IReadOnlyDictionary<string, IList<Currency>> _currencies;
 
-		public Exchange(IReadOnlyDictionary<string, IList<Currency>> currencies, IExchangeClient client)
+		public Exchange(IReadOnlyDictionary<string, IList<Currency>> currencies, IApiClient client)
 		{
 			_currencies = currencies;
 			_client = client;
@@ -60,7 +60,7 @@ namespace TradingBot.Core
 
 		public async Task<(decimal ask, decimal bid)> GetBookOrderPriceAsync(Pair pair)
 		{
-			OrderBookDto dto = await _client.GetOrderBookAsync(pair.GetSymbol(Type), 5);
+			DepthDto dto = await _client.GetOrderBookAsync(pair.GetSymbol(Type), 5);
 			decimal ask = 0;
 			decimal bid = 0;
 
@@ -69,12 +69,12 @@ namespace TradingBot.Core
 				return (0, 0);
 			}
 
-			foreach (OrderDto item in dto.Asks)
+			foreach (BookOrderDto item in dto.Asks)
 			{
 				ask += item.Price;
 			}
 
-			foreach (OrderDto item in dto.Bids)
+			foreach (BookOrderDto item in dto.Bids)
 			{
 				bid += item.Price;
 			}

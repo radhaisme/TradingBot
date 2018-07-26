@@ -7,16 +7,16 @@ namespace TradingBot.Core
 {
 	public static class Helper
 	{
-		public static OrderBookDto BuildOrderBook(IEnumerable<dynamic> a, IEnumerable<dynamic> b, Func<dynamic, OrderDto> func)
+		public static DepthDto BuildOrderBook(IEnumerable<dynamic> a, IEnumerable<dynamic> b, Func<dynamic, BookOrderDto> func)
 		{
 			if (func == null)
 			{
 				throw new ArgumentNullException(nameof(func));
 			}
 
-			var model = new OrderBookDto();
-			IEnumerable<OrderDto> asks = a.Select(func).Where(x => x.Price > 0);
-			IEnumerable<OrderDto> bids = b.Select(func).Where(x => x.Price > 0);
+			var model = new DepthDto();
+			IEnumerable<BookOrderDto> asks = a.Select(func).Where(x => x.Price > 0);
+			IEnumerable<BookOrderDto> bids = b.Select(func).Where(x => x.Price > 0);
 
 			if (!asks.Any() || !bids.Any())
 			{

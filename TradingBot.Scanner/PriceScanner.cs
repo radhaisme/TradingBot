@@ -4,9 +4,9 @@ namespace TradingBot.Scanner
 {
 	public sealed class PriceScanner
 	{
-		private readonly IExchangeClient _client;
+		private readonly IApiClient _client;
 		
-		public PriceScanner(IExchangeClient client)
+		public PriceScanner(IApiClient client)
 		{
 			_client = client;
 		}

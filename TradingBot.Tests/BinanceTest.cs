@@ -8,7 +8,7 @@ namespace TradingBot.Tests
 {
 	public class BinanceTest
 	{
-		private readonly IExchangeClient _client = new BinanceClient();
+		private readonly IApiClient _client = new BinanceClient();
 
 		[Fact]
 		public async void GetPairsTest()
@@ -21,14 +21,14 @@ namespace TradingBot.Tests
 		[Fact]
 		public async void GetOrderBookTest()
 		{
-			OrderBookDto book = await _client.GetOrderBookAsync("ETHBTC");
+			DepthDto book = await _client.GetOrderBookAsync("ETHBTC");
 			Assert.NotNull(book);
 			Assert.NotEmpty(book.Asks);
 			Assert.NotEmpty(book.Bids);
 		}
 
 		[Fact]
-		public async void GetPairDetail()
+		public async void GetPairDetailTest()
 		{
 			PairDetailDto detail = await _client.GetPairDetailAsync("ETHBTC");
 			Assert.NotNull(detail);

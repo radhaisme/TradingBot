@@ -10,7 +10,7 @@ using TradingBot.Core.Enums;
 
 namespace Exmo.Api
 {
-	public class ExmoClient : ApiClient, IExchangeClient
+	public class ExmoClient : ApiClient, IApiClient
 	{
 		private readonly IExmoSettings _settings;
 
@@ -58,7 +58,7 @@ namespace Exmo.Api
 			return dto;
 		}
 
-		public async Task<OrderBookDto> GetOrderBookAsync(string pair, uint limit = 100)
+		public async Task<DepthDto> GetOrderBookAsync(string pair, uint limit = 100)
 		{
 			if (String.IsNullOrEmpty(pair))
 			{
@@ -66,9 +66,19 @@ namespace Exmo.Api
 			}
 
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"order_book?pair={pair}&limit={limit}"));
-			var dto = Helper.BuildOrderBook(((IEnumerable<dynamic>)content[pair].ask).Take((int)limit), ((IEnumerable<dynamic>)content[pair].bid).Take((int)limit), item => new OrderDto { Price = item[0], Amount = item[2] });
+			var dto = Helper.BuildOrderBook(((IEnumerable<dynamic>)content[pair].ask).Take((int)limit), ((IEnumerable<dynamic>)content[pair].bid).Take((int)limit), item => new BookOrderDto { Price = item[0], Amount = item[2] });
 
 			return dto;
+		}
+
+		public Task<CreateOrderDto> CreateOrderAsync(OrderDto input)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<CancelOrderDto> CancelOrderAsync(CancelOrderDto input)
+		{
+			throw new NotImplementedException();
 		}
 
 		protected override async void HandleError(HttpResponseMessage response)

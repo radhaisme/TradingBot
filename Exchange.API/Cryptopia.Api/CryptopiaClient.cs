@@ -10,7 +10,7 @@ using TradingBot.Core.Enums;
 
 namespace Cryptopia.Api
 {
-	public sealed class CryptopiaClient : ApiClient, IExchangeClient
+	public sealed class CryptopiaClient : ApiClient, IApiClient
 	{
 		private readonly ICryptopiaSettings _settings;
 
@@ -60,7 +60,7 @@ namespace Cryptopia.Api
 			return dto;
 		}
 
-		public async Task<OrderBookDto> GetOrderBookAsync(string pair, uint limit = 100)
+		public async Task<DepthDto> GetOrderBookAsync(string pair, uint limit = 100)
 		{
 			if (String.IsNullOrEmpty(pair))
 			{
@@ -68,9 +68,19 @@ namespace Cryptopia.Api
 			}
 
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"GetMarketOrders/{pair}/{limit}"));
-			var dto = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.Data.Buy).Take((int)limit), ((IEnumerable<dynamic>)content.Data.Sell).Take((int)limit), item => new OrderDto { Price = item.Price, Amount = item.Volume });
+			var dto = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.Data.Buy).Take((int)limit), ((IEnumerable<dynamic>)content.Data.Sell).Take((int)limit), item => new BookOrderDto { Price = item.Price, Amount = item.Volume });
 
 			return dto;
+		}
+
+		public Task<CreateOrderDto> CreateOrderAsync(OrderDto input)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<CancelOrderDto> CancelOrderAsync(CancelOrderDto input)
+		{
+			throw new NotImplementedException();
 		}
 
 		protected override async void HandleError(HttpResponseMessage response)

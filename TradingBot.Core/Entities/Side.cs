@@ -1,9 +1,9 @@
 ﻿
 namespace TradingBot.Core.Entities
 {
-	public enum OrderType : byte
+	public enum Side : byte
 	{
-		Limit,
-		Market
+		Buy,
+		Sell
 	}
 }

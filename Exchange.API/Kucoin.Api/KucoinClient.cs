@@ -10,7 +10,7 @@ using TradingBot.Core.Enums;
 
 namespace Kucoin.Api
 {
-	public sealed class KucoinClient : ApiClient, IExchangeClient
+	public sealed class KucoinClient : ApiClient, IApiClient
 	{
 		private readonly IKucoinSettings _settings;
 
@@ -68,7 +68,7 @@ namespace Kucoin.Api
 			return dto;
 		}
 
-		public async Task<OrderBookDto> GetOrderBookAsync(string pair, uint limit = 100)
+		public async Task<DepthDto> GetOrderBookAsync(string pair, uint limit = 100)
 		{
 			if (String.IsNullOrEmpty(pair))
 			{
@@ -77,9 +77,19 @@ namespace Kucoin.Api
 
 			var content = await CallAsync<ResponseModel>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"open/orders?symbol={pair}&limit={limit}"));
 			dynamic data = content.Data;
-			var dto = Helper.BuildOrderBook(((IEnumerable<dynamic>)data.BUY).Take((int)limit), ((IEnumerable<dynamic>)data.SELL).Take((int)limit), item => new OrderDto { Price = item[0], Amount = item[1] });
+			var dto = Helper.BuildOrderBook(((IEnumerable<dynamic>)data.BUY).Take((int)limit), ((IEnumerable<dynamic>)data.SELL).Take((int)limit), item => new BookOrderDto { Price = item[0], Amount = item[1] });
 
 			return dto;
+		}
+
+		public Task<CreateOrderDto> CreateOrderAsync(OrderDto input)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<CancelOrderDto> CancelOrderAsync(CancelOrderDto input)
+		{
+			throw new NotImplementedException();
 		}
 
 		protected override async void HandleError(HttpResponseMessage response)

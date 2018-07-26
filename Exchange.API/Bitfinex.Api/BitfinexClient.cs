@@ -10,7 +10,7 @@ using TradingBot.Core.Enums;
 
 namespace Bitfinex.Api
 {
-	public sealed class BitfinexClient : ApiClient, IExchangeClient
+	public sealed class BitfinexClient : ApiClient, IApiClient
 	{
 		private readonly IBitfinexSettings _settings;
 
@@ -56,7 +56,7 @@ namespace Bitfinex.Api
 			return dto;
 		}
 
-		public async Task<OrderBookDto> GetOrderBookAsync(string pair, uint limit = 100)
+		public async Task<DepthDto> GetOrderBookAsync(string pair, uint limit = 100)
 		{
 			if (String.IsNullOrEmpty(pair))
 			{
@@ -64,9 +64,19 @@ namespace Bitfinex.Api
 			}
 
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"book/{pair}?limit_bids={limit}&limit_asks={limit}"));
-			var dto = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.asks).Take((int)limit), ((IEnumerable<dynamic>)content.bids).Take((int)limit), item => new OrderDto { Price = item.price, Amount = item.amount });
+			var dto = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.asks).Take((int)limit), ((IEnumerable<dynamic>)content.bids).Take((int)limit), item => new BookOrderDto { Price = item.price, Amount = item.amount });
 
 			return dto;
+		}
+
+		public Task<CreateOrderDto> CreateOrderAsync(OrderDto input)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<CancelOrderDto> CancelOrderAsync(CancelOrderDto input)
+		{
+			throw new NotImplementedException();
 		}
 
 		protected override async void HandleError(HttpResponseMessage response)

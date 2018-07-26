@@ -10,7 +10,7 @@ using TradingBot.Core.Enums;
 
 namespace Okex.Api
 {
-	public sealed class OkexClient : ApiClient, IExchangeClient
+	public sealed class OkexClient : ApiClient, IApiClient
 	{
 		private readonly IOkexSettings _settings;
 
@@ -57,7 +57,7 @@ namespace Okex.Api
 			return dto;
 		}
 
-		public async Task<OrderBookDto> GetOrderBookAsync(string pair, uint limit = 100)
+		public async Task<DepthDto> GetOrderBookAsync(string pair, uint limit = 100)
 		{
 			if (String.IsNullOrEmpty(pair))
 			{
@@ -65,9 +65,19 @@ namespace Okex.Api
 			}
 
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"depth.do?symbol={pair}&size={limit}"));
-			var model = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.asks).Take((int)limit), ((IEnumerable<dynamic>)content.bids).Take((int)limit), item => new OrderDto { Price = item[0], Amount = item[1] });
+			var model = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.asks).Take((int)limit), ((IEnumerable<dynamic>)content.bids).Take((int)limit), item => new BookOrderDto { Price = item[0], Amount = item[1] });
 
 			return model;
+		}
+
+		public Task<CreateOrderDto> CreateOrderAsync(OrderDto input)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<CancelOrderDto> CancelOrderAsync(CancelOrderDto input)
+		{
+			throw new NotImplementedException();
 		}
 
 		protected override async void HandleError(HttpResponseMessage response)

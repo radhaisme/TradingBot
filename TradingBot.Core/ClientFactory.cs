@@ -29,7 +29,7 @@ namespace TradingBot.Core
 			return Clients.ContainsKey(exchangeType);
 		}
 
-		public IExchangeClient Create(ExchangeType type, IApiSettings settings = null)
+		public IApiClient Create(ExchangeType type, IApiSettings settings = null)
 		{
 			if (!IsExists(type))
 			{
@@ -38,7 +38,7 @@ namespace TradingBot.Core
 
 			ExchangeInfo client = Clients[type];
 
-			return (IExchangeClient)Activator.CreateInstance(client.ExchangeApi, client.PublicEndpoint, client.PrivateEndpoint, settings);
+			return (IApiClient)Activator.CreateInstance(client.ExchangeApi, client.PublicEndpoint, client.PrivateEndpoint, settings);
 		}
 
 		#region Private methods

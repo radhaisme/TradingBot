@@ -13,7 +13,7 @@ using TradingBot.Core.Enums;
 
 namespace Yobit.Api
 {
-	public sealed class YobitClient : ApiClient, IExchangeClient
+	public sealed class YobitClient : ApiClient, IApiClient
 	{
 		private readonly IYobitSettings _settings;
 
@@ -68,7 +68,7 @@ namespace Yobit.Api
 			return dto;
 		}
 
-		public async Task<OrderBookDto> GetOrderBookAsync(string pair, uint limit = 100)
+		public async Task<DepthDto> GetOrderBookAsync(string pair, uint limit = 100)
 		{
 			if (String.IsNullOrEmpty(pair))
 			{
@@ -77,25 +77,25 @@ namespace Yobit.Api
 
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"depth/{pair}?limit={limit}&ignore_invalid=1"));
 			dynamic data = content[pair];
-			OrderBookDto dto = Helper.BuildOrderBook(((IEnumerable<dynamic>)data.asks).Take((int)limit), ((IEnumerable<dynamic>)data.bids).Take((int)limit), item => new OrderDto { Price = item[0], Amount = item[1] });
+			DepthDto dto = Helper.BuildOrderBook(((IEnumerable<dynamic>)data.asks).Take((int)limit), ((IEnumerable<dynamic>)data.bids).Take((int)limit), item => new BookOrderDto { Price = item[0], Amount = item[1] });
 
 			return dto;
 		}
 
-		public async Task<CreateOrderDto> CreateOrderAsync(string pair, OrderType type, decimal price, decimal amount)
+		public async Task<CreateOrderDto> CreateOrderAsync(OrderDto input)
 		{
-			if (String.IsNullOrEmpty(pair))
+			if (String.IsNullOrEmpty(input.Pair))
 			{
-				throw new ArgumentNullException(nameof(pair));
+				throw new ArgumentNullException(nameof(input.Pair));
 			}
 
 			string queryString = HttpHelper.QueryString(new Dictionary<string, string>
 			{
 				{"method", "Trade"},
-				{"pair", pair},
-				{"type", OrderType.Buy.ToString()},
-				{"rate", price.ToString(CultureInfo.InvariantCulture)},
-				{"amount", amount.ToString(CultureInfo.InvariantCulture)},
+				{"pair", input.Pair},
+				{"type", input.Side.ToString()},
+				{"rate", input.Price.ToString(CultureInfo.InvariantCulture)},
+				{"amount", input.Amount.ToString(CultureInfo.InvariantCulture)},
 				{"nonce", GenerateNonce(_settings.CreatedAt)}
 			}, true);
 			var content = await MakePrivateCallAsync(queryString);
@@ -104,30 +104,20 @@ namespace Yobit.Api
 			dto.Remains = content.remains;
 			dto.OrderId = content.order_id;
 
-			//foreach (dynamic item in content.@return.funds)
-			//{
-			//	model.Funds.Add(item.Key, item.Value);
-			//}
-
 			return dto;
 		}
 
-		public async Task<CancelOrderDto> CancelOrderAsync(int orderId)
+		public async Task<CancelOrderDto> CancelOrderAsync(CancelOrderDto input)
 		{
-			if (orderId <= 0)
+			if (input.OrderId <= 0)
 			{
-				throw new ArgumentOutOfRangeException(nameof(orderId));
+				throw new ArgumentOutOfRangeException(nameof(input.OrderId));
 			}
 
-			string queryString = HttpHelper.QueryString(new Dictionary<string, string> { { "method", "CancelOrderDto" }, { "order_id", orderId.ToString() }, { "nonce", GenerateNonce(_settings.CreatedAt) } }, true);
+			string queryString = HttpHelper.QueryString(new Dictionary<string, string> { { "method", "CancelOrderDto" }, { "order_id", input.OrderId.ToString() }, { "nonce", GenerateNonce(_settings.CreatedAt) } }, true);
 			var content = await MakePrivateCallAsync(queryString);
 			var dto = new CancelOrderDto();
 			dto.OrderId = content.@return.order_id;
-
-			//foreach (dynamic item in result.@return.funds)
-			//{
-			//	model.Funds.Add(item.Key, item.Value);
-			//}
 
 			return dto;
 		}
@@ -200,7 +190,7 @@ namespace Yobit.Api
 		//			model.Orders.Add((int)item.Key, new OrderInfo
 		//			{
 		//				Pair = value.pair,
-		//				Type = Enum.Parse(typeof(OrderType), value.type, true),
+		//				Type = Enum.Parse(typeof(Side), value.type, true),
 		//				StartAmount = value.start_amount,
 		//				Amount = value.amount,
 		//				Price = value.rate,
@@ -306,7 +296,7 @@ namespace Yobit.Api
 		//			model.Orders.Add((int)item.Key, new OrderInfo
 		//			{
 		//				Pair = value.pair,
-		//				Type = Enum.Parse(typeof(OrderType), value.type, true),
+		//				Type = Enum.Parse(typeof(Side), value.type, true),
 		//				Amount = value.amount,
 		//				Price = value.rate,
 		//				CreatedAt = DateTimeOffset.FromUnixTimeSeconds(value.timestamp_created)

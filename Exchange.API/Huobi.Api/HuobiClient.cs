@@ -9,7 +9,7 @@ using TradingBot.Core.Enums;
 
 namespace Huobi.Api
 {
-	public sealed class HuobiClient : ApiClient, IExchangeClient
+	public sealed class HuobiClient : ApiClient, IApiClient
 	{
 		private readonly IHuobiSettings _settings;
 
@@ -55,7 +55,7 @@ namespace Huobi.Api
 			return dto;
 		}
 
-		public async Task<OrderBookDto> GetOrderBookAsync(string pair, uint limit = 100)
+		public async Task<DepthDto> GetOrderBookAsync(string pair, uint limit = 100)
 		{
 			if (String.IsNullOrEmpty(pair))
 			{
@@ -63,9 +63,19 @@ namespace Huobi.Api
 			}
 
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"market/depth?symbol={pair}&type=step1"));
-			OrderBookDto model = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.tick.asks).Take((int)limit), ((IEnumerable<dynamic>)content.tick.bids).Take((int)limit), item => new OrderDto { Price = item[0], Amount = item[1] });
+			DepthDto model = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.tick.asks).Take((int)limit), ((IEnumerable<dynamic>)content.tick.bids).Take((int)limit), item => new BookOrderDto { Price = item[0], Amount = item[1] });
 
 			return model;
+		}
+
+		public Task<CreateOrderDto> CreateOrderAsync(OrderDto input)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<CancelOrderDto> CancelOrderAsync(CancelOrderDto input)
+		{
+			throw new NotImplementedException();
 		}
 
 		//public async Task<IReadOnlyCollection<PairDetailDto>> GetPairsDetails(params string[] pairs)
