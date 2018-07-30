@@ -122,6 +122,8 @@ namespace Yobit.Api
 			return dto;
 		}
 
+		#region Private method
+
 		private Task<dynamic> MakePrivateCallAsync(string content)
 		{
 			if (String.IsNullOrEmpty(_settings.PrivateUrl))
@@ -164,6 +166,8 @@ namespace Yobit.Api
 				throw new HttpRequestException(content.Error);
 			}
 		}
+
+		#endregion
 
 		//public async Task<OrderDetails> GetOrderInfoAsync(int orderId)
 		//{

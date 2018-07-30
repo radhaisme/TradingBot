@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -47,6 +49,13 @@ namespace TradingBot.Common
 			}
 
 			return sb.ToString();
+		}
+
+		public static string GetHash(HMAC hmac, string key, string content)
+		{
+			hmac.Key = Encoding.UTF8.GetBytes(key);
+
+			return BitConverter.ToString(hmac.ComputeHash(Encoding.UTF8.GetBytes(content))).Replace("-", String.Empty);
 		}
 	}
 }

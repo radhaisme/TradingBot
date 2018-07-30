@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using TradingBot.Common;
 using TradingBot.Core;
@@ -70,14 +73,54 @@ namespace Binance.Api
 			return dto;
 		}
 
-		public Task<CreateOrderDto> CreateOrderAsync(OrderDto input)
+		public async Task<CreateOrderDto> CreateOrderAsync(OrderDto input)
 		{
-			throw new NotImplementedException();
+			var queryString = HttpHelper.QueryString(new Dictionary<string, string>
+			{
+				{ "symbol", input.Pair },
+				{ "side", input.Side.ToString().ToUpper() },
+				{ "type", input.Type.ToString().ToUpper() },
+				{ "quantity", input.Amount.ToString(CultureInfo.InvariantCulture) },
+				{ "price", input.Price.ToString(CultureInfo.InvariantCulture) },
+				{ "timeInForce", "GTC" },
+				{ "timestamp", DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString() }
+			}, true);
+			var content = await MakePrivateCallAsync(HttpMethod.Post, "order", queryString);
+			var dto = new CreateOrderDto();
+			dto.OrderId = content.orderId;
+
+			return dto;
 		}
 
-		public Task<CancelOrderDto> CancelOrderAsync(CancelOrderDto input)
+		public async Task<CancelOrderDto> CancelOrderAsync(CancelOrderDto input)
 		{
-			throw new NotImplementedException();
+			if (input.OrderId <= 0)
+			{
+				throw new ArgumentException(nameof(input.OrderId));
+			}
+
+			var queryString = HttpHelper.QueryString(new Dictionary<string, string>
+			{
+				{ "symbol", input.Pair },
+				{ "orderId", input.OrderId.ToString() },
+				{ "timestamp", DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString() }
+			}, true);
+			var content = await MakePrivateCallAsync(HttpMethod.Delete, "order", queryString);
+			var dto = new CancelOrderDto();
+			dto.OrderId = content.orderId;
+
+			return dto;
+		}
+
+		#region Private methods
+
+		private Task<dynamic> MakePrivateCallAsync(HttpMethod method, string url, string content)
+		{
+			SetHeaders(new Dictionary<string, string> { { "X-MBX-APIKEY", _settings.ApiKey } });
+			string hash = HttpHelper.GetHash(new HMACSHA256(), _settings.Secret, content);
+			content += $"&signature={hash}";
+
+			return CallAsync<dynamic>(method, BuildUrl(_settings.PrivateUrl, url), new StringContent(content, Encoding.UTF8, "application/x-www-form-urlencoded"));
 		}
 
 		protected override async void HandleError(HttpResponseMessage response)
@@ -90,6 +133,8 @@ namespace Binance.Api
 			var content = await HttpHelper.AcquireContentAsync<ErrorModel>(response);
 			throw new HttpRequestException(content.Msg);
 		}
+
+		#endregion
 	}
 
 	public static class Interval
