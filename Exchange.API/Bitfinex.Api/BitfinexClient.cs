@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using TradingBot.Common;
 using TradingBot.Core;
@@ -69,14 +71,44 @@ namespace Bitfinex.Api
 			return dto;
 		}
 
-		public Task<CreateOrderDto> CreateOrderAsync(OrderDto input)
+		public async Task<CreateOrderDto> CreateOrderAsync(OrderDto input)
 		{
-			throw new NotImplementedException();
+			var order = new { symbol = input.Pair, amount = input.Amount, price = input.Price, side = input.Side.ToString().ToLower(), type = GetOrderType(input.Type), ocoorder = false };
+			var content = await MakePrivateCallAsync(order, "order/new");
+			var dto = new CreateOrderDto();
+			dto.OrderId = content.order_id;
+
+			return dto;
 		}
 
-		public Task<CancelOrderDto> CancelOrderAsync(CancelOrderDto input)
+		public async Task<CancelOrderDto> CancelOrderAsync(CancelOrderDto input)
 		{
-			throw new NotImplementedException();
+			var order = new { order_id = input.OrderId };
+			var content = await MakePrivateCallAsync(order, "order/cancel");
+			var dto = new CancelOrderDto();
+			dto.OrderId = content.order_id;
+
+			return dto;
+		}
+
+		#region Private method
+
+		private Task<dynamic> MakePrivateCallAsync(object obj, string url)
+		{
+			string base64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonHelper.ToJson(obj)));
+			SetHeaders(new Dictionary<string, string>
+			{
+				{ "X-BFX-APIKEY", _settings.ApiKey },
+				{ "X-BFX-PAYLOAD", base64 },
+				{ "X-BFX-SIGNATURE", HttpHelper.GetHash(new HMACSHA384(), _settings.Secret, base64) }
+			});
+
+			return CallAsync<dynamic>(HttpMethod.Post, BuildUrl(_settings.PrivateUrl, url));
+		}
+
+		private string GetOrderType(OrderType type)
+		{
+			return $"exchange {type.ToString().ToLower()}";
 		}
 
 		protected override async void HandleError(HttpResponseMessage response)
@@ -89,5 +121,7 @@ namespace Bitfinex.Api
 			var content = await HttpHelper.AcquireContentAsync<ErrorModel>(response);
 			throw new HttpRequestException(content.Message);
 		}
+
+		#endregion
 	}
 }
