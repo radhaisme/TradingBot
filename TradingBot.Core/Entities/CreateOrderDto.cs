@@ -11,7 +11,7 @@ namespace TradingBot.Core.Entities
 
 		public decimal Received { get; set; }
 		public decimal Remains { get; set; }
-		public int OrderId { get; set; }
+		public long OrderId { get; set; }
 		public IDictionary<string, decimal> Funds { get; }
 	}
 }
