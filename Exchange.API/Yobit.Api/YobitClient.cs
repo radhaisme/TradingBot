@@ -145,7 +145,7 @@ namespace Yobit.Api
 			{
 				{"Key", _settings.ApiKey},
 				{
-					"Sign", BitConverter.ToString(new HMACSHA512(Encoding.UTF8.GetBytes(_settings.Secret)).ComputeHash(Encoding.UTF8.GetBytes(content))).Replace("-", "").ToLower()
+					"Sign", HttpHelper.GetHash(new HMACSHA512(), _settings.Secret, content).ToLower()
 				}
 			});
 
