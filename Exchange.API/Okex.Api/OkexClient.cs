@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using TradingBot.Common;
 using TradingBot.Core;
@@ -72,12 +74,45 @@ namespace Okex.Api
 
 		public Task<CreateOrderDto> CreateOrderAsync(OrderDto input)
 		{
-			throw new NotImplementedException();
+
+			return null;
 		}
 
 		public Task<CancelOrderDto> CancelOrderAsync(CancelOrderDto input)
 		{
-			throw new NotImplementedException();
+
+
+			return null;
+		}
+
+		#region Private methods
+
+		private Task<dynamic> MakePrivateCallAsync(string content)
+		{
+			if (String.IsNullOrEmpty(_settings.PrivateUrl))
+			{
+				throw new ArgumentNullException(nameof(_settings.PrivateUrl));
+			}
+
+			if (String.IsNullOrEmpty(_settings.ApiKey))
+			{
+				throw new ArgumentNullException(nameof(_settings.ApiKey));
+			}
+
+			if (String.IsNullOrEmpty(_settings.Secret))
+			{
+				throw new ArgumentNullException(nameof(_settings.Secret));
+			}
+
+			SetHeaders(new Dictionary<string, string>
+			{
+				{"Key", _settings.ApiKey},
+				{
+					"Sign", BitConverter.ToString(new HMACSHA512(Encoding.UTF8.GetBytes(_settings.Secret)).ComputeHash(Encoding.UTF8.GetBytes(content))).Replace("-", "").ToLower()
+				}
+			});
+
+			return CallAsync<dynamic>(HttpMethod.Post, BuildUrl(_settings.PrivateUrl, content), new StringContent(content, Encoding.UTF8, "application/x-www-form-urlencoded"));
 		}
 
 		protected override async void HandleError(HttpResponseMessage response)
@@ -90,5 +125,7 @@ namespace Okex.Api
 				throw new HttpRequestException(message);
 			}
 		}
+
+		#endregion
 	}
 }

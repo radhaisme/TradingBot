@@ -75,12 +75,25 @@ namespace Cryptopia.Api
 
 		public Task<CreateOrderDto> CreateOrderAsync(OrderDto input)
 		{
-			throw new NotImplementedException();
+			//HMACSHA256
+
+			return null;
 		}
 
 		public Task<CancelOrderDto> CancelOrderAsync(CancelOrderDto input)
 		{
-			throw new NotImplementedException();
+			
+
+			return null;
+		}
+
+		#region Private methods
+
+		private Task<dynamic> MakePrivateCallAsync(string url)
+		{
+
+
+			return CallAsync<dynamic>(HttpMethod.Post, BuildUrl(_settings.PrivateUrl, url));
 		}
 
 		protected override async void HandleError(HttpResponseMessage response)
@@ -92,5 +105,7 @@ namespace Cryptopia.Api
 				throw new HttpRequestException(content.Error);
 			}
 		}
+
+		#endregion
 	}
 }
