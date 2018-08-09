@@ -21,7 +21,7 @@ namespace Cryptopia.Api
 
 		public ExchangeType Type => _settings.Type;
 
-		public async Task<IReadOnlyCollection<PairDto>> GetPairsAsync()
+		public async Task<PairResponse> GetPairsAsync()
 		{
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "GetTradePairs"));
 			var pairs = new List<PairDto>();
@@ -38,51 +38,51 @@ namespace Cryptopia.Api
 				pairs.Add(dto);
 			}
 
-			return pairs.AsReadOnly();
+			return new PairResponse(pairs);
 		}
 
-		public async Task<PairDetailDto> GetPairDetailAsync(string pair)
+		public async Task<PairDetailResponse> GetPairDetailAsync(PairDetailRequest request)
 		{
-			if (String.IsNullOrEmpty(pair))
+			if (String.IsNullOrEmpty(request.Pair))
 			{
-				throw new ArgumentNullException(nameof(pair));
+				throw new ArgumentNullException(nameof(request.Pair));
 			}
 
-			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"GetMarket/{pair}"));
-			var dto = new PairDetailDto();
-			dto.Ask = content.Data.AskPrice;
-			dto.Bid = content.Data.BidPrice;
-			dto.High = content.Data.High;
-			dto.Low = content.Data.Low;
-			dto.LastPrice = content.Data.LastPrice;
-			dto.Volume = content.Data.Volume;
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"GetMarket/{request.Pair}"));
+			var response = new PairDetailResponse();
+			response.Ask = content.Data.AskPrice;
+			response.Bid = content.Data.BidPrice;
+			response.High = content.Data.High;
+			response.Low = content.Data.Low;
+			response.LastPrice = content.Data.LastPrice;
+			response.Volume = content.Data.Volume;
 
-			return dto;
+			return response;
 		}
 
-		public async Task<DepthDto> GetOrderBookAsync(string pair, uint limit = 100)
+		public async Task<DepthResponse> GetOrderBookAsync(DepthRequest request)
 		{
-			if (String.IsNullOrEmpty(pair))
+			if (String.IsNullOrEmpty(request.Pair))
 			{
-				throw new ArgumentNullException(nameof(pair));
+				throw new ArgumentNullException(nameof(request.Pair));
 			}
 
-			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"GetMarketOrders/{pair}/{limit}"));
-			var dto = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.Data.Buy).Take((int)limit), ((IEnumerable<dynamic>)content.Data.Sell).Take((int)limit), item => new BookOrderDto { Price = item.Price, Amount = item.Volume });
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"GetMarketOrders/{request.Pair}/{request.Limit}"));
+			var response = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.Data.Buy).Take((int)request.Limit), ((IEnumerable<dynamic>)content.Data.Sell).Take((int)request.Limit), item => new BookOrderDto { Price = item.Price, Amount = item.Volume });
 
-			return dto;
+			return response;
 		}
 
-		public Task<CreateOrderDto> CreateOrderAsync(OrderDto input)
+		public Task<CreateOrderResponse> CreateOrderAsync(OrderRequest request)
 		{
 			//HMACSHA256
 
 			return null;
 		}
 
-		public Task<CancelOrderDto> CancelOrderAsync(CancelOrderDto input)
+		public Task<CancelOrderResponse> CancelOrderAsync(CancelOrderRequest request)
 		{
-			
+
 
 			return null;
 		}

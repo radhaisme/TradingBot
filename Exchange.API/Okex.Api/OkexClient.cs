@@ -23,7 +23,7 @@ namespace Okex.Api
 
 		public ExchangeType Type => _settings.Type;
 
-		public async Task<IReadOnlyCollection<PairDto>> GetPairsAsync()
+		public async Task<PairResponse> GetPairsAsync()
 		{
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "tickers.do"));
 			var pairs = new List<PairDto>();
@@ -37,18 +37,18 @@ namespace Okex.Api
 				pairs.Add(dto);
 			}
 
-			return pairs.AsReadOnly();
+			return new PairResponse(pairs);
 		}
 
-		public async Task<PairDetailDto> GetPairDetailAsync(string pair)
+		public async Task<PairDetailResponse> GetPairDetailAsync(PairDetailRequest request)
 		{
-			if (String.IsNullOrEmpty(pair))
+			if (String.IsNullOrEmpty(request.Pair))
 			{
-				throw new ArgumentNullException(nameof(pair));
+				throw new ArgumentNullException(nameof(request.Pair));
 			}
 
-			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"ticker.do?symbol={pair}"));
-			var dto = new PairDetailDto();
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"ticker.do?symbol={request.Pair}"));
+			var dto = new PairDetailResponse();
 			dto.LastPrice = content.ticker.last;
 			dto.Ask = content.ticker.buy;
 			dto.Bid = content.ticker.sell;
@@ -59,26 +59,26 @@ namespace Okex.Api
 			return dto;
 		}
 
-		public async Task<DepthDto> GetOrderBookAsync(string pair, uint limit = 100)
+		public async Task<DepthResponse> GetOrderBookAsync(DepthRequest request)
 		{
-			if (String.IsNullOrEmpty(pair))
+			if (String.IsNullOrEmpty(request.Pair))
 			{
-				throw new ArgumentNullException(nameof(pair));
+				throw new ArgumentNullException(nameof(request.Pair));
 			}
 
-			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"depth.do?symbol={pair}&size={limit}"));
-			var model = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.asks).Take((int)limit), ((IEnumerable<dynamic>)content.bids).Take((int)limit), item => new BookOrderDto { Price = item[0], Amount = item[1] });
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"depth.do?symbol={request.Pair}&size={request.Limit}"));
+			var model = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.asks).Take((int)request.Limit), ((IEnumerable<dynamic>)content.bids).Take((int)request.Limit), item => new BookOrderDto { Price = item[0], Amount = item[1] });
 
 			return model;
 		}
 
-		public Task<CreateOrderDto> CreateOrderAsync(OrderDto input)
+		public Task<CreateOrderResponse> CreateOrderAsync(OrderRequest request)
 		{
 
 			return null;
 		}
 
-		public Task<CancelOrderDto> CancelOrderAsync(CancelOrderDto input)
+		public Task<CancelOrderResponse> CancelOrderAsync(CancelOrderRequest request)
 		{
 
 

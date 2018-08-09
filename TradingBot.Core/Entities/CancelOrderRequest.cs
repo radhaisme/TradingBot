@@ -1,7 +1,7 @@
 ﻿
 namespace TradingBot.Core.Entities
 {
-	public class CancelOrderDto
+	public class CancelOrderRequest
 	{
 		public string Pair { get; set; }
 		public int TradePairId { get; set; }

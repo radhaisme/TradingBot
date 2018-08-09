@@ -24,7 +24,7 @@ namespace Yobit.Api
 
 		public ExchangeType Type => _settings.Type;
 
-		public async Task<IReadOnlyCollection<PairDto>> GetPairsAsync()
+		public async Task<PairResponse> GetPairsAsync()
 		{
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "info?ignore_invalid=1"));
 			var pairs = new List<PairDto>();
@@ -45,19 +45,19 @@ namespace Yobit.Api
 				pairs.Add(dto);
 			}
 
-			return pairs.AsReadOnly();
+			return new PairResponse(pairs);
 		}
 
-		public async Task<PairDetailDto> GetPairDetailAsync(string pair)
+		public async Task<PairDetailResponse> GetPairDetailAsync(PairDetailRequest request)
 		{
-			if (String.IsNullOrEmpty(pair))
+			if (String.IsNullOrEmpty(request.Pair))
 			{
-				throw new ArgumentNullException(nameof(pair));
+				throw new ArgumentNullException(nameof(request.Pair));
 			}
 
-			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"ticker/{pair}?ignore_invalid=1"));
-			dynamic data = content[pair];
-			var dto = new PairDetailDto();
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"ticker/{request.Pair}?ignore_invalid=1"));
+			dynamic data = content[request.Pair];
+			var dto = new PairDetailResponse();
 			dto.LastPrice = data.last;
 			dto.Volume = data.vol;
 			dto.Ask = data.buy;
@@ -68,38 +68,38 @@ namespace Yobit.Api
 			return dto;
 		}
 
-		public async Task<DepthDto> GetOrderBookAsync(string pair, uint limit = 100)
+		public async Task<DepthResponse> GetOrderBookAsync(DepthRequest request)
 		{
-			if (String.IsNullOrEmpty(pair))
+			if (String.IsNullOrEmpty(request.Pair))
 			{
-				throw new ArgumentNullException(nameof(pair));
+				throw new ArgumentNullException(nameof(request.Pair));
 			}
 
-			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"depth/{pair}?limit={limit}&ignore_invalid=1"));
-			dynamic data = content[pair];
-			DepthDto dto = Helper.BuildOrderBook(((IEnumerable<dynamic>)data.asks).Take((int)limit), ((IEnumerable<dynamic>)data.bids).Take((int)limit), item => new BookOrderDto { Price = item[0], Amount = item[1] });
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"depth/{request.Pair}?limit={request.Limit}&ignore_invalid=1"));
+			dynamic data = content[request.Pair];
+			DepthResponse response = Helper.BuildOrderBook(((IEnumerable<dynamic>)data.asks).Take((int)request.Limit), ((IEnumerable<dynamic>)data.bids).Take((int)request.Limit), item => new BookOrderDto { Price = item[0], Amount = item[1] });
 
-			return dto;
+			return response;
 		}
 
-		public async Task<CreateOrderDto> CreateOrderAsync(OrderDto input)
+		public async Task<CreateOrderResponse> CreateOrderAsync(OrderRequest request)
 		{
-			if (String.IsNullOrEmpty(input.Pair))
+			if (String.IsNullOrEmpty(request.Pair))
 			{
-				throw new ArgumentNullException(nameof(input.Pair));
+				throw new ArgumentNullException(nameof(request.Pair));
 			}
 
 			string queryString = HttpHelper.QueryString(new Dictionary<string, string>
 			{
 				{"method", "Trade"},
-				{"pair", input.Pair},
-				{"type", input.Side.ToString()},
-				{"rate", input.Price.ToString(CultureInfo.InvariantCulture)},
-				{"amount", input.Amount.ToString(CultureInfo.InvariantCulture)},
+				{"pair", request.Pair},
+				{"type", request.Side.ToString()},
+				{"rate", request.Price.ToString(CultureInfo.InvariantCulture)},
+				{"amount", request.Amount.ToString(CultureInfo.InvariantCulture)},
 				{"nonce", GenerateNonce(_settings.CreatedAt)}
 			}, true);
 			var content = await MakePrivateCallAsync(queryString);
-			var dto = new CreateOrderDto();
+			var dto = new CreateOrderResponse();
 			dto.Received = content.received;
 			dto.Remains = content.remains;
 			dto.OrderId = content.order_id;
@@ -107,16 +107,16 @@ namespace Yobit.Api
 			return dto;
 		}
 
-		public async Task<CancelOrderDto> CancelOrderAsync(CancelOrderDto input)
+		public async Task<CancelOrderResponse> CancelOrderAsync(CancelOrderRequest request)
 		{
-			if (input.OrderId <= 0)
+			if (request.OrderId <= 0)
 			{
-				throw new ArgumentOutOfRangeException(nameof(input.OrderId));
+				throw new ArgumentOutOfRangeException(nameof(request.OrderId));
 			}
 
-			string queryString = HttpHelper.QueryString(new Dictionary<string, string> { { "method", "CancelOrderDto" }, { "order_id", input.OrderId.ToString() }, { "nonce", GenerateNonce(_settings.CreatedAt) } }, true);
+			string queryString = HttpHelper.QueryString(new Dictionary<string, string> { { "method", "CancelOrderRequest" }, { "order_id", request.OrderId.ToString() }, { "nonce", GenerateNonce(_settings.CreatedAt) } }, true);
 			var content = await MakePrivateCallAsync(queryString);
-			var dto = new CancelOrderDto();
+			var dto = new CancelOrderResponse();
 			dto.OrderId = content.@return.order_id;
 
 			return dto;

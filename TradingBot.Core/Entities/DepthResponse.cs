@@ -2,9 +2,9 @@
 
 namespace TradingBot.Core.Entities
 {
-	public class DepthDto
+	public class DepthResponse
 	{
-		public DepthDto()
+		public DepthResponse()
 		{
 			Asks = new List<BookOrderDto>();
 			Bids = new List<BookOrderDto>();

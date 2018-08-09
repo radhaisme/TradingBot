@@ -10,9 +10,9 @@ namespace TradingBot.CommandPrompt
 		private static async Task Main(string[] args)
 		{
 			var client = new BinanceClient();
-			var r = await client.CancelOrderAsync(new CancelOrderDto { Pair = "ETHBTC", OrderId = 1 });
+			var r = await client.CancelOrderAsync(new CancelOrderRequest { Pair = "ETHBTC", OrderId = 1 });
 
-			//var r = await client.CreateOrderAsync(new OrderDto { Pair = "ETHBTC", Price = 0.1m, Amount = 1, Side = Side.Buy, Type = OrderType.Limit });
+			//var r = await client.CreateOrderAsync(new OrderRequest { Pair = "ETHBTC", Price = 0.1m, Amount = 1, Side = Side.Buy, Type = OrderType.Limit });
 
 
 

@@ -20,7 +20,7 @@ namespace Huobi.Api
 
 		public ExchangeType Type => _settings.Type;
 
-		public async Task<IReadOnlyCollection<PairDto>> GetPairsAsync()
+		public async Task<PairResponse> GetPairsAsync()
 		{
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "v1/common/symbols"));
 			var pairs = new List<PairDto>();
@@ -33,18 +33,18 @@ namespace Huobi.Api
 				pairs.Add(dto);
 			}
 
-			return pairs.AsReadOnly();
+			return new PairResponse(pairs);
 		}
 
-		public async Task<PairDetailDto> GetPairDetailAsync(string pair)
+		public async Task<PairDetailResponse> GetPairDetailAsync(PairDetailRequest request)
 		{
-			if (String.IsNullOrEmpty(pair))
+			if (String.IsNullOrEmpty(request.Pair))
 			{
-				throw new ArgumentNullException(nameof(pair));
+				throw new ArgumentNullException(nameof(request.Pair));
 			}
 
-			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"market/detail/merged?symbol={pair}"));
-			var dto = new PairDetailDto();
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"market/detail/merged?symbol={request.Pair}"));
+			var dto = new PairDetailResponse();
 			dto.LastPrice = content.tick.close;
 			dto.Ask = content.tick.ask[0];
 			dto.Bid = content.tick.bid[0];
@@ -55,37 +55,37 @@ namespace Huobi.Api
 			return dto;
 		}
 
-		public async Task<DepthDto> GetOrderBookAsync(string pair, uint limit = 100)
+		public async Task<DepthResponse> GetOrderBookAsync(DepthRequest request)
 		{
-			if (String.IsNullOrEmpty(pair))
+			if (String.IsNullOrEmpty(request.Pair))
 			{
-				throw new ArgumentNullException(nameof(pair));
+				throw new ArgumentNullException(nameof(request.Pair));
 			}
 
-			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"market/depth?symbol={pair}&type=step1"));
-			DepthDto model = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.tick.asks).Take((int)limit), ((IEnumerable<dynamic>)content.tick.bids).Take((int)limit), item => new BookOrderDto { Price = item[0], Amount = item[1] });
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"market/depth?symbol={request.Pair}&type=step1"));
+			DepthResponse model = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.tick.asks).Take((int)request.Limit), ((IEnumerable<dynamic>)content.tick.bids).Take((int)request.Limit), item => new BookOrderDto { Price = item[0], Amount = item[1] });
 
 			return model;
 		}
 
-		public Task<CreateOrderDto> CreateOrderAsync(OrderDto input)
+		public Task<CreateOrderResponse> CreateOrderAsync(OrderRequest request)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Task<CancelOrderDto> CancelOrderAsync(CancelOrderDto input)
+		public Task<CancelOrderResponse> CancelOrderAsync(CancelOrderRequest request)
 		{
 			throw new NotImplementedException();
 		}
 
-		//public async Task<IReadOnlyCollection<PairDetailDto>> GetPairsDetails(params string[] pairs)
+		//public async Task<IReadOnlyCollection<PairDetailResponse>> GetPairsDetails(params string[] pairs)
 		//{
 		//	var content = await HttpHelper.AcquireContentAsync<dynamic>(await _api.GetPairsDetailsAsync());
-		//	var details = new List<PairDetailDto>();
+		//	var details = new List<PairDetailResponse>();
 
 		//	foreach (dynamic item in content.data)
 		//	{
-		//		var dto = new PairDetailDto();
+		//		var dto = new PairDetailResponse();
 		//		dto.LastPrice = item.close;
 		//		//detail.Low = item.low;
 		//		//detail.High = item.high;
@@ -93,7 +93,7 @@ namespace Huobi.Api
 		//		details.Add(dto);
 		//	}
 
-		//	return new ReadOnlyCollection<PairDetailDto>(details);
+		//	return new ReadOnlyCollection<PairDetailResponse>(details);
 		//}
 	}
 }

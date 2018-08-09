@@ -13,15 +13,15 @@ namespace TradingBot.Tests
 		[Fact]
 		public async void GetPairsTest()
 		{
-			IReadOnlyCollection<PairDto> pairs = await _client.GetPairsAsync();
-			Assert.NotNull(pairs);
-			Assert.NotEmpty(pairs);
+			PairResponse response = await _client.GetPairsAsync();
+			Assert.NotNull(response);
+			Assert.NotEmpty(response.Pairs);
 		}
 
 		[Fact]
 		public async void GetOrderBookTest()
 		{
-			DepthDto book = await _client.GetOrderBookAsync("ETHBTC");
+			DepthResponse book = await _client.GetOrderBookAsync(new DepthRequest { Pair = "ETHBTC", Limit = 100 });
 			Assert.NotNull(book);
 			Assert.NotEmpty(book.Asks);
 			Assert.NotEmpty(book.Bids);
@@ -30,7 +30,7 @@ namespace TradingBot.Tests
 		[Fact]
 		public async void GetPairDetailTest()
 		{
-			PairDetailDto detail = await _client.GetPairDetailAsync("ETHBTC");
+			PairDetailResponse detail = await _client.GetPairDetailAsync(new PairDetailRequest { Pair = "ETHBTC" });
 			Assert.NotNull(detail);
 			Assert.NotEqual(0, detail.LastPrice);
 		}

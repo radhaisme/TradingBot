@@ -1,7 +1,7 @@
 ﻿
 namespace TradingBot.Core.Entities
 {
-	public class PairDetailDto
+	public class PairDetailResponse
 	{
 		public decimal High { get; set; }
 		public decimal Low { get; set; }
