@@ -2,9 +2,9 @@
 
 namespace TradingBot.Core.Entities
 {
-	public class CreateOrderDto
+	public class CreateOrderResponse
 	{
-		public CreateOrderDto()
+		public CreateOrderResponse()
 		{
 			Funds = new Dictionary<string, decimal>();
 		}

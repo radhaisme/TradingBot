@@ -1,7 +1,7 @@
 ﻿
 namespace TradingBot.Core.Entities
 {
-	public class OrderDto
+	public class OrderRequest
 	{
 		public int AccountId { get; set; }
 		public string Pair { get; set; }

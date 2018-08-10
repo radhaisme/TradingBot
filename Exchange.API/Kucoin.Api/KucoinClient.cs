@@ -21,7 +21,7 @@ namespace Kucoin.Api
 
 		public ExchangeType Type => _settings.Type;
 
-		public async Task<IReadOnlyCollection<PairDto>> GetPairsAsync()
+		public async Task<PairResponse> GetPairsAsync()
 		{
 			var content = await CallAsync<ResponseModel>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "market/open/symbols"));
 			var pairs = new List<PairDto>();
@@ -39,17 +39,17 @@ namespace Kucoin.Api
 				pairs.Add(pair);
 			}
 
-			return pairs.AsReadOnly();
+			return new PairResponse(pairs);
 		}
 
-		public async Task<PairDetailDto> GetPairDetailAsync(string pair)
+		public async Task<PairDetailResponse> GetPairDetailAsync(PairDetailRequest request)
 		{
-			if (String.IsNullOrEmpty(pair))
+			if (String.IsNullOrEmpty(request.Pair))
 			{
-				throw new ArgumentNullException(nameof(pair));
+				throw new ArgumentNullException(nameof(request.Pair));
 			}
 
-			var content = await CallAsync<ResponseModel>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"{pair}/open/tick"));
+			var content = await CallAsync<ResponseModel>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"{request.Pair}/open/tick"));
 
 			if (!(bool)content.Data.trading)
 			{
@@ -57,7 +57,7 @@ namespace Kucoin.Api
 			}
 
 			dynamic data = content.Data;
-			var dto = new PairDetailDto();
+			var dto = new PairDetailResponse();
 			dto.LastPrice = data.lastDealPrice;
 			dto.Ask = data.buy;
 			dto.Bid = data.sell;
@@ -68,26 +68,26 @@ namespace Kucoin.Api
 			return dto;
 		}
 
-		public async Task<DepthDto> GetOrderBookAsync(string pair, uint limit = 100)
+		public async Task<DepthResponse> GetOrderBookAsync(DepthRequest request)
 		{
-			if (String.IsNullOrEmpty(pair))
+			if (String.IsNullOrEmpty(request.Pair))
 			{
-				throw new ArgumentNullException(nameof(pair));
+				throw new ArgumentNullException(nameof(request.Pair));
 			}
 
-			var content = await CallAsync<ResponseModel>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"open/orders?symbol={pair}&limit={limit}"));
+			var content = await CallAsync<ResponseModel>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"open/orders?symbol={request.Pair}&limit={request.Limit}"));
 			dynamic data = content.Data;
-			var dto = Helper.BuildOrderBook(((IEnumerable<dynamic>)data.BUY).Take((int)limit), ((IEnumerable<dynamic>)data.SELL).Take((int)limit), item => new BookOrderDto { Price = item[0], Amount = item[1] });
+			var dto = Helper.BuildOrderBook(((IEnumerable<dynamic>)data.BUY).Take((int)request.Limit), ((IEnumerable<dynamic>)data.SELL).Take((int)request.Limit), item => new BookOrderDto { Price = item[0], Amount = item[1] });
 
 			return dto;
 		}
 
-		public Task<CreateOrderDto> CreateOrderAsync(OrderDto input)
+		public Task<CreateOrderResponse> CreateOrderAsync(OrderRequest request)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Task<CancelOrderDto> CancelOrderAsync(CancelOrderDto input)
+		public Task<CancelOrderResponse> CancelOrderAsync(CancelOrderRequest request)
 		{
 			throw new NotImplementedException();
 		}

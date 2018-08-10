@@ -23,7 +23,7 @@ namespace Bitfinex.Api
 
 		public ExchangeType Type => _settings.Type;
 
-		public async Task<IReadOnlyCollection<PairDto>> GetPairsAsync()
+		public async Task<PairResponse> GetPairsAsync()
 		{
 			var content = await CallAsync<string[]>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "symbols"));
 			var pairs = new Dictionary<string, PairDto>(content.Length);
@@ -36,56 +36,56 @@ namespace Bitfinex.Api
 				pairs.Add(item, dto);
 			}
 
-			return pairs.Values.ToList().AsReadOnly();
+			return new PairResponse(pairs.Values.ToList());
 		}
 
-		public async Task<PairDetailDto> GetPairDetailAsync(string pair)
+		public async Task<PairDetailResponse> GetPairDetailAsync(PairDetailRequest request)
 		{
-			if (String.IsNullOrEmpty(pair))
+			if (String.IsNullOrEmpty(request.Pair))
 			{
-				throw new ArgumentNullException(nameof(pair));
+				throw new ArgumentNullException(nameof(request.Pair));
 			}
 
-			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"pubticker/{pair}"));
-			var dto = new PairDetailDto();
-			dto.LastPrice = content.last_price;
-			dto.Ask = content.ask;
-			dto.Bid = content.bid;
-			dto.Volume = content.volume;
-			dto.High = content.high;
-			dto.Low = content.low;
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"pubticker/{request.Pair}"));
+			var response = new PairDetailResponse();
+			response.LastPrice = content.last_price;
+			response.Ask = content.ask;
+			response.Bid = content.bid;
+			response.Volume = content.volume;
+			response.High = content.high;
+			response.Low = content.low;
 
-			return dto;
+			return response;
 		}
 
-		public async Task<DepthDto> GetOrderBookAsync(string pair, uint limit = 100)
+		public async Task<DepthResponse> GetOrderBookAsync(DepthRequest request)
 		{
-			if (String.IsNullOrEmpty(pair))
+			if (String.IsNullOrEmpty(request.Pair))
 			{
-				throw new ArgumentNullException(nameof(pair));
+				throw new ArgumentNullException(nameof(request.Pair));
 			}
 
-			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"book/{pair}?limit_bids={limit}&limit_asks={limit}"));
-			var dto = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.asks).Take((int)limit), ((IEnumerable<dynamic>)content.bids).Take((int)limit), item => new BookOrderDto { Price = item.price, Amount = item.amount });
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"book/{request.Pair}?limit_bids={request.Limit}&limit_asks={request.Limit}"));
+			var response = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.asks).Take((int)request.Limit), ((IEnumerable<dynamic>)content.bids).Take((int)request.Limit), item => new BookOrderDto { Price = item.price, Amount = item.amount });
 
-			return dto;
+			return response;
 		}
 
-		public async Task<CreateOrderDto> CreateOrderAsync(OrderDto input)
+		public async Task<CreateOrderResponse> CreateOrderAsync(OrderRequest request)
 		{
-			var order = new { symbol = input.Pair, amount = input.Amount, price = input.Price, side = input.Side.ToString().ToLower(), type = GetOrderType(input.Type), ocoorder = false };
+			var order = new { symbol = request.Pair, amount = request.Amount, price = request.Price, side = request.Side.ToString().ToLower(), type = GetOrderType(request.Type), ocoorder = false };
 			var content = await MakePrivateCallAsync(order, "order/new");
-			var dto = new CreateOrderDto();
-			dto.OrderId = content.order_id;
+			var response = new CreateOrderResponse();
+			response.OrderId = content.order_id;
 
-			return dto;
+			return response;
 		}
 
-		public async Task<CancelOrderDto> CancelOrderAsync(CancelOrderDto input)
+		public async Task<CancelOrderResponse> CancelOrderAsync(CancelOrderRequest request)
 		{
-			var order = new { order_id = input.OrderId };
+			var order = new { order_id = request.OrderId };
 			var content = await MakePrivateCallAsync(order, "order/cancel");
-			var dto = new CancelOrderDto();
+			var dto = new CancelOrderResponse();
 			dto.OrderId = content.order_id;
 
 			return dto;

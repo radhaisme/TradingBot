@@ -25,7 +25,7 @@ namespace Binance.Api
 
 		public ExchangeType Type => _settings.Type;
 
-		public async Task<IReadOnlyCollection<PairDto>> GetPairsAsync()
+		public async Task<PairResponse> GetPairsAsync()
 		{
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "exchangeInfo"));
 			var pairs = new List<PairDto>();
@@ -38,78 +38,78 @@ namespace Binance.Api
 				pairs.Add(dto);
 			}
 
-			return pairs.AsReadOnly();
+			return new PairResponse(pairs);
 		}
 
-		public async Task<PairDetailDto> GetPairDetailAsync(string pair)
+		public async Task<PairDetailResponse> GetPairDetailAsync(PairDetailRequest request)
 		{
-			if (String.IsNullOrEmpty(pair))
+			if (String.IsNullOrEmpty(request.Pair))
 			{
-				throw new ArgumentNullException(nameof(pair));
+				throw new ArgumentNullException(nameof(request.Pair));
 			}
 
-			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"ticker/price?symbol={pair}"));
-			var dto = new PairDetailDto();
-			dto.LastPrice = content.price;
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"ticker/price?symbol={request.Pair}"));
+			var response = new PairDetailResponse();
+			response.LastPrice = content.price;
 
-			return dto;
+			return response;
 		}
 
-		public async Task<DepthDto> GetOrderBookAsync(string pair, uint limit = 100)
+		public async Task<DepthResponse> GetOrderBookAsync(DepthRequest request)
 		{
-			if (String.IsNullOrEmpty(pair))
+			if (String.IsNullOrEmpty(request.Pair))
 			{
-				throw new ArgumentNullException(nameof(pair));
+				throw new ArgumentNullException(nameof(request.Pair));
 			}
 
-			if (!_limits.Contains(limit))
+			if (!_limits.Contains(request.Limit))
 			{
-				throw new ArgumentOutOfRangeException(nameof(limit));
+				throw new ArgumentOutOfRangeException(nameof(request.Limit));
 			}
 
-			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"depth?symbol={pair}&limit={limit}"));
-			var dto = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.asks).Take((int)limit), ((IEnumerable<dynamic>)content.bids).Take((int)limit), item => new BookOrderDto { Price = item[0], Amount = item[1] });
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"depth?symbol={request.Pair}&limit={request.Limit}"));
+			var response = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.asks).Take((int)request.Limit), ((IEnumerable<dynamic>)content.bids).Take((int)request.Limit), item => new BookOrderDto { Price = item[0], Amount = item[1] });
 
-			return dto;
+			return response;
 		}
 
-		public async Task<CreateOrderDto> CreateOrderAsync(OrderDto input)
+		public async Task<CreateOrderResponse> CreateOrderAsync(OrderRequest request)
 		{
 			var queryString = HttpHelper.QueryString(new Dictionary<string, string>
 			{
-				{ "symbol", input.Pair },
-				{ "side", input.Side.ToString().ToUpper() },
-				{ "type", input.Type.ToString().ToUpper() },
-				{ "quantity", input.Amount.ToString(CultureInfo.InvariantCulture) },
-				{ "price", input.Price.ToString(CultureInfo.InvariantCulture) },
+				{ "symbol", request.Pair },
+				{ "side", request.Side.ToString().ToUpper() },
+				{ "type", request.Type.ToString().ToUpper() },
+				{ "quantity", request.Amount.ToString(CultureInfo.InvariantCulture) },
+				{ "price", request.Price.ToString(CultureInfo.InvariantCulture) },
 				{ "timeInForce", "GTC" },
 				{ "timestamp", DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString() }
 			}, true);
 			var content = await MakePrivateCallAsync(HttpMethod.Post, "order", queryString);
-			var dto = new CreateOrderDto();
-			dto.OrderId = content.orderId;
+			var response = new CreateOrderResponse();
+			response.OrderId = content.orderId;
 
-			return dto;
+			return response;
 		}
 
-		public async Task<CancelOrderDto> CancelOrderAsync(CancelOrderDto input)
+		public async Task<CancelOrderResponse> CancelOrderAsync(CancelOrderRequest request)
 		{
-			if (input.OrderId <= 0)
+			if (request.OrderId <= 0)
 			{
-				throw new ArgumentException(nameof(input.OrderId));
+				throw new ArgumentException(nameof(request.OrderId));
 			}
 
 			var queryString = HttpHelper.QueryString(new Dictionary<string, string>
 			{
-				{ "symbol", input.Pair },
-				{ "orderId", input.OrderId.ToString() },
+				{ "symbol", request.Pair },
+				{ "orderId", request.OrderId.ToString() },
 				{ "timestamp", DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString() }
 			}, true);
 			var content = await MakePrivateCallAsync(HttpMethod.Delete, "order", queryString);
-			var dto = new CancelOrderDto();
-			dto.OrderId = content.orderId;
+			var response = new CancelOrderResponse();
+			response.OrderId = content.orderId;
 
-			return dto;
+			return response;
 		}
 
 		#region Private methods

@@ -24,7 +24,7 @@ namespace TradingBot.Core
 		{
 			var pairs = new List<Pair>();
 
-			foreach (PairDto item in _client.GetPairsAsync().Result)
+			foreach (PairDto item in _client.GetPairsAsync().Result.Pairs)
 			{
 				if (!_currencies.ContainsKey(item.BaseAsset) || !_currencies.ContainsKey(item.QuoteAsset))
 				{
@@ -53,33 +53,35 @@ namespace TradingBot.Core
 
 		public async Task<decimal> GetPriceAsync(Pair pair)
 		{
-			PairDetailDto detailDto = await _client.GetPairDetailAsync(pair.GetSymbol(Type));
+			PairDetailResponse detailResponse = null;//await _client.GetPairDetailAsync(pair.GetSymbol(Type));
 
-			return detailDto.LastPrice;
+			return detailResponse.LastPrice;
 		}
 
 		public async Task<(decimal ask, decimal bid)> GetBookOrderPriceAsync(Pair pair)
 		{
-			DepthDto dto = await _client.GetOrderBookAsync(pair.GetSymbol(Type), 5);
-			decimal ask = 0;
-			decimal bid = 0;
+			//DepthResponse response = await _client.GetOrderBookAsync(pair.GetSymbol(Type), 5);
+			//decimal ask = 0;
+			//decimal bid = 0;
 
-			if (dto.Asks.Count == 0 || dto.Bids.Count == 0)
-			{
-				return (0, 0);
-			}
+			//if (response.Asks.Count == 0 || response.Bids.Count == 0)
+			//{
+			//	return (0, 0);
+			//}
 
-			foreach (BookOrderDto item in dto.Asks)
-			{
-				ask += item.Price;
-			}
+			//foreach (BookOrderDto item in response.Asks)
+			//{
+			//	ask += item.Price;
+			//}
 
-			foreach (BookOrderDto item in dto.Bids)
-			{
-				bid += item.Price;
-			}
+			//foreach (BookOrderDto item in response.Bids)
+			//{
+			//	bid += item.Price;
+			//}
 
-			return (ask / dto.Asks.Count, bid / dto.Bids.Count);
+			//return (ask / response.Asks.Count, bid / response.Bids.Count);
+
+			return (0, 0);
 		}
 	}
 }
