@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
@@ -21,7 +22,7 @@ namespace Bitfinex.Api
 			_settings = new BitfinexSettings();
 		}
 
-		public ExchangeType Type => _settings.Type;
+		public ExchangeType Type => ExchangeType.Bitfinex;
 
 		public async Task<PairResponse> GetPairsAsync()
 		{
@@ -71,9 +72,17 @@ namespace Bitfinex.Api
 			return response;
 		}
 
-		public async Task<CreateOrderResponse> CreateOrderAsync(OrderRequest request)
+		public async Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)
 		{
-			var order = new { symbol = request.Pair, amount = request.Amount, price = request.Price, side = request.Side.ToString().ToLower(), type = GetOrderType(request.Type), ocoorder = false };
+			var order = new
+			{
+				symbol = request.Pair,
+				amount = request.Amount,
+				price = request.Price,
+				side = request.Side.ToString().ToLower(),
+				type = GetOrderType(request.Type),
+				ocoorder = false //TODO: Unsupported an ocoorder orders
+			};
 			var content = await MakePrivateCallAsync(order, "order/new");
 			var response = new CreateOrderResponse();
 			response.OrderId = content.order_id;
@@ -89,6 +98,20 @@ namespace Bitfinex.Api
 			dto.OrderId = content.order_id;
 
 			return dto;
+		}
+
+		public async Task<OrderResponse> GetOrdersAsync(OrderRequest request)
+		{
+			var order = new { nonce = DateTime.Now.ToString(CultureInfo.InvariantCulture) };
+			dynamic content = await MakePrivateCallAsync(order, "orders");
+			var response = new OrderResponse();
+
+			foreach (dynamic item in content)
+			{
+
+			}
+
+			return response;
 		}
 
 		#region Private method

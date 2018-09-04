@@ -18,7 +18,7 @@ namespace Huobi.Api
 			_settings = new HuobiSettings();
 		}
 
-		public ExchangeType Type => _settings.Type;
+		public ExchangeType Type => ExchangeType.Huobi;
 
 		public async Task<PairResponse> GetPairsAsync()
 		{
@@ -68,7 +68,7 @@ namespace Huobi.Api
 			return model;
 		}
 
-		public Task<CreateOrderResponse> CreateOrderAsync(OrderRequest request)
+		public Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)
 		{
 			throw new NotImplementedException();
 		}

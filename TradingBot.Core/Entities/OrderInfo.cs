@@ -1,8 +1,7 @@
-﻿
+﻿using System;
+
 namespace TradingBot.Core.Entities
 {
-	using System;
-
 	public class OrderInfo
 	{
 		public string Pair { get; set; }

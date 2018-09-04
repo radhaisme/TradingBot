@@ -22,7 +22,7 @@ namespace Yobit.Api
 			_settings = new YobitSettings();
 		}
 
-		public ExchangeType Type => _settings.Type;
+		public ExchangeType Type => ExchangeType.Yobit;
 
 		public async Task<PairResponse> GetPairsAsync()
 		{
@@ -82,7 +82,7 @@ namespace Yobit.Api
 			return response;
 		}
 
-		public async Task<CreateOrderResponse> CreateOrderAsync(OrderRequest request)
+		public async Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)
 		{
 			if (String.IsNullOrEmpty(request.Pair))
 			{
@@ -246,13 +246,13 @@ namespace Yobit.Api
 		//	}
 		//}
 
-		//public async Task<TradeInfo> GetTradesAsync(string pair, uint limit = 150)
+		//public async Task<OrderResponse> GetTradesAsync(string pair, uint limit = 150)
 		//{
 		//	try
 		//	{
 		//		HttpResponseMessage response = await _api.GetTradesAsync(pair, limit);
 		//		var result = await HttpHelper.AcquireContentAsync<dynamic>(response);
-		//		var model = new TradeInfo();
+		//		var model = new OrderResponse();
 
 		//		foreach (dynamic item in result[pair])
 		//		{
@@ -264,7 +264,7 @@ namespace Yobit.Api
 		//				Tid = item.tid,
 		//				Timestamp = DateTimeOffset.FromUnixTimeSeconds((long)item.timestamp)
 		//			};
-		//			model.Trades.Add(trade);
+		//			model.Orders.Add(trade);
 		//		}
 
 		//		return model;

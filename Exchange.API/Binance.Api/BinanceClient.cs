@@ -23,7 +23,7 @@ namespace Binance.Api
 			_settings = new BinanceSettings();
 		}
 
-		public ExchangeType Type => _settings.Type;
+		public ExchangeType Type => ExchangeType.Binance;
 
 		public async Task<PairResponse> GetPairsAsync()
 		{
@@ -73,7 +73,7 @@ namespace Binance.Api
 			return response;
 		}
 
-		public async Task<CreateOrderResponse> CreateOrderAsync(OrderRequest request)
+		public async Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)
 		{
 			var queryString = HttpHelper.QueryString(new Dictionary<string, string>
 			{
@@ -108,6 +108,24 @@ namespace Binance.Api
 			var content = await MakePrivateCallAsync(HttpMethod.Delete, "order", queryString);
 			var response = new CancelOrderResponse();
 			response.OrderId = content.orderId;
+
+			return response;
+		}
+
+		public async Task<OrderResponse> GetOrdersAsync(OrderRequest request)
+		{
+			var queryString = HttpHelper.QueryString(new Dictionary<string, string>
+			{
+				{ "symbol", request.Pair },
+				{ "timestamp", DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString() }
+			}, true);
+			dynamic content = await MakePrivateCallAsync(HttpMethod.Get, "openOrders", queryString);
+			var response = new OrderResponse();
+
+			foreach (dynamic item in content)
+			{
+				
+			}
 
 			return response;
 		}

@@ -19,7 +19,7 @@ namespace Kucoin.Api
 			_settings = new KucoinSettings();
 		}
 
-		public ExchangeType Type => _settings.Type;
+		public ExchangeType Type => ExchangeType.Kucoin;
 
 		public async Task<PairResponse> GetPairsAsync()
 		{
@@ -82,7 +82,7 @@ namespace Kucoin.Api
 			return dto;
 		}
 
-		public Task<CreateOrderResponse> CreateOrderAsync(OrderRequest request)
+		public Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)
 		{
 			throw new NotImplementedException();
 		}

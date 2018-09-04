@@ -21,7 +21,7 @@ namespace Okex.Api
 			_settings = new OkexSettings();
 		}
 
-		public ExchangeType Type => _settings.Type;
+		public ExchangeType Type => ExchangeType.Okex;
 
 		public async Task<PairResponse> GetPairsAsync()
 		{
@@ -72,7 +72,7 @@ namespace Okex.Api
 			return model;
 		}
 
-		public Task<CreateOrderResponse> CreateOrderAsync(OrderRequest request)
+		public Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)
 		{
 
 			return null;
