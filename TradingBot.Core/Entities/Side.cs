@@ -1,7 +1,7 @@
 ﻿
 namespace TradingBot.Core.Entities
 {
-	public enum Side : byte
+	public enum TradeType : byte
 	{
 		Buy,
 		Sell

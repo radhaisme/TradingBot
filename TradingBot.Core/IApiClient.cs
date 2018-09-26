@@ -10,7 +10,7 @@ namespace TradingBot.Core
 		ExchangeType Type { get; }
 		//Task<OrderDetails> GetOrderInfoAsync(int orderId);
 		//Task<CancelOrderRequest> CancelOrderAsync(int orderId);
-		//Task<CreateOrderResponse> CreateOrderAsync(string pair, Side type, decimal price, decimal amount);
+		//Task<CreateOrderResponse> CreateOrderAsync(string pair, TradeType type, decimal price, decimal amount);
 		//Task<Balance> GetInfoAsync();
 		//Task<OrderResponse> GetTradesAsync(string pair, uint limit = 150);
 		Task<PairResponse> GetPairsAsync();

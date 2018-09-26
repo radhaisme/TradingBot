@@ -93,8 +93,8 @@ namespace Yobit.Api
 			{
 				{"method", "Trade"},
 				{"pair", request.Pair},
-				{"type", request.Side.ToString()},
-				{"rate", request.Price.ToString(CultureInfo.InvariantCulture)},
+				{"type", request.TradeType.ToString()},
+				{"rate", request.Rate.ToString(CultureInfo.InvariantCulture)},
 				{"amount", request.Amount.ToString(CultureInfo.InvariantCulture)},
 				{"nonce", GenerateNonce(_settings.CreatedAt)}
 			}, true);
@@ -145,7 +145,7 @@ namespace Yobit.Api
 			{
 				{"Key", _settings.ApiKey},
 				{
-					"Sign", BitConverter.ToString(new HMACSHA512(Encoding.UTF8.GetBytes(_settings.Secret)).ComputeHash(Encoding.UTF8.GetBytes(content))).Replace("-", "").ToLower()
+					"Sign", HttpHelper.GetHash(new HMACSHA512(), _settings.Secret, content).ToLower()
 				}
 			});
 
@@ -194,10 +194,10 @@ namespace Yobit.Api
 		//			model.Orders.Add((int)item.Key, new OrderInfo
 		//			{
 		//				Pair = value.pair,
-		//				Type = Enum.Parse(typeof(Side), value.type, true),
+		//				Type = Enum.Parse(typeof(TradeType), value.type, true),
 		//				StartAmount = value.start_amount,
 		//				Amount = value.amount,
-		//				Price = value.rate,
+		//				Rate = value.rate,
 		//				CreatedAt = DateTimeOffset.FromUnixTimeSeconds(value.timestamp_created),
 		//				Status = Enum.Parse(typeof(OrderStatus), value.status)
 		//			});
@@ -259,7 +259,7 @@ namespace Yobit.Api
 		//			var trade = new Trade
 		//			{
 		//				Type = (TradeType)Enum.Parse(typeof(TradeType), (string)item.type, true),
-		//				Price = item.price,
+		//				Rate = item.price,
 		//				Amount = item.amount,
 		//				Tid = item.tid,
 		//				Timestamp = DateTimeOffset.FromUnixTimeSeconds((long)item.timestamp)
@@ -300,9 +300,9 @@ namespace Yobit.Api
 		//			model.Orders.Add((int)item.Key, new OrderInfo
 		//			{
 		//				Pair = value.pair,
-		//				Type = Enum.Parse(typeof(Side), value.type, true),
+		//				Type = Enum.Parse(typeof(TradeType), value.type, true),
 		//				Amount = value.amount,
-		//				Price = value.rate,
+		//				Rate = value.rate,
 		//				CreatedAt = DateTimeOffset.FromUnixTimeSeconds(value.timestamp_created)
 		//			});
 		//		}

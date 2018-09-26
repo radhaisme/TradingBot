@@ -78,10 +78,10 @@ namespace Binance.Api
 			var queryString = HttpHelper.QueryString(new Dictionary<string, string>
 			{
 				{ "symbol", request.Pair },
-				{ "side", request.Side.ToString().ToUpper() },
+				{ "side", request.TradeType.ToString().ToUpper() },
 				{ "type", request.Type.ToString().ToUpper() },
 				{ "quantity", request.Amount.ToString(CultureInfo.InvariantCulture) },
-				{ "price", request.Price.ToString(CultureInfo.InvariantCulture) },
+				{ "price", request.Rate.ToString(CultureInfo.InvariantCulture) },
 				{ "timeInForce", "GTC" },
 				{ "timestamp", DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString() }
 			}, true);

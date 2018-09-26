@@ -30,13 +30,15 @@ namespace Cryptopia.Api
 
 			foreach (dynamic item in content.Data)
 			{
-				var dto = new PairDto();
-				dto.BaseAssetName = item.Currency;
-				dto.BaseAsset = item.Symbol;
-				dto.QuoteAssetName = item.BaseCurrency;
-				dto.QuoteAsset = item.BaseSymbol;
-				dto.MaxOrderSize = item.MaximumTrade;
-				dto.MinOrderSize = item.MinimumTrade;
+				var dto = new PairDto
+				{
+					BaseAssetName = item.Currency,
+					BaseAsset = item.Symbol,
+					QuoteAssetName = item.BaseCurrency,
+					QuoteAsset = item.BaseSymbol,
+					MaxOrderSize = item.MaximumTrade,
+					MinOrderSize = item.MinimumTrade
+				};
 				pairs.Add(dto);
 			}
 
@@ -51,13 +53,15 @@ namespace Cryptopia.Api
 			}
 
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"GetMarket/{request.Pair}"));
-			var response = new PairDetailResponse();
-			response.Ask = content.Data.AskPrice;
-			response.Bid = content.Data.BidPrice;
-			response.High = content.Data.High;
-			response.Low = content.Data.Low;
-			response.LastPrice = content.Data.LastPrice;
-			response.Volume = content.Data.Volume;
+			var response = new PairDetailResponse
+			{
+				Ask = content.Data.AskPrice,
+				Bid = content.Data.BidPrice,
+				High = content.Data.High,
+				Low = content.Data.Low,
+				LastPrice = content.Data.LastPrice,
+				Volume = content.Data.Volume
+			};
 
 			return response;
 		}
@@ -79,13 +83,20 @@ namespace Cryptopia.Api
 
 		public async Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)
 		{
-			var content = await MakePrivateCallAsync("SubmitTrade");
-			
-			//var nonce = Guid.NewGuid().ToString("N");
-			//string hash = Convert.ToBase64String(MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(String.Empty)));
-			//Uri uri = BuildUrl(_settings.PrivateUrl, "SubmitTrade");
-			//var raw = String.Concat(_settings.ApiKey, "POST", uri.ToString(), nonce, hash);
-			//string signature = HttpHelper.GetHash(HMACSHA256.Create(), _settings.Secret, String.Empty);
+			var nonce = Guid.NewGuid().ToString("N");
+			var builder = new ModelBuilder();
+			var order = builder.CreateOrder(request);
+
+			//var order = new { Market = request.Pair, Type = request.TradeType, request.Rate, request.Amount };
+
+
+
+
+			string hash = Convert.ToBase64String(MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(String.Empty)));
+			Uri uri = BuildUrl(_settings.PrivateUrl, "SubmitTrade");
+			var raw = String.Concat(_settings.ApiKey, "POST", uri.ToString(), nonce, hash);
+
+			HttpHelper.GetHash(HMACSHA256.Create(), _settings.Secret, String.Empty);
 
 			//SetHeaders(new Dictionary<string, string> { { "amx", $"{_settings.ApiKey}:{0}:{nonce}" } });
 			//var content = await CallAsync<dynamic>(HttpMethod.Post, uri, new StringContent(String.Empty));
