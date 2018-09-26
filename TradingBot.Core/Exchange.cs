@@ -71,12 +71,12 @@ namespace TradingBot.Core
 
 			//foreach (BookOrderDto item in response.Asks)
 			//{
-			//	ask += item.Price;
+			//	ask += item.Rate;
 			//}
 
 			//foreach (BookOrderDto item in response.Bids)
 			//{
-			//	bid += item.Price;
+			//	bid += item.Rate;
 			//}
 
 			//return (ask / response.Asks.Count, bid / response.Bids.Count);

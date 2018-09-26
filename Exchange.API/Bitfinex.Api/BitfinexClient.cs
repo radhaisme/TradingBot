@@ -78,8 +78,8 @@ namespace Bitfinex.Api
 			{
 				symbol = request.Pair,
 				amount = request.Amount,
-				price = request.Price,
-				side = request.Side.ToString().ToLower(),
+				price = request.Rate,
+				side = request.TradeType.ToString().ToLower(),
 				type = GetOrderType(request.Type),
 				ocoorder = false //TODO: Unsupported an ocoorder orders
 			};
