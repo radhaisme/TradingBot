@@ -70,22 +70,25 @@ namespace Cryptopia.Api
 			}
 
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"GetMarketOrders/{request.Pair}/{request.Limit}"));
-			var response = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.Data.Buy).Take((int)request.Limit), ((IEnumerable<dynamic>)content.Data.Sell).Take((int)request.Limit), item => new BookOrderDto { Price = item.Price, Amount = item.Volume });
+			var response = Helper.BuildOrderBook(((IEnumerable<dynamic>) content.Data.Buy).Take((int) request.Limit),
+																						   ((IEnumerable<dynamic>) content.Data.Sell).Take((int) request.Limit),
+																						   item => new BookOrderDto {Price = item.Price, Amount = item.Volume});
 
 			return response;
 		}
 
 		public async Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)
 		{
-			var nonce = Guid.NewGuid().ToString("N");
+			var content = await MakePrivateCallAsync("SubmitTrade");
 			
-			string hash = Convert.ToBase64String(MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(String.Empty)));
-			Uri uri = BuildUrl(_settings.PrivateUrl, "SubmitTrade");
-			var raw = String.Concat(_settings.ApiKey, "POST", uri.ToString(), nonce, hash);
-			HttpHelper.GetHash(HMACSHA256.Create(), _settings.Secret, String.Empty);
+			//var nonce = Guid.NewGuid().ToString("N");
+			//string hash = Convert.ToBase64String(MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(String.Empty)));
+			//Uri uri = BuildUrl(_settings.PrivateUrl, "SubmitTrade");
+			//var raw = String.Concat(_settings.ApiKey, "POST", uri.ToString(), nonce, hash);
+			//string signature = HttpHelper.GetHash(HMACSHA256.Create(), _settings.Secret, String.Empty);
 
-			SetHeaders(new Dictionary<string, string> { { "amx", $"{_settings.ApiKey}:{0}:{nonce}" } });
-			var content = await CallAsync<dynamic>(HttpMethod.Post, uri, new StringContent(String.Empty));
+			//SetHeaders(new Dictionary<string, string> { { "amx", $"{_settings.ApiKey}:{0}:{nonce}" } });
+			//var content = await CallAsync<dynamic>(HttpMethod.Post, uri, new StringContent(String.Empty));
 
 
 
@@ -103,9 +106,15 @@ namespace Cryptopia.Api
 
 		#region Private methods
 
-		private Task<dynamic> MakePrivateCallAsync(string url)
+		private async Task<dynamic> MakePrivateCallAsync(string url)
 		{
-
+			var nonce = Guid.NewGuid().ToString("N");
+			string hash = Convert.ToBase64String(MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(String.Empty)));
+			Uri uri = BuildUrl(_settings.PrivateUrl, "SubmitTrade");
+			var rawData = String.Concat(_settings.ApiKey, "POST", uri.ToString(), nonce, hash);
+			string signature = HttpHelper.GetHash(HMACSHA256.Create(), _settings.Secret, rawData);
+			SetHeaders(new Dictionary<string, string> { { "amx", $"{_settings.ApiKey}:{signature}:{nonce}" } });
+			var content = await CallAsync<dynamic>(HttpMethod.Post, uri, new StringContent(String.Empty));
 
 			return CallAsync<dynamic>(HttpMethod.Post, BuildUrl(_settings.PrivateUrl, url));
 		}
