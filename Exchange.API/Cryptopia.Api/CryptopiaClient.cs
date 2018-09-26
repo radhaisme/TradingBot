@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using TradingBot.Common;
 using TradingBot.Core;
@@ -19,7 +21,7 @@ namespace Cryptopia.Api
 			_settings = new CryptopiaSettings();
 		}
 
-		public ExchangeType Type => _settings.Type;
+		public ExchangeType Type => ExchangeType.Cryptopia;
 
 		public async Task<PairResponse> GetPairsAsync()
 		{
@@ -73,11 +75,23 @@ namespace Cryptopia.Api
 			return response;
 		}
 
-		public Task<CreateOrderResponse> CreateOrderAsync(OrderRequest request)
+		public async Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)
 		{
-			//HMACSHA256
+			var nonce = Guid.NewGuid().ToString("N");
+			
+			string hash = Convert.ToBase64String(MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(String.Empty)));
+			Uri uri = BuildUrl(_settings.PrivateUrl, "SubmitTrade");
+			var raw = String.Concat(_settings.ApiKey, "POST", uri.ToString(), nonce, hash);
+			HttpHelper.GetHash(HMACSHA256.Create(), _settings.Secret, String.Empty);
 
-			return null;
+			SetHeaders(new Dictionary<string, string> { { "amx", $"{_settings.ApiKey}:{0}:{nonce}" } });
+			var content = await CallAsync<dynamic>(HttpMethod.Post, uri, new StringContent(String.Empty));
+
+
+
+			var response = new CreateOrderResponse();
+
+			return response;
 		}
 
 		public Task<CancelOrderResponse> CancelOrderAsync(CancelOrderRequest request)

@@ -12,11 +12,11 @@ namespace TradingBot.Core
 		//Task<CancelOrderRequest> CancelOrderAsync(int orderId);
 		//Task<CreateOrderResponse> CreateOrderAsync(string pair, Side type, decimal price, decimal amount);
 		//Task<Balance> GetInfoAsync();
-		//Task<TradeInfo> GetTradesAsync(string pair, uint limit = 150);
+		//Task<OrderResponse> GetTradesAsync(string pair, uint limit = 150);
 		Task<PairResponse> GetPairsAsync();
 		Task<PairDetailResponse> GetPairDetailAsync(PairDetailRequest request);
 		Task<DepthResponse> GetOrderBookAsync(DepthRequest request);
-		Task<CreateOrderResponse> CreateOrderAsync(OrderRequest request);
+		Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request);
 		Task<CancelOrderResponse> CancelOrderAsync(CancelOrderRequest request);
 		//Task<IReadOnlyCollection<PairDetail>> GetPairsDetails(params string[] pairs);
 		//Task<DepthResponse> GetPairOrdersAsync(string pair, uint limit = 150);

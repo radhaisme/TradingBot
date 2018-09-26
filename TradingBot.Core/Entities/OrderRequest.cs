@@ -1,13 +1,8 @@
 ﻿
 namespace TradingBot.Core.Entities
 {
-	public class OrderRequest
-	{
-		public int AccountId { get; set; }
+    public class OrderRequest
+    {
 		public string Pair { get; set; }
-		public OrderType Type { get; set; }
-		public decimal Price { get; set; }
-		public decimal Amount { get; set; }
-		public Side Side { get; set; }
-	}
+    }
 }

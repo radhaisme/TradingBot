@@ -21,7 +21,7 @@ namespace Exmo.Api
 			_settings = new ExmoSettings();
 		}
 
-		public ExchangeType Type => _settings.Type;
+		public ExchangeType Type => ExchangeType.Exmo;
 
 		public async Task<PairResponse> GetPairsAsync()
 		{
@@ -73,7 +73,7 @@ namespace Exmo.Api
 			return dto;
 		}
 
-		public Task<CreateOrderResponse> CreateOrderAsync(OrderRequest request)
+		public Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)
 		{
 			//HMACSHA512
 

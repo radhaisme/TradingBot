@@ -10,6 +10,7 @@ namespace TradingBot.Core.Enums
 		Okex,
 		Exmo,
 		Kucoin,
-		Cryptopia
+		Cryptopia,
+		Bitmex
 	}
 }
