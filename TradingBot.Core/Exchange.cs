@@ -24,7 +24,7 @@ namespace TradingBot.Core
 		{
 			var pairs = new List<Pair>();
 
-			foreach (PairDto item in _client.GetPairsAsync().Result.Pairs)
+			foreach (TradePair item in _client.GetPairsAsync().Result.Pairs)
 			{
 				if (!_currencies.ContainsKey(item.BaseAsset) || !_currencies.ContainsKey(item.QuoteAsset))
 				{

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cryptopia.Api.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -9,10 +10,16 @@ using TradingBot.Common;
 using TradingBot.Core;
 using TradingBot.Core.Entities;
 using TradingBot.Core.Enums;
+using CancelOrderRequest = Cryptopia.Api.Models.CancelOrderRequest;
+using CancelOrderResponse = Cryptopia.Api.Models.CancelOrderResponse;
+using CreateOrderRequest = Cryptopia.Api.Models.CreateOrderRequest;
+using CreateOrderResponse = Cryptopia.Api.Models.CreateOrderResponse;
+using DepthRequest = Cryptopia.Api.Models.DepthRequest;
+using DepthResponse = Cryptopia.Api.Models.DepthResponse;
 
 namespace Cryptopia.Api
 {
-	public sealed class CryptopiaClient : ApiClient, IApiClient
+	public sealed class CryptopiaClient : ApiClient
 	{
 		private readonly ICryptopiaSettings _settings;
 
@@ -23,14 +30,16 @@ namespace Cryptopia.Api
 
 		public ExchangeType Type => ExchangeType.Cryptopia;
 
-		public async Task<PairResponse> GetPairsAsync()
+		#region Public API
+
+		public async Task<TradePairsResponse> GetTradePairsAsync()
 		{
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "GetTradePairs"));
-			var pairs = new List<PairDto>();
+			var pairs = new List<TradePair>();
 
 			foreach (dynamic item in content.Data)
 			{
-				var dto = new PairDto
+				var pair = new TradePair
 				{
 					BaseAssetName = item.Currency,
 					BaseAsset = item.Symbol,
@@ -39,13 +48,13 @@ namespace Cryptopia.Api
 					MaxOrderSize = item.MaximumTrade,
 					MinOrderSize = item.MinimumTrade
 				};
-				pairs.Add(dto);
+				pairs.Add(pair);
 			}
 
-			return new PairResponse(pairs);
+			return new TradePairsResponse(pairs);
 		}
 
-		public async Task<PairDetailResponse> GetPairDetailAsync(PairDetailRequest request)
+		public async Task<MarketResponse> GetMarketAsync(MarketRequest request)
 		{
 			if (String.IsNullOrEmpty(request.Pair))
 			{
@@ -53,10 +62,10 @@ namespace Cryptopia.Api
 			}
 
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"GetMarket/{request.Pair}"));
-			var response = new PairDetailResponse
+			var response = new MarketResponse
 			{
-				Ask = content.Data.AskPrice,
-				Bid = content.Data.BidPrice,
+				AskPrice = content.Data.AskPrice,
+				BidPrice = content.Data.BidPrice,
 				High = content.Data.High,
 				Low = content.Data.Low,
 				LastPrice = content.Data.LastPrice,
@@ -74,23 +83,34 @@ namespace Cryptopia.Api
 			}
 
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"GetMarketOrders/{request.Pair}/{request.Limit}"));
-			var response = Helper.BuildOrderBook(((IEnumerable<dynamic>) content.Data.Buy).Take((int) request.Limit),
-																						   ((IEnumerable<dynamic>) content.Data.Sell).Take((int) request.Limit),
-																						   item => new BookOrderDto {Price = item.Price, Amount = item.Volume});
+			var asks = ((IEnumerable<dynamic>)content.Data.Buy).Take(request.Limit).Select(x => new OrderInBook { Rate = x.Price, Volume = x.Volume }).Where(x => x.Rate > 0);
+			var bids = ((IEnumerable<dynamic>)content.Data.Sell).Take(request.Limit).Select(x => new OrderInBook { Rate = x.Price, Volume = x.Volume }).Where(x => x.Rate > 0);
 
-			return response;
+			if (!asks.Any() || !bids.Any())
+			{
+				return new DepthResponse();
+			}
+
+			if (asks.Count() < bids.Count())
+			{
+				bids = bids.Take(asks.Count());
+			}
+			else
+			{
+				asks = asks.Take(bids.Count());
+			}
+
+			return new DepthResponse(asks.ToList(), bids.ToList());
 		}
+
+		#endregion
+
+		#region Private API
 
 		public async Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)
 		{
 			var nonce = Guid.NewGuid().ToString("N");
-			var builder = new ModelBuilder();
-			var order = builder.CreateOrder(request);
-
-			//var order = new { Market = request.Pair, Type = request.TradeType, request.Rate, request.Amount };
-
-
-
+			//var order = new { Market = request.Pair, Type = request.TradeType, request.Rate, request.Volume };
 
 			string hash = Convert.ToBase64String(MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(String.Empty)));
 			Uri uri = BuildUrl(_settings.PrivateUrl, "SubmitTrade");
@@ -114,6 +134,8 @@ namespace Cryptopia.Api
 
 			return null;
 		}
+
+		#endregion
 
 		#region Private methods
 

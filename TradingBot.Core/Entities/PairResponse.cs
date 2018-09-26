@@ -4,11 +4,11 @@ namespace TradingBot.Core.Entities
 {
 	public class PairResponse
 	{
-		public PairResponse(List<PairDto> pairs)
+		public PairResponse(List<TradePair> pairs)
 		{
 			Pairs = pairs.AsReadOnly();
 		}
 
-		public IReadOnlyCollection<PairDto> Pairs { get; }
+		public IReadOnlyCollection<TradePair> Pairs { get; }
 	}
 }

@@ -26,11 +26,11 @@ namespace Exmo.Api
 		public async Task<PairResponse> GetPairsAsync()
 		{
 			var content = await CallAsync<Dictionary<string, dynamic>>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "pair_settings"));
-			var pairs = new List<PairDto>();
+			var pairs = new List<TradePair>();
 
 			foreach (string key in content.Keys)
 			{
-				var dto = new PairDto();
+				var dto = new TradePair();
 				string[] assets = key.Split('_');
 				dto.BaseAsset = assets[0];
 				dto.QuoteAsset = assets[1];
@@ -62,15 +62,17 @@ namespace Exmo.Api
 
 		public async Task<DepthResponse> GetOrderBookAsync(DepthRequest request)
 		{
-			if (String.IsNullOrEmpty(request.Pair))
-			{
-				throw new ArgumentNullException(nameof(request.Pair));
-			}
+			//if (String.IsNullOrEmpty(request.Pair))
+			//{
+			//	throw new ArgumentNullException(nameof(request.Pair));
+			//}
 
-			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"order_book?pair={request.Pair}&limit={request.Limit}"));
-			var dto = Helper.BuildOrderBook(((IEnumerable<dynamic>)content[request.Pair].ask).Take((int)request.Limit), ((IEnumerable<dynamic>)content[request.Pair].bid).Take((int)request.Limit), item => new BookOrderDto { Price = item[0], Amount = item[2] });
+			//var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"order_book?pair={request.Pair}&limit={request.Limit}"));
+			//var dto = Helper.BuildOrderBook(((IEnumerable<dynamic>)content[request.Pair].ask).Take((int)request.Limit), ((IEnumerable<dynamic>)content[request.Pair].bid).Take((int)request.Limit), item => new BookOrderDto { Price = item[0], Amount = item[2] });
 
-			return dto;
+			//return dto;
+
+			return null;
 		}
 
 		public Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)

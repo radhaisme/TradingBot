@@ -24,7 +24,7 @@ namespace Kucoin.Api
 		public async Task<PairResponse> GetPairsAsync()
 		{
 			var content = await CallAsync<ResponseModel>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "market/open/symbols"));
-			var pairs = new List<PairDto>();
+			var pairs = new List<TradePair>();
 
 			foreach (dynamic item in content.Data)
 			{
@@ -33,7 +33,7 @@ namespace Kucoin.Api
 					continue;
 				}
 
-				var pair = new PairDto();
+				var pair = new TradePair();
 				pair.BaseAsset = item.coinType;
 				pair.QuoteAsset = item.coinTypePair;
 				pairs.Add(pair);
@@ -70,16 +70,18 @@ namespace Kucoin.Api
 
 		public async Task<DepthResponse> GetOrderBookAsync(DepthRequest request)
 		{
-			if (String.IsNullOrEmpty(request.Pair))
-			{
-				throw new ArgumentNullException(nameof(request.Pair));
-			}
+			//if (String.IsNullOrEmpty(request.Pair))
+			//{
+			//	throw new ArgumentNullException(nameof(request.Pair));
+			//}
 
-			var content = await CallAsync<ResponseModel>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"open/orders?symbol={request.Pair}&limit={request.Limit}"));
-			dynamic data = content.Data;
-			var dto = Helper.BuildOrderBook(((IEnumerable<dynamic>)data.BUY).Take((int)request.Limit), ((IEnumerable<dynamic>)data.SELL).Take((int)request.Limit), item => new BookOrderDto { Price = item[0], Amount = item[1] });
+			//var content = await CallAsync<ResponseModel>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"open/orders?symbol={request.Pair}&limit={request.Limit}"));
+			//dynamic data = content.Data;
+			//var dto = Helper.BuildOrderBook(((IEnumerable<dynamic>)data.BUY).Take((int)request.Limit), ((IEnumerable<dynamic>)data.SELL).Take((int)request.Limit), item => new BookOrderDto { Price = item[0], Amount = item[1] });
 
-			return dto;
+			//return dto;
+
+			return null;
 		}
 
 		public Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)

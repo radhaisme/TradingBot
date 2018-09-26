@@ -23,11 +23,11 @@ namespace Huobi.Api
 		public async Task<PairResponse> GetPairsAsync()
 		{
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "v1/common/symbols"));
-			var pairs = new List<PairDto>();
+			var pairs = new List<TradePair>();
 
 			foreach (dynamic item in content.data)
 			{
-				var dto = new PairDto();
+				var dto = new TradePair();
 				dto.BaseAsset = ((string)item["base-currency"]).ToUpper();
 				dto.QuoteAsset = ((string)item["quote-currency"]).ToUpper();
 				pairs.Add(dto);
@@ -57,15 +57,17 @@ namespace Huobi.Api
 
 		public async Task<DepthResponse> GetOrderBookAsync(DepthRequest request)
 		{
-			if (String.IsNullOrEmpty(request.Pair))
-			{
-				throw new ArgumentNullException(nameof(request.Pair));
-			}
+			//if (String.IsNullOrEmpty(request.Pair))
+			//{
+			//	throw new ArgumentNullException(nameof(request.Pair));
+			//}
 
-			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"market/depth?symbol={request.Pair}&type=step1"));
-			DepthResponse model = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.tick.asks).Take((int)request.Limit), ((IEnumerable<dynamic>)content.tick.bids).Take((int)request.Limit), item => new BookOrderDto { Price = item[0], Amount = item[1] });
+			//var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"market/depth?symbol={request.Pair}&type=step1"));
+			//DepthResponse model = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.tick.asks).Take((int)request.Limit), ((IEnumerable<dynamic>)content.tick.bids).Take((int)request.Limit), item => new BookOrderDto { Price = item[0], Amount = item[1] });
 
-			return model;
+			//return model;
+
+			return null;
 		}
 
 		public Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)

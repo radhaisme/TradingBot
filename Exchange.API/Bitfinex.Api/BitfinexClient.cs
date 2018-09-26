@@ -27,11 +27,11 @@ namespace Bitfinex.Api
 		public async Task<PairResponse> GetPairsAsync()
 		{
 			var content = await CallAsync<string[]>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "symbols"));
-			var pairs = new Dictionary<string, PairDto>(content.Length);
+			var pairs = new Dictionary<string, TradePair>(content.Length);
 
 			foreach (var item in content)
 			{
-				var dto = new PairDto();
+				var dto = new TradePair();
 				dto.BaseAsset = item.Substring(0, item.Length - 3);
 				dto.QuoteAsset = item.Substring(item.Length - 3, 3);
 				pairs.Add(item, dto);
@@ -61,15 +61,17 @@ namespace Bitfinex.Api
 
 		public async Task<DepthResponse> GetOrderBookAsync(DepthRequest request)
 		{
-			if (String.IsNullOrEmpty(request.Pair))
-			{
-				throw new ArgumentNullException(nameof(request.Pair));
-			}
+			//if (String.IsNullOrEmpty(request.Pair))
+			//{
+			//	throw new ArgumentNullException(nameof(request.Pair));
+			//}
 
-			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"book/{request.Pair}?limit_bids={request.Limit}&limit_asks={request.Limit}"));
-			var response = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.asks).Take((int)request.Limit), ((IEnumerable<dynamic>)content.bids).Take((int)request.Limit), item => new BookOrderDto { Price = item.price, Amount = item.amount });
+			//var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"book/{request.Pair}?limit_bids={request.Limit}&limit_asks={request.Limit}"));
+			//var response = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.asks).Take((int)request.Limit), ((IEnumerable<dynamic>)content.bids).Take((int)request.Limit), item => new BookOrderDto { Price = item.price, Amount = item.amount });
 
-			return response;
+			//return response;
+
+			return null;
 		}
 
 		public async Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)

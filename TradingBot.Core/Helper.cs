@@ -1,41 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TradingBot.Core.Entities;
 
 namespace TradingBot.Core
 {
 	public static class Helper
 	{
-		public static DepthResponse BuildOrderBook(IEnumerable<dynamic> a, IEnumerable<dynamic> b, Func<dynamic, BookOrderDto> func)
+		public static U BuildOrderBook<U, T>(IEnumerable<dynamic> asks, IEnumerable<dynamic> bids, uint limit, Func<dynamic, T> func) where U : new()
 		{
 			if (func == null)
 			{
 				throw new ArgumentNullException(nameof(func));
 			}
+			
+			//var model = new U();
+			var a = asks.Select(func).Take((int)limit); //.Where(x => x.Price > 0);
+			var b = bids.Select(func).Take((int) limit); //.Where(x => x.Price > 0);
 
-			var model = new DepthResponse();
-			IEnumerable<BookOrderDto> asks = a.Select(func).Where(x => x.Price > 0);
-			IEnumerable<BookOrderDto> bids = b.Select(func).Where(x => x.Price > 0);
+			//if (!asks.Any() || !bids.Any())
+			//{
+			//	return model;
+			//}
 
-			if (!asks.Any() || !bids.Any())
-			{
-				return model;
-			}
+			//if (asks.Count() < bids.Count())
+			//{
+			//	bids = bids.Take(asks.Count());
+			//}
+			//else
+			//{
+			//	asks = asks.Take(bids.Count());
+			//}
 
-			if (asks.Count() < bids.Count())
-			{
-				bids = bids.Take(asks.Count());
-			}
-			else
-			{
-				asks = asks.Take(bids.Count());
-			}
+			//model.Asks.AddRange(asks);
+			//model.Bids.AddRange(bids);
 
-			model.Asks.AddRange(asks);
-			model.Bids.AddRange(bids);
+			//return model;
 
-			return model;
+			return default(U);
 		}
 	}
 }

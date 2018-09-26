@@ -7,9 +7,9 @@ namespace TradingBot.Core.Entities
 	{
 		public PairsInfo()
 		{
-			Pairs = new Dictionary<string, PairDto>();
+			Pairs = new Dictionary<string, TradePair>();
 		}
 
-		public IDictionary<string, PairDto> Pairs { get; set; }
+		public IDictionary<string, TradePair> Pairs { get; set; }
 	}
 }

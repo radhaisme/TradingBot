@@ -1,7 +1,7 @@
 ﻿
 namespace TradingBot.Core.Entities
 {
-	public class PairDto
+	public class TradePair
 	{
 		public string BaseAssetName { get; set; }
 		public string BaseAsset { get; set; }

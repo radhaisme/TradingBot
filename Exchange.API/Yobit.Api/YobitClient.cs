@@ -27,7 +27,7 @@ namespace Yobit.Api
 		public async Task<PairResponse> GetPairsAsync()
 		{
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "info?ignore_invalid=1"));
-			var pairs = new List<PairDto>();
+			var pairs = new List<TradePair>();
 
 			foreach (dynamic key in content.pairs)
 			{
@@ -38,7 +38,7 @@ namespace Yobit.Api
 					continue;
 				}
 
-				var dto = new PairDto();
+				var dto = new TradePair();
 				string[] assets = ((string)key.Name).Split('_');
 				dto.BaseAsset = assets[0];
 				dto.QuoteAsset = assets[1];
@@ -70,16 +70,18 @@ namespace Yobit.Api
 
 		public async Task<DepthResponse> GetOrderBookAsync(DepthRequest request)
 		{
-			if (String.IsNullOrEmpty(request.Pair))
-			{
-				throw new ArgumentNullException(nameof(request.Pair));
-			}
+			//if (String.IsNullOrEmpty(request.Pair))
+			//{
+			//	throw new ArgumentNullException(nameof(request.Pair));
+			//}
 
-			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"depth/{request.Pair}?limit={request.Limit}&ignore_invalid=1"));
-			dynamic data = content[request.Pair];
-			DepthResponse response = Helper.BuildOrderBook(((IEnumerable<dynamic>)data.asks).Take((int)request.Limit), ((IEnumerable<dynamic>)data.bids).Take((int)request.Limit), item => new BookOrderDto { Price = item[0], Amount = item[1] });
+			//var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"depth/{request.Pair}?limit={request.Limit}&ignore_invalid=1"));
+			//dynamic data = content[request.Pair];
+			//DepthResponse response = Helper.BuildOrderBook(((IEnumerable<dynamic>)data.asks).Take((int)request.Limit), ((IEnumerable<dynamic>)data.bids).Take((int)request.Limit), item => new BookOrderDto { Price = item[0], Amount = item[1] });
 
-			return response;
+			//return response;
+
+			return null;
 		}
 
 		public async Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)
@@ -196,7 +198,7 @@ namespace Yobit.Api
 		//				Pair = value.pair,
 		//				Type = Enum.Parse(typeof(TradeType), value.type, true),
 		//				StartAmount = value.start_amount,
-		//				Amount = value.amount,
+		//				Volume = value.amount,
 		//				Rate = value.rate,
 		//				CreatedAt = DateTimeOffset.FromUnixTimeSeconds(value.timestamp_created),
 		//				Status = Enum.Parse(typeof(OrderStatus), value.status)
@@ -260,7 +262,7 @@ namespace Yobit.Api
 		//			{
 		//				Type = (TradeType)Enum.Parse(typeof(TradeType), (string)item.type, true),
 		//				Rate = item.price,
-		//				Amount = item.amount,
+		//				Volume = item.amount,
 		//				Tid = item.tid,
 		//				Timestamp = DateTimeOffset.FromUnixTimeSeconds((long)item.timestamp)
 		//			};
@@ -301,7 +303,7 @@ namespace Yobit.Api
 		//			{
 		//				Pair = value.pair,
 		//				Type = Enum.Parse(typeof(TradeType), value.type, true),
-		//				Amount = value.amount,
+		//				Volume = value.amount,
 		//				Rate = value.rate,
 		//				CreatedAt = DateTimeOffset.FromUnixTimeSeconds(value.timestamp_created)
 		//			});

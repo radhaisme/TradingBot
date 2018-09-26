@@ -28,11 +28,11 @@ namespace Binance.Api
 		public async Task<PairResponse> GetPairsAsync()
 		{
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "exchangeInfo"));
-			var pairs = new List<PairDto>();
+			var pairs = new List<TradePair>();
 
 			foreach (dynamic item in content.symbols)
 			{
-				var dto = new PairDto();
+				var dto = new TradePair();
 				dto.BaseAsset = item.baseAsset;
 				dto.QuoteAsset = item.quoteAsset;
 				pairs.Add(dto);
@@ -57,20 +57,22 @@ namespace Binance.Api
 
 		public async Task<DepthResponse> GetOrderBookAsync(DepthRequest request)
 		{
-			if (String.IsNullOrEmpty(request.Pair))
-			{
-				throw new ArgumentNullException(nameof(request.Pair));
-			}
+			//if (String.IsNullOrEmpty(request.Pair))
+			//{
+			//	throw new ArgumentNullException(nameof(request.Pair));
+			//}
 
-			if (!_limits.Contains(request.Limit))
-			{
-				throw new ArgumentOutOfRangeException(nameof(request.Limit));
-			}
+			//if (!_limits.Contains(request.Limit))
+			//{
+			//	throw new ArgumentOutOfRangeException(nameof(request.Limit));
+			//}
 
-			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"depth?symbol={request.Pair}&limit={request.Limit}"));
-			var response = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.asks).Take((int)request.Limit), ((IEnumerable<dynamic>)content.bids).Take((int)request.Limit), item => new BookOrderDto { Price = item[0], Amount = item[1] });
+			//var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"depth?symbol={request.Pair}&limit={request.Limit}"));
+			//var response = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.asks).Take((int)request.Limit), ((IEnumerable<dynamic>)content.bids).Take((int)request.Limit), item => new BookOrderDto { Price = item[0], Amount = item[1] });
 
-			return response;
+			//return response;
+
+			return null;
 		}
 
 		public async Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)

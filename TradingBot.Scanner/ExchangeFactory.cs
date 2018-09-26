@@ -83,11 +83,11 @@ namespace TradingBot.Scanner
 					}
 				case ExchangeType.Cryptopia:
 					{
-						IExchange ex = new Exchange(_currencies, new CryptopiaClient());
-						ex.Initialize();
-						_exchanges.Add(type, ex);
+						//IExchange ex = new Exchange(_currencies, new CryptopiaClient());
+						//ex.Initialize();
+						//_exchanges.Add(type, ex);
 
-						return ex;
+						return null;
 					}
 				case ExchangeType.Exmo:
 					{

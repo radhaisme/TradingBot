@@ -26,11 +26,11 @@ namespace Okex.Api
 		public async Task<PairResponse> GetPairsAsync()
 		{
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "tickers.do"));
-			var pairs = new List<PairDto>();
+			var pairs = new List<TradePair>();
 
 			foreach (dynamic item in content.tickers)
 			{
-				var dto = new PairDto();
+				var dto = new TradePair();
 				string[] assets = ((string)item.symbol).Split('_');
 				dto.BaseAsset = assets[0].ToUpper();
 				dto.QuoteAsset = assets[1].ToUpper();
@@ -61,15 +61,17 @@ namespace Okex.Api
 
 		public async Task<DepthResponse> GetOrderBookAsync(DepthRequest request)
 		{
-			if (String.IsNullOrEmpty(request.Pair))
-			{
-				throw new ArgumentNullException(nameof(request.Pair));
-			}
+			//if (String.IsNullOrEmpty(request.Pair))
+			//{
+			//	throw new ArgumentNullException(nameof(request.Pair));
+			//}
 
-			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"depth.do?symbol={request.Pair}&size={request.Limit}"));
-			var model = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.asks).Take((int)request.Limit), ((IEnumerable<dynamic>)content.bids).Take((int)request.Limit), item => new BookOrderDto { Price = item[0], Amount = item[1] });
+			//var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"depth.do?symbol={request.Pair}&size={request.Limit}"));
+			//var model = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.asks).Take((int)request.Limit), ((IEnumerable<dynamic>)content.bids).Take((int)request.Limit), item => new BookOrderDto { Price = item[0], Amount = item[1] });
 
-			return model;
+			//return model;
+
+			return null;
 		}
 
 		public Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)
