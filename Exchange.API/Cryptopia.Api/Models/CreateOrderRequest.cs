@@ -1,5 +1,4 @@
-﻿using TradingBot.Core.Entities;
-
+﻿
 namespace Cryptopia.Api.Models
 {
 	public sealed class CreateOrderRequest

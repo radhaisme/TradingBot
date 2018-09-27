@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Cryptopia.Api.Models
+namespace Binance.Api.Models
 {
 	public sealed class TradePairsResponse
     {

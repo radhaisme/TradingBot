@@ -6,16 +6,10 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using TradingBot.Common;
 using TradingBot.Core;
-using TradingBot.Core.Entities;
 using TradingBot.Core.Enums;
-using CancelOrderRequest = Cryptopia.Api.Models.CancelOrderRequest;
-using CancelOrderResponse = Cryptopia.Api.Models.CancelOrderResponse;
-using CreateOrderRequest = Cryptopia.Api.Models.CreateOrderRequest;
-using CreateOrderResponse = Cryptopia.Api.Models.CreateOrderResponse;
-using DepthRequest = Cryptopia.Api.Models.DepthRequest;
-using DepthResponse = Cryptopia.Api.Models.DepthResponse;
 
 namespace Cryptopia.Api
 {
@@ -35,11 +29,11 @@ namespace Cryptopia.Api
 		public async Task<TradePairsResponse> GetTradePairsAsync()
 		{
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "GetTradePairs"));
-			var pairs = new List<TradePair>();
+			var pairs = new List<TradePairResult>();
 
 			foreach (dynamic item in content.Data)
 			{
-				var pair = new TradePair
+				var pair = new TradePairResult
 				{
 					BaseAssetName = item.Currency,
 					BaseAsset = item.Symbol,
@@ -83,8 +77,8 @@ namespace Cryptopia.Api
 			}
 
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"GetMarketOrders/{request.Pair}/{request.Limit}"));
-			var asks = ((IEnumerable<dynamic>)content.Data.Buy).Take(request.Limit).Select(x => new OrderInBook { Rate = x.Price, Volume = x.Volume }).Where(x => x.Rate > 0);
-			var bids = ((IEnumerable<dynamic>)content.Data.Sell).Take(request.Limit).Select(x => new OrderInBook { Rate = x.Price, Volume = x.Volume }).Where(x => x.Rate > 0);
+			var asks = ((IEnumerable<dynamic>)content.Data.Buy).Take(request.Limit).Select(x => new OrderInBookResult { Rate = x.Price, Volume = x.Volume }).Where(x => x.Rate > 0);
+			var bids = ((IEnumerable<dynamic>)content.Data.Sell).Take(request.Limit).Select(x => new OrderInBookResult { Rate = x.Price, Volume = x.Volume }).Where(x => x.Rate > 0);
 
 			if (!asks.Any() || !bids.Any())
 			{
@@ -109,47 +103,54 @@ namespace Cryptopia.Api
 
 		public async Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)
 		{
-			var nonce = Guid.NewGuid().ToString("N");
-			//var order = new { Market = request.Pair, Type = request.TradeType, request.Rate, request.Volume };
-
-			string hash = Convert.ToBase64String(MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(String.Empty)));
-			Uri uri = BuildUrl(_settings.PrivateUrl, "SubmitTrade");
-			var raw = String.Concat(_settings.ApiKey, "POST", uri.ToString(), nonce, hash);
-
-			HttpHelper.GetHash(HMACSHA256.Create(), _settings.Secret, String.Empty);
-
-			//SetHeaders(new Dictionary<string, string> { { "amx", $"{_settings.ApiKey}:{0}:{nonce}" } });
-			//var content = await CallAsync<dynamic>(HttpMethod.Post, uri, new StringContent(String.Empty));
-
-
-
+			//TODO: Place an order validation to here
+			var content = await MakePrivateCallAsync(BuildUrl(_settings.PrivateUrl, "SubmitTrade"), request);
 			var response = new CreateOrderResponse();
-
+			
 			return response;
 		}
 
-		public Task<CancelOrderResponse> CancelOrderAsync(CancelOrderRequest request)
+		public async Task<CancelOrderResponse> CancelOrderAsync(CancelOrderRequest request)
 		{
+			//TODO: Place an order validation to here
+			var content = await MakePrivateCallAsync(BuildUrl(_settings.PrivateUrl, "CancelTrade"), request);
+			var response = new CancelOrderResponse();
+			
+			return response;
+		}
 
+		public async Task<OpenOrdersResponse> GetOpenOrdersAsync(OpenOrdersRequest request)
+		{
+			//var queryString = HttpHelper.QueryString(new Dictionary<string, string>
+			//{
+			//	{ "symbol", request.Pair },
+			//	{ "timestamp", DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString() }
+			//}, true);
+			//dynamic content = await MakePrivateCallAsync(HttpMethod.Get, "openOrders", queryString);
+			var response = new OpenOrdersResponse();
 
-			return null;
+			//foreach (dynamic item in content)
+			//{
+
+			//}
+
+			return response;
 		}
 
 		#endregion
 
 		#region Private methods
 
-		private async Task<dynamic> MakePrivateCallAsync(string url)
+		private Task<dynamic> MakePrivateCallAsync(Uri uri, object request)
 		{
 			var nonce = Guid.NewGuid().ToString("N");
-			string hash = Convert.ToBase64String(MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(String.Empty)));
-			Uri uri = BuildUrl(_settings.PrivateUrl, "SubmitTrade");
-			var rawData = String.Concat(_settings.ApiKey, "POST", uri.ToString(), nonce, hash);
+			string json = JsonConvert.SerializeObject(request);
+			string contentBase64String = Convert.ToBase64String(MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(json)));
+			var rawData = String.Concat(_settings.ApiKey, "POST", uri.ToString(), nonce, contentBase64String);
 			string signature = HttpHelper.GetHash(HMACSHA256.Create(), _settings.Secret, rawData);
 			SetHeaders(new Dictionary<string, string> { { "amx", $"{_settings.ApiKey}:{signature}:{nonce}" } });
-			var content = await CallAsync<dynamic>(HttpMethod.Post, uri, new StringContent(String.Empty));
-
-			return CallAsync<dynamic>(HttpMethod.Post, BuildUrl(_settings.PrivateUrl, url));
+			
+			return CallAsync<dynamic>(HttpMethod.Post, uri, new StringContent(json, Encoding.UTF8, "application/json"));
 		}
 
 		protected override async void HandleError(HttpResponseMessage response)

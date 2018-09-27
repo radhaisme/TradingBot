@@ -35,11 +35,11 @@ namespace TradingBot.Scanner
 			{
 				case ExchangeType.Binance:
 					{
-						IExchange ex = new Exchange(_currencies, new BinanceClient());
-						ex.Initialize();
-						_exchanges.Add(type, ex);
+						//IExchange ex = new Exchange(_currencies, new BinanceClient());
+						//ex.Initialize();
+						//_exchanges.Add(type, ex);
 
-						return ex;
+						return null;
 					}
 				case ExchangeType.Huobi:
 					{

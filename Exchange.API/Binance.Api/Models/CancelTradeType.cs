@@ -1,12 +1,13 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace TradingBot.Core.Entities
+namespace Binance.Api.Models
 {
 	[JsonConverter(typeof(StringEnumConverter))]
-	public enum TradeType : byte
+	public enum CancelTradeType : byte
 	{
-		Buy,
-		Sell
+		Trade,
+		TradePair,
+		All
 	}
 }

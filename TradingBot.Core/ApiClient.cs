@@ -6,7 +6,7 @@ using TradingBot.Common;
 
 namespace TradingBot.Core
 {
-	public abstract class ApiClient
+	public abstract class ApiClient : IDisposable
 	{
 		private readonly HttpClient _client = new HttpClient();
 

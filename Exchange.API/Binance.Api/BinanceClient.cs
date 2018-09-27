@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Binance.Api.Models;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -8,15 +9,14 @@ using System.Text;
 using System.Threading.Tasks;
 using TradingBot.Common;
 using TradingBot.Core;
-using TradingBot.Core.Entities;
 using TradingBot.Core.Enums;
 
 namespace Binance.Api
 {
-	public sealed class BinanceClient : ApiClient, IApiClient
+	public sealed class BinanceClient : ApiClient
 	{
 		private readonly IBinanceSettings _settings;
-		private readonly uint[] _limits = { 5, 10, 20, 50, 100, 500, 1000 };
+		private readonly int[] _limits = { 5, 10, 20, 50, 100, 500, 1000 };
 
 		public BinanceClient()
 		{
@@ -25,23 +25,25 @@ namespace Binance.Api
 
 		public ExchangeType Type => ExchangeType.Binance;
 
-		public async Task<PairResponse> GetPairsAsync()
+		public async Task<TradePairsResponse> GetTradePairsAsync()
 		{
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "exchangeInfo"));
-			var pairs = new List<TradePair>();
+			var pairs = new List<TradePairResult>();
 
 			foreach (dynamic item in content.symbols)
 			{
-				var dto = new TradePair();
-				dto.BaseAsset = item.baseAsset;
-				dto.QuoteAsset = item.quoteAsset;
-				pairs.Add(dto);
+				var pair = new TradePairResult
+				{
+					BaseAsset = item.baseAsset,
+					QuoteAsset = item.quoteAsset
+				};
+				pairs.Add(pair);
 			}
 
-			return new PairResponse(pairs);
+			return new TradePairsResponse(pairs);
 		}
 
-		public async Task<PairDetailResponse> GetPairDetailAsync(PairDetailRequest request)
+		public async Task<MarketResponse> GetMarketAsync(MarketRequest request)
 		{
 			if (String.IsNullOrEmpty(request.Pair))
 			{
@@ -49,25 +51,24 @@ namespace Binance.Api
 			}
 
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"ticker/price?symbol={request.Pair}"));
-			var response = new PairDetailResponse();
-			response.LastPrice = content.price;
+			var response = new MarketResponse { LastPrice = content.price };
 
 			return response;
 		}
 
 		public async Task<DepthResponse> GetOrderBookAsync(DepthRequest request)
 		{
-			//if (String.IsNullOrEmpty(request.Pair))
-			//{
-			//	throw new ArgumentNullException(nameof(request.Pair));
-			//}
+			if (String.IsNullOrEmpty(request.Pair))
+			{
+				throw new ArgumentNullException(nameof(request.Pair));
+			}
 
-			//if (!_limits.Contains(request.Limit))
-			//{
-			//	throw new ArgumentOutOfRangeException(nameof(request.Limit));
-			//}
+			if (!_limits.Contains(request.Limit))
+			{
+				throw new ArgumentOutOfRangeException(nameof(request.Limit));
+			}
 
-			//var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"depth?symbol={request.Pair}&limit={request.Limit}"));
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"depth?symbol={request.Pair}&limit={request.Limit}"));
 			//var response = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.asks).Take((int)request.Limit), ((IEnumerable<dynamic>)content.bids).Take((int)request.Limit), item => new BookOrderDto { Price = item[0], Amount = item[1] });
 
 			//return response;
@@ -81,17 +82,15 @@ namespace Binance.Api
 			{
 				{ "symbol", request.Pair },
 				{ "side", request.TradeType.ToString().ToUpper() },
-				{ "type", request.Type.ToString().ToUpper() },
+				{ "type", request.OrderType.ToString().ToUpper() },
 				{ "quantity", request.Amount.ToString(CultureInfo.InvariantCulture) },
 				{ "price", request.Rate.ToString(CultureInfo.InvariantCulture) },
 				{ "timeInForce", "GTC" },
 				{ "timestamp", DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString() }
 			}, true);
 			var content = await MakePrivateCallAsync(HttpMethod.Post, "order", queryString);
-			var response = new CreateOrderResponse();
-			response.OrderId = content.orderId;
 
-			return response;
+			return new CreateOrderResponse((long)content.orderId);
 		}
 
 		public async Task<CancelOrderResponse> CancelOrderAsync(CancelOrderRequest request)
@@ -108,13 +107,11 @@ namespace Binance.Api
 				{ "timestamp", DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString() }
 			}, true);
 			var content = await MakePrivateCallAsync(HttpMethod.Delete, "order", queryString);
-			var response = new CancelOrderResponse();
-			response.OrderId = content.orderId;
 
-			return response;
+			return new CancelOrderResponse((long)content.orderId);
 		}
 
-		public async Task<OrderResponse> GetOrdersAsync(OrderRequest request)
+		public async Task<OpenOrdersResponse> GetOpenOrdersAsync(OpenOrdersRequest request)
 		{
 			var queryString = HttpHelper.QueryString(new Dictionary<string, string>
 			{
@@ -122,11 +119,11 @@ namespace Binance.Api
 				{ "timestamp", DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString() }
 			}, true);
 			dynamic content = await MakePrivateCallAsync(HttpMethod.Get, "openOrders", queryString);
-			var response = new OrderResponse();
+			var response = new OpenOrdersResponse();
 
 			foreach (dynamic item in content)
 			{
-				
+
 			}
 
 			return response;
