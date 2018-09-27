@@ -25,6 +25,8 @@ namespace Binance.Api
 
 		public ExchangeType Type => ExchangeType.Binance;
 
+		#region Public API
+
 		public async Task<TradePairsResponse> GetTradePairsAsync()
 		{
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "exchangeInfo"));
@@ -69,12 +71,29 @@ namespace Binance.Api
 			}
 
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"depth?symbol={request.Pair}&limit={request.Limit}"));
-			//var response = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.asks).Take((int)request.Limit), ((IEnumerable<dynamic>)content.bids).Take((int)request.Limit), item => new BookOrderDto { Price = item[0], Amount = item[1] });
+			var asks = ((IEnumerable<dynamic>)content.Data.Buy).Take(request.Limit).Select(x => new OrderInBookResult { Rate = x.Price, Volume = x.Volume }).Where(x => x.Rate > 0);
+			var bids = ((IEnumerable<dynamic>)content.Data.Sell).Take(request.Limit).Select(x => new OrderInBookResult { Rate = x.Price, Volume = x.Volume }).Where(x => x.Rate > 0);
 
-			//return response;
+			if (!asks.Any() || !bids.Any())
+			{
+				return new DepthResponse();
+			}
 
-			return null;
+			if (asks.Count() < bids.Count())
+			{
+				bids = bids.Take(asks.Count());
+			}
+			else
+			{
+				asks = asks.Take(bids.Count());
+			}
+
+			return new DepthResponse(asks.ToList(), bids.ToList());
 		}
+
+		#endregion
+
+		#region Private API
 
 		public async Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)
 		{
@@ -128,6 +147,8 @@ namespace Binance.Api
 
 			return response;
 		}
+
+		#endregion
 
 		#region Private methods
 

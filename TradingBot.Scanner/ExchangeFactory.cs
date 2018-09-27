@@ -59,11 +59,11 @@ namespace TradingBot.Scanner
 					}
 				case ExchangeType.Bitfinex:
 					{
-						IExchange ex = new Exchange(_currencies, new BitfinexClient());
-						ex.Initialize();
-						_exchanges.Add(type, ex);
+						//IExchange ex = new Exchange(_currencies, new BitfinexClient());
+						//ex.Initialize();
+						//_exchanges.Add(type, ex);
 
-						return ex;
+						return null;
 					}
 				case ExchangeType.Kucoin:
 					{

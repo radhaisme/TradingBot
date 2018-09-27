@@ -13,7 +13,7 @@ using TradingBot.Core.Enums;
 
 namespace Bitfinex.Api
 {
-	public sealed class BitfinexClient : ApiClient, IApiClient
+	public sealed class BitfinexClient : ApiClient
 	{
 		private readonly IBitfinexSettings _settings;
 
@@ -23,6 +23,8 @@ namespace Bitfinex.Api
 		}
 
 		public ExchangeType Type => ExchangeType.Bitfinex;
+
+		#region Public API
 
 		public async Task<PairResponse> GetPairsAsync()
 		{
@@ -74,6 +76,10 @@ namespace Bitfinex.Api
 			return null;
 		}
 
+		#endregion
+
+		#region Private API
+
 		public async Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)
 		{
 			var order = new
@@ -115,6 +121,8 @@ namespace Bitfinex.Api
 
 			return response;
 		}
+
+		#endregion
 
 		#region Private method
 
