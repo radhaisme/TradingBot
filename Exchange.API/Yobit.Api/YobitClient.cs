@@ -8,12 +8,12 @@ using System.Text;
 using System.Threading.Tasks;
 using TradingBot.Common;
 using TradingBot.Core;
-using TradingBot.Core.Entities;
 using TradingBot.Core.Enums;
+using Yobit.Api.Models;
 
 namespace Yobit.Api
 {
-	public sealed class YobitClient : ApiClient, IApiClient
+	public sealed class YobitClient : ApiClient
 	{
 		private readonly IYobitSettings _settings;
 
@@ -24,10 +24,10 @@ namespace Yobit.Api
 
 		public ExchangeType Type => ExchangeType.Yobit;
 
-		public async Task<PairResponse> GetPairsAsync()
+		public async Task<TradePairsResponse> GetTradePairsAsync()
 		{
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "info?ignore_invalid=1"));
-			var pairs = new List<TradePair>();
+			var pairs = new List<TradePairResult>();
 
 			foreach (dynamic key in content.pairs)
 			{
@@ -38,17 +38,17 @@ namespace Yobit.Api
 					continue;
 				}
 
-				var dto = new TradePair();
+				var item = new TradePairResult();
 				string[] assets = ((string)key.Name).Split('_');
-				dto.BaseAsset = assets[0];
-				dto.QuoteAsset = assets[1];
-				pairs.Add(dto);
+				item.BaseAsset = assets[0];
+				item.QuoteAsset = assets[1];
+				pairs.Add(item);
 			}
 
-			return new PairResponse(pairs);
+			return new TradePairsResponse(pairs);
 		}
 
-		public async Task<PairDetailResponse> GetPairDetailAsync(PairDetailRequest request)
+		public async Task<MarketResponse> GetMarketAsync(MarketRequest request)
 		{
 			if (String.IsNullOrEmpty(request.Pair))
 			{
@@ -57,31 +57,45 @@ namespace Yobit.Api
 
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"ticker/{request.Pair}?ignore_invalid=1"));
 			dynamic data = content[request.Pair];
-			var dto = new PairDetailResponse();
-			dto.LastPrice = data.last;
-			dto.Volume = data.vol;
-			dto.Ask = data.buy;
-			dto.Bid = data.sell;
-			dto.High = data.high;
-			dto.Low = data.low;
 
-			return dto;
+			return new MarketResponse
+			{
+				LastPrice = data.last,
+				Volume = data.vol,
+				AskPrice = data.buy,
+				BidPrice = data.sell,
+				High = data.high,
+				Low = data.low
+			};
 		}
 
 		public async Task<DepthResponse> GetOrderBookAsync(DepthRequest request)
 		{
-			//if (String.IsNullOrEmpty(request.Pair))
-			//{
-			//	throw new ArgumentNullException(nameof(request.Pair));
-			//}
+			if (String.IsNullOrEmpty(request.Pair))
+			{
+				throw new ArgumentNullException(nameof(request.Pair));
+			}
 
-			//var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"depth/{request.Pair}?limit={request.Limit}&ignore_invalid=1"));
-			//dynamic data = content[request.Pair];
-			//DepthResponse response = Helper.BuildOrderBook(((IEnumerable<dynamic>)data.asks).Take((int)request.Limit), ((IEnumerable<dynamic>)data.bids).Take((int)request.Limit), item => new BookOrderDto { Price = item[0], Amount = item[1] });
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"depth/{request.Pair}?limit={request.Limit}&ignore_invalid=1"));
+			dynamic data = content[request.Pair];
+			var asks = ((IEnumerable<dynamic>)data.asks).Take(request.Limit).Select(x => new OrderInBookResult { Rate = x.Price, Volume = x.Volume }).Where(x => x.Rate > 0);
+			var bids = ((IEnumerable<dynamic>)data.bids).Take(request.Limit).Select(x => new OrderInBookResult { Rate = x.Price, Volume = x.Volume }).Where(x => x.Rate > 0);
 
-			//return response;
+			if (!asks.Any() || !bids.Any())
+			{
+				return new DepthResponse();
+			}
 
-			return null;
+			if (asks.Count() < bids.Count())
+			{
+				bids = bids.Take(asks.Count());
+			}
+			else
+			{
+				asks = asks.Take(bids.Count());
+			}
+
+			return new DepthResponse(asks.ToList(), bids.ToList());
 		}
 
 		public async Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)
@@ -101,12 +115,8 @@ namespace Yobit.Api
 				{"nonce", GenerateNonce(_settings.CreatedAt)}
 			}, true);
 			var content = await MakePrivateCallAsync(queryString);
-			var dto = new CreateOrderResponse();
-			dto.Received = content.received;
-			dto.Remains = content.remains;
-			dto.OrderId = content.order_id;
-
-			return dto;
+			
+			return new CreateOrderResponse((long)content.order_id);
 		}
 
 		public async Task<CancelOrderResponse> CancelOrderAsync(CancelOrderRequest request)
@@ -118,10 +128,22 @@ namespace Yobit.Api
 
 			string queryString = HttpHelper.QueryString(new Dictionary<string, string> { { "method", "CancelOrderRequest" }, { "order_id", request.OrderId.ToString() }, { "nonce", GenerateNonce(_settings.CreatedAt) } }, true);
 			var content = await MakePrivateCallAsync(queryString);
-			var dto = new CancelOrderResponse();
-			dto.OrderId = content.@return.order_id;
+			
+			return new CancelOrderResponse((long)content.@return.order_id);
+		}
 
-			return dto;
+		public async Task<OpenOrdersResponse> GetOpenOrdersAsync(OpenOrdersRequest request)
+		{
+			//var order = new { nonce = DateTime.Now.ToString(CultureInfo.InvariantCulture) };
+			//dynamic content = await MakePrivateCallAsync(order, "orders");
+			var response = new OpenOrdersResponse();
+
+			//foreach (dynamic item in content)
+			//{
+
+			//}
+
+			return response;
 		}
 
 		#region Private method

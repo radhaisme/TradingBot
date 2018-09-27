@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Bitfinex.Api.Models;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -8,7 +9,6 @@ using System.Text;
 using System.Threading.Tasks;
 using TradingBot.Common;
 using TradingBot.Core;
-using TradingBot.Core.Entities;
 using TradingBot.Core.Enums;
 
 namespace Bitfinex.Api
@@ -26,23 +26,25 @@ namespace Bitfinex.Api
 
 		#region Public API
 
-		public async Task<PairResponse> GetPairsAsync()
+		public async Task<TradePairsResponse> GetTradePairsAsync()
 		{
 			var content = await CallAsync<string[]>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "symbols"));
-			var pairs = new Dictionary<string, TradePair>(content.Length);
+			var pairs = new Dictionary<string, TradePairResult>(content.Length);
 
 			foreach (var item in content)
 			{
-				var dto = new TradePair();
-				dto.BaseAsset = item.Substring(0, item.Length - 3);
-				dto.QuoteAsset = item.Substring(item.Length - 3, 3);
-				pairs.Add(item, dto);
+				var pair = new TradePairResult
+				{
+					BaseAsset = item.Substring(0, item.Length - 3),
+					QuoteAsset = item.Substring(item.Length - 3, 3)
+				};
+				pairs.Add(item, pair);
 			}
 
-			return new PairResponse(pairs.Values.ToList());
+			return new TradePairsResponse(pairs.Values.ToList());
 		}
 
-		public async Task<PairDetailResponse> GetPairDetailAsync(PairDetailRequest request)
+		public async Task<MarketResponse> GetMarketAsync(MarketRequest request)
 		{
 			if (String.IsNullOrEmpty(request.Pair))
 			{
@@ -50,30 +52,44 @@ namespace Bitfinex.Api
 			}
 
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"pubticker/{request.Pair}"));
-			var response = new PairDetailResponse();
-			response.LastPrice = content.last_price;
-			response.Ask = content.ask;
-			response.Bid = content.bid;
-			response.Volume = content.volume;
-			response.High = content.high;
-			response.Low = content.low;
-
-			return response;
+			
+			return new MarketResponse
+			{
+				LastPrice = content.last_price,
+				AskPrice = content.ask,
+				BidPrice = content.bid,
+				Volume = content.volume,
+				High = content.high,
+				Low = content.low
+			};
 		}
 
 		public async Task<DepthResponse> GetOrderBookAsync(DepthRequest request)
 		{
-			//if (String.IsNullOrEmpty(request.Pair))
-			//{
-			//	throw new ArgumentNullException(nameof(request.Pair));
-			//}
+			if (String.IsNullOrEmpty(request.Pair))
+			{
+				throw new ArgumentNullException(nameof(request.Pair));
+			}
 
-			//var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"book/{request.Pair}?limit_bids={request.Limit}&limit_asks={request.Limit}"));
-			//var response = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.asks).Take((int)request.Limit), ((IEnumerable<dynamic>)content.bids).Take((int)request.Limit), item => new BookOrderDto { Price = item.price, Amount = item.amount });
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"book/{request.Pair}?limit_bids={request.Limit}&limit_asks={request.Limit}"));
+			var asks = ((IEnumerable<dynamic>)content.Data.Buy).Take(request.Limit).Select(x => new OrderInBookResult { Rate = x.Price, Volume = x.Volume }).Where(x => x.Rate > 0);
+			var bids = ((IEnumerable<dynamic>)content.Data.Sell).Take(request.Limit).Select(x => new OrderInBookResult { Rate = x.Price, Volume = x.Volume }).Where(x => x.Rate > 0);
 
-			//return response;
+			if (!asks.Any() || !bids.Any())
+			{
+				return new DepthResponse();
+			}
 
-			return null;
+			if (asks.Count() < bids.Count())
+			{
+				bids = bids.Take(asks.Count());
+			}
+			else
+			{
+				asks = asks.Take(bids.Count());
+			}
+
+			return new DepthResponse(asks.ToList(), bids.ToList());
 		}
 
 		#endregion
@@ -88,31 +104,27 @@ namespace Bitfinex.Api
 				amount = request.Amount,
 				price = request.Rate,
 				side = request.TradeType.ToString().ToLower(),
-				type = GetOrderType(request.Type),
+				type = GetOrderType(request.OrderType),
 				ocoorder = false //TODO: Unsupported an ocoorder orders
 			};
 			var content = await MakePrivateCallAsync(order, "order/new");
-			var response = new CreateOrderResponse();
-			response.OrderId = content.order_id;
 
-			return response;
+			return new CreateOrderResponse((long)content.order_id);
 		}
 
 		public async Task<CancelOrderResponse> CancelOrderAsync(CancelOrderRequest request)
 		{
 			var order = new { order_id = request.OrderId };
 			var content = await MakePrivateCallAsync(order, "order/cancel");
-			var dto = new CancelOrderResponse();
-			dto.OrderId = content.order_id;
 
-			return dto;
+			return new CancelOrderResponse((long)content.order_id);
 		}
 
-		public async Task<OrderResponse> GetOrdersAsync(OrderRequest request)
+		public async Task<OpenOrdersResponse> GetOpenOrdersAsync(OpenOrdersRequest request)
 		{
 			var order = new { nonce = DateTime.Now.ToString(CultureInfo.InvariantCulture) };
 			dynamic content = await MakePrivateCallAsync(order, "orders");
-			var response = new OrderResponse();
+			var response = new OpenOrdersResponse();
 
 			foreach (dynamic item in content)
 			{

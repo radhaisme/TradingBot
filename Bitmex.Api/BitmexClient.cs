@@ -98,7 +98,7 @@ namespace Bitmex.Api
 			return dto;
 		}
 
-		public async Task<OrderResponse> GetOrdersAsync(OrderRequest request)
+		public async Task<OrderResponse> GetOpenOrdersAsync(OrderRequest request)
 		{
 			var order = new { nonce = DateTime.Now.ToString(CultureInfo.InvariantCulture) };
 			dynamic content = await MakePrivateCallAsync(order, "orders");
