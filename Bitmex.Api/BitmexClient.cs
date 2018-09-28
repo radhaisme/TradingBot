@@ -53,17 +53,17 @@ namespace Bitmex.Api
 
 		public async Task<DepthResponse> GetOrderBookAsync(DepthRequest request)
 		{
-			//if (String.IsNullOrEmpty(request.Pair))
-			//{
-			//	throw new ArgumentNullException(nameof(request.Pair));
-			//}
+			if (String.IsNullOrEmpty(request.Pair))
+			{
+				throw new ArgumentNullException(nameof(request.Pair));
+			}
 
 			//var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"book/{request.Pair}?limit_bids={request.Limit}&limit_asks={request.Limit}"));
 			//var response = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.asks).Take((int)request.Limit), ((IEnumerable<dynamic>)content.bids).Take((int)request.Limit), item => new BookOrderDto { Price = item.price, Amount = item.amount });
 
 			//return response;
 
-			return null;
+			return new DepthResponse();
 		}
 
 		#endregion

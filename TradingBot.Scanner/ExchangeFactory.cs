@@ -43,11 +43,11 @@ namespace TradingBot.Scanner
 					}
 				case ExchangeType.Huobi:
 					{
-						IExchange ex = new Exchange(_currencies, new HuobiClient());
-						ex.Initialize();
-						_exchanges.Add(type, ex);
+						//IExchange ex = new Exchange(_currencies, new HuobiClient());
+						//ex.Initialize();
+						//_exchanges.Add(type, ex);
 
-						return ex;
+						return null;
 					}
 				case ExchangeType.Yobit:
 					{
@@ -67,19 +67,19 @@ namespace TradingBot.Scanner
 					}
 				case ExchangeType.Kucoin:
 					{
-						IExchange ex = new Exchange(_currencies, new KucoinClient());
-						ex.Initialize();
-						_exchanges.Add(type, ex);
+						//IExchange ex = new Exchange(_currencies, new KucoinClient());
+						//ex.Initialize();
+						//_exchanges.Add(type, ex);
 
-						return ex;
+						return null;
 					}
 				case ExchangeType.Okex:
 					{
-						IExchange ex = new Exchange(_currencies, new OkexClient());
-						ex.Initialize();
-						_exchanges.Add(type, ex);
+						//IExchange ex = new Exchange(_currencies, new OkexClient());
+						//ex.Initialize();
+						//_exchanges.Add(type, ex);
 
-						return ex;
+						return null;
 					}
 				case ExchangeType.Cryptopia:
 					{
@@ -91,11 +91,11 @@ namespace TradingBot.Scanner
 					}
 				case ExchangeType.Exmo:
 					{
-						IExchange ex = new Exchange(_currencies, new ExmoClient());
-						ex.Initialize();
-						_exchanges.Add(type, ex);
+						//IExchange ex = new Exchange(_currencies, new ExmoClient());
+						//ex.Initialize();
+						//_exchanges.Add(type, ex);
 
-						return ex;
+						return null;
 					}
 				default:
 					{

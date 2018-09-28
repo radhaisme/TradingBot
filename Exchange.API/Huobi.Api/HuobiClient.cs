@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Huobi.Api.Models;
 using TradingBot.Core;
-using TradingBot.Core.Entities;
 using TradingBot.Core.Enums;
 
 namespace Huobi.Api
 {
-	public sealed class HuobiClient : ApiClient, IApiClient
+	public sealed class HuobiClient : ApiClient
 	{
 		private readonly IHuobiSettings _settings;
 
@@ -20,23 +20,25 @@ namespace Huobi.Api
 
 		public ExchangeType Type => ExchangeType.Huobi;
 
-		public async Task<PairResponse> GetPairsAsync()
+		#region Public API
+
+		public async Task<TradePairsResponse> GetTradePairsAsync()
 		{
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "v1/common/symbols"));
-			var pairs = new List<TradePair>();
+			var pairs = new List<TradePairResult>();
 
 			foreach (dynamic item in content.data)
 			{
-				var dto = new TradePair();
-				dto.BaseAsset = ((string)item["base-currency"]).ToUpper();
-				dto.QuoteAsset = ((string)item["quote-currency"]).ToUpper();
-				pairs.Add(dto);
+				var pair = new TradePairResult();
+				pair.BaseAsset = ((string)item["base-currency"]).ToUpper();
+				pair.QuoteAsset = ((string)item["quote-currency"]).ToUpper();
+				pairs.Add(pair);
 			}
 
-			return new PairResponse(pairs);
+			return new TradePairsResponse(pairs);
 		}
 
-		public async Task<PairDetailResponse> GetPairDetailAsync(PairDetailRequest request)
+		public async Task<MarketResponse> GetMarketAsync(MarketRequest request)
 		{
 			if (String.IsNullOrEmpty(request.Pair))
 			{
@@ -44,41 +46,83 @@ namespace Huobi.Api
 			}
 
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"market/detail/merged?symbol={request.Pair}"));
-			var dto = new PairDetailResponse();
-			dto.LastPrice = content.tick.close;
-			dto.Ask = content.tick.ask[0];
-			dto.Bid = content.tick.bid[0];
-			dto.Volume = content.tick.vol;
-			dto.High = content.tick.high;
-			dto.Low = content.tick.low;
 
-			return dto;
+			return new MarketResponse
+			{
+				LastPrice = content.tick.close,
+				AskPrice = content.tick.ask[0],
+				BidPrice = content.tick.bid[0],
+				Volume = content.tick.vol,
+				High = content.tick.high,
+				Low = content.tick.low
+			};
 		}
 
 		public async Task<DepthResponse> GetOrderBookAsync(DepthRequest request)
 		{
-			//if (String.IsNullOrEmpty(request.Pair))
+			if (String.IsNullOrEmpty(request.Pair))
+			{
+				throw new ArgumentNullException(nameof(request.Pair));
+			}
+
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"market/depth?symbol={request.Pair}&type=step1"));
+			var asks = ((IEnumerable<dynamic>)content.asks).Take(request.Limit).Select(x => new OrderInBookResult { Rate = x[0], Volume = x[1] }).Where(x => x.Rate > 0);
+			var bids = ((IEnumerable<dynamic>)content.bids).Take(request.Limit).Select(x => new OrderInBookResult { Rate = x[0], Volume = x[1] }).Where(x => x.Rate > 0);
+
+			if (!asks.Any() || !bids.Any())
+			{
+				return new DepthResponse();
+			}
+
+			if (asks.Count() < bids.Count())
+			{
+				bids = bids.Take(asks.Count());
+			}
+			else
+			{
+				asks = asks.Take(bids.Count());
+			}
+
+			return new DepthResponse(asks.ToList(), bids.ToList());
+		}
+
+		#endregion
+
+		#region Private API
+
+		public async Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)
+		{
+
+
+			return new CreateOrderResponse(0);
+		}
+
+		public async Task<CancelOrderResponse> CancelOrderAsync(CancelOrderRequest request)
+		{
+
+
+			return new CancelOrderResponse(0);
+		}
+
+		public async Task<OpenOrdersResponse> GetOpenOrdersAsync(OpenOrdersRequest request)
+		{
+			//var queryString = HttpHelper.QueryString(new Dictionary<string, string>
 			//{
-			//	throw new ArgumentNullException(nameof(request.Pair));
+			//	{ "symbol", request.Pair },
+			//	{ "timestamp", DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString() }
+			//}, true);
+			//dynamic content = await MakePrivateCallAsync(HttpMethod.Get, "openOrders", queryString);
+			var response = new OpenOrdersResponse();
+
+			//foreach (dynamic item in content)
+			//{
+
 			//}
 
-			//var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"market/depth?symbol={request.Pair}&type=step1"));
-			//DepthResponse model = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.tick.asks).Take((int)request.Limit), ((IEnumerable<dynamic>)content.tick.bids).Take((int)request.Limit), item => new BookOrderDto { Price = item[0], Amount = item[1] });
-
-			//return model;
-
-			return null;
+			return response;
 		}
 
-		public Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)
-		{
-			throw new NotImplementedException();
-		}
-
-		public Task<CancelOrderResponse> CancelOrderAsync(CancelOrderRequest request)
-		{
-			throw new NotImplementedException();
-		}
+		#endregion
 
 		//public async Task<IReadOnlyCollection<PairDetailResponse>> GetPairsDetails(params string[] pairs)
 		//{

@@ -13,7 +13,7 @@ namespace TradingBot.Core
 		//Task<CreateOrderResponse> CreateOrderAsync(string pair, TradeType type, decimal price, decimal amount);
 		//Task<Balance> GetInfoAsync();
 		//Task<OrderResponse> GetTradesAsync(string pair, uint limit = 150);
-		Task<PairResponse> GetPairsAsync();
+		Task<PairResponse> GetTradePairsAsync();
 		Task<PairDetailResponse> GetPairDetailAsync(PairDetailRequest request);
 		Task<DepthResponse> GetOrderBookAsync(DepthRequest request);
 		Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request);

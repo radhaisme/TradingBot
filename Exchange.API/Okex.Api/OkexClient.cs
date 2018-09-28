@@ -5,14 +5,14 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Okex.Api.Models;
 using TradingBot.Common;
 using TradingBot.Core;
-using TradingBot.Core.Entities;
 using TradingBot.Core.Enums;
 
 namespace Okex.Api
 {
-	public sealed class OkexClient : ApiClient, IApiClient
+	public sealed class OkexClient : ApiClient
 	{
 		private readonly IOkexSettings _settings;
 
@@ -23,24 +23,28 @@ namespace Okex.Api
 
 		public ExchangeType Type => ExchangeType.Okex;
 
-		public async Task<PairResponse> GetPairsAsync()
+		#region Public API
+
+		public async Task<TradePairsResponse> GetTradePairsAsync()
 		{
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "tickers.do"));
-			var pairs = new List<TradePair>();
+			var pairs = new List<TradePairResult>();
 
 			foreach (dynamic item in content.tickers)
 			{
-				var dto = new TradePair();
 				string[] assets = ((string)item.symbol).Split('_');
-				dto.BaseAsset = assets[0].ToUpper();
-				dto.QuoteAsset = assets[1].ToUpper();
-				pairs.Add(dto);
+				var pair = new TradePairResult
+				{
+					BaseAsset = assets[0].ToUpper(),
+					QuoteAsset = assets[1].ToUpper()
+				};
+				pairs.Add(pair);
 			}
 
-			return new PairResponse(pairs);
+			return new TradePairsResponse(pairs);
 		}
 
-		public async Task<PairDetailResponse> GetPairDetailAsync(PairDetailRequest request)
+		public async Task<MarketResponse> GetMarketAsync(MarketRequest request)
 		{
 			if (String.IsNullOrEmpty(request.Pair))
 			{
@@ -48,34 +52,53 @@ namespace Okex.Api
 			}
 
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"ticker.do?symbol={request.Pair}"));
-			var dto = new PairDetailResponse();
-			dto.LastPrice = content.ticker.last;
-			dto.Ask = content.ticker.buy;
-			dto.Bid = content.ticker.sell;
-			dto.High = content.ticker.high;
-			dto.Low = content.ticker.low;
-			dto.Volume = content.ticker.vol;
 
-			return dto;
+			return new MarketResponse
+			{
+				LastPrice = content.ticker.last,
+				AskPrice = content.ticker.buy,
+				BidPrice = content.ticker.sell,
+				High = content.ticker.high,
+				Low = content.ticker.low,
+				Volume = content.ticker.vol
+			};
 		}
 
 		public async Task<DepthResponse> GetOrderBookAsync(DepthRequest request)
 		{
-			//if (String.IsNullOrEmpty(request.Pair))
-			//{
-			//	throw new ArgumentNullException(nameof(request.Pair));
-			//}
+			if (String.IsNullOrEmpty(request.Pair))
+			{
+				throw new ArgumentNullException(nameof(request.Pair));
+			}
 
-			//var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"depth.do?symbol={request.Pair}&size={request.Limit}"));
-			//var model = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.asks).Take((int)request.Limit), ((IEnumerable<dynamic>)content.bids).Take((int)request.Limit), item => new BookOrderDto { Price = item[0], Amount = item[1] });
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"depth.do?symbol={request.Pair}&size={request.Limit}"));
+			var asks = ((IEnumerable<dynamic>)content.asks).Take(request.Limit).Select(x => new OrderInBookResult { Rate = x[0], Volume = x[1] }).Where(x => x.Rate > 0);
+			var bids = ((IEnumerable<dynamic>)content.bids).Take(request.Limit).Select(x => new OrderInBookResult { Rate = x[0], Volume = x[1] }).Where(x => x.Rate > 0);
 
-			//return model;
+			if (!asks.Any() || !bids.Any())
+			{
+				return new DepthResponse();
+			}
 
-			return null;
+			if (asks.Count() < bids.Count())
+			{
+				bids = bids.Take(asks.Count());
+			}
+			else
+			{
+				asks = asks.Take(bids.Count());
+			}
+
+			return new DepthResponse(asks.ToList(), bids.ToList());
 		}
+
+		#endregion
+
+		#region Private API
 
 		public Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)
 		{
+
 
 			return null;
 		}
@@ -86,6 +109,26 @@ namespace Okex.Api
 
 			return null;
 		}
+
+		public async Task<OpenOrdersResponse> GetOpenOrdersAsync(OpenOrdersRequest request)
+		{
+			var queryString = HttpHelper.QueryString(new Dictionary<string, string>
+			{
+				{ "symbol", request.Pair },
+				{ "timestamp", DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString() }
+			}, true);
+			//dynamic content = await MakePrivateCallAsync(HttpMethod.Get, "openOrders", queryString);
+			var response = new OpenOrdersResponse();
+
+			//foreach (dynamic item in content)
+			//{
+				
+			//}
+
+			return response;
+		}
+
+		#endregion
 
 		#region Private methods
 

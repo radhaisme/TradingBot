@@ -24,6 +24,8 @@ namespace Yobit.Api
 
 		public ExchangeType Type => ExchangeType.Yobit;
 
+		#region Public API
+
 		public async Task<TradePairsResponse> GetTradePairsAsync()
 		{
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "info?ignore_invalid=1"));
@@ -98,6 +100,10 @@ namespace Yobit.Api
 			return new DepthResponse(asks.ToList(), bids.ToList());
 		}
 
+		#endregion
+
+		#region Private API
+
 		public async Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)
 		{
 			if (String.IsNullOrEmpty(request.Pair))
@@ -115,7 +121,7 @@ namespace Yobit.Api
 				{"nonce", GenerateNonce(_settings.CreatedAt)}
 			}, true);
 			var content = await MakePrivateCallAsync(queryString);
-			
+
 			return new CreateOrderResponse((long)content.order_id);
 		}
 
@@ -128,7 +134,7 @@ namespace Yobit.Api
 
 			string queryString = HttpHelper.QueryString(new Dictionary<string, string> { { "method", "CancelOrderRequest" }, { "order_id", request.OrderId.ToString() }, { "nonce", GenerateNonce(_settings.CreatedAt) } }, true);
 			var content = await MakePrivateCallAsync(queryString);
-			
+
 			return new CancelOrderResponse((long)content.@return.order_id);
 		}
 
@@ -145,6 +151,8 @@ namespace Yobit.Api
 
 			return response;
 		}
+
+		#endregion
 
 		#region Private method
 

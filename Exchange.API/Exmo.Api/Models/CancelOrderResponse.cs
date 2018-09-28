@@ -1,5 +1,5 @@
 ﻿
-namespace Bitfinex.Api.Models
+namespace Exmo.Api.Models
 {
     public sealed class CancelOrderResponse
     {

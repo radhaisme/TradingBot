@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Kucoin.Api.Models;
 using TradingBot.Common;
 using TradingBot.Core;
-using TradingBot.Core.Entities;
 using TradingBot.Core.Enums;
 
 namespace Kucoin.Api
 {
-	public sealed class KucoinClient : ApiClient, IApiClient
+	public sealed class KucoinClient : ApiClient
 	{
 		private readonly IKucoinSettings _settings;
 
@@ -21,10 +21,12 @@ namespace Kucoin.Api
 
 		public ExchangeType Type => ExchangeType.Kucoin;
 
-		public async Task<PairResponse> GetPairsAsync()
+		#region Public API
+
+		public async Task<TradePairsResponse> GetTradePairsAsync()
 		{
 			var content = await CallAsync<ResponseModel>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "market/open/symbols"));
-			var pairs = new List<TradePair>();
+			var pairs = new List<TradePairResult>();
 
 			foreach (dynamic item in content.Data)
 			{
@@ -33,16 +35,16 @@ namespace Kucoin.Api
 					continue;
 				}
 
-				var pair = new TradePair();
+				var pair = new TradePairResult();
 				pair.BaseAsset = item.coinType;
 				pair.QuoteAsset = item.coinTypePair;
 				pairs.Add(pair);
 			}
 
-			return new PairResponse(pairs);
+			return new TradePairsResponse(pairs);
 		}
 
-		public async Task<PairDetailResponse> GetPairDetailAsync(PairDetailRequest request)
+		public async Task<MarketResponse> GetMarketAsync(MarketRequest request)
 		{
 			if (String.IsNullOrEmpty(request.Pair))
 			{
@@ -57,42 +59,84 @@ namespace Kucoin.Api
 			}
 
 			dynamic data = content.Data;
-			var dto = new PairDetailResponse();
-			dto.LastPrice = data.lastDealPrice;
-			dto.Ask = data.buy;
-			dto.Bid = data.sell;
-			dto.Volume = data.vol;
-			dto.Low = ((decimal?)data.low).GetValueOrDefault();
-			dto.High = ((decimal?)data.high).GetValueOrDefault();
 
-			return dto;
+			return new MarketResponse
+			{
+				LastPrice = data.lastDealPrice,
+				AskPrice = data.buy,
+				BidPrice = data.sell,
+				Volume = data.vol,
+				Low = ((decimal?)data.low).GetValueOrDefault(),
+				High = ((decimal?)data.high).GetValueOrDefault()
+			};
 		}
 
 		public async Task<DepthResponse> GetOrderBookAsync(DepthRequest request)
 		{
-			//if (String.IsNullOrEmpty(request.Pair))
+			if (String.IsNullOrEmpty(request.Pair))
+			{
+				throw new ArgumentNullException(nameof(request.Pair));
+			}
+
+			var content = await CallAsync<ResponseModel>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"open/orders?symbol={request.Pair}&limit={request.Limit}"));
+			dynamic data = content.Data;
+			var asks = ((IEnumerable<dynamic>)data.asks).Take(request.Limit).Select(x => new OrderInBookResult { Rate = x[0], Volume = x[1] }).Where(x => x.Rate > 0);
+			var bids = ((IEnumerable<dynamic>)data.bids).Take(request.Limit).Select(x => new OrderInBookResult { Rate = x[0], Volume = x[1] }).Where(x => x.Rate > 0);
+
+			if (!asks.Any() || !bids.Any())
+			{
+				return new DepthResponse();
+			}
+
+			if (asks.Count() < bids.Count())
+			{
+				bids = bids.Take(asks.Count());
+			}
+			else
+			{
+				asks = asks.Take(bids.Count());
+			}
+
+			return new DepthResponse(asks.ToList(), bids.ToList());
+		}
+
+		#endregion
+
+		#region Private API
+
+		public async Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)
+		{
+
+
+			return new CreateOrderResponse(0);
+		}
+
+		public async Task<CancelOrderResponse> CancelOrderAsync(CancelOrderRequest request)
+		{
+
+
+			return new CancelOrderResponse(0);
+		}
+
+		public async Task<OpenOrdersResponse> GetOpenOrdersAsync(OpenOrdersRequest request)
+		{
+			//var queryString = HttpHelper.QueryString(new Dictionary<string, string>
 			//{
-			//	throw new ArgumentNullException(nameof(request.Pair));
+			//	{ "symbol", request.Pair },
+			//	{ "timestamp", DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString() }
+			//}, true);
+			//dynamic content = await MakePrivateCallAsync(HttpMethod.Get, "openOrders", queryString);
+			var response = new OpenOrdersResponse();
+
+			//foreach (dynamic item in content)
+			//{
+
 			//}
 
-			//var content = await CallAsync<ResponseModel>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"open/orders?symbol={request.Pair}&limit={request.Limit}"));
-			//dynamic data = content.Data;
-			//var dto = Helper.BuildOrderBook(((IEnumerable<dynamic>)data.BUY).Take((int)request.Limit), ((IEnumerable<dynamic>)data.SELL).Take((int)request.Limit), item => new BookOrderDto { Price = item[0], Amount = item[1] });
-
-			//return dto;
-
-			return null;
+			return response;
 		}
 
-		public Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)
-		{
-			throw new NotImplementedException();
-		}
-
-		public Task<CancelOrderResponse> CancelOrderAsync(CancelOrderRequest request)
-		{
-			throw new NotImplementedException();
-		}
+		#endregion
 
 		protected override async void HandleError(HttpResponseMessage response)
 		{
