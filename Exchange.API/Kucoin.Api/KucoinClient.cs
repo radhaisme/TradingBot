@@ -80,8 +80,8 @@ namespace Kucoin.Api
 
 			var content = await CallAsync<ResponseModel>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"open/orders?symbol={request.Pair}&limit={request.Limit}"));
 			dynamic data = content.Data;
-			var asks = ((IEnumerable<dynamic>)data.asks).Take(request.Limit).Select(x => new OrderInBookResult { Rate = x[0], Volume = x[1] }).Where(x => x.Rate > 0);
-			var bids = ((IEnumerable<dynamic>)data.bids).Take(request.Limit).Select(x => new OrderInBookResult { Rate = x[0], Volume = x[1] }).Where(x => x.Rate > 0);
+			var asks = ((IEnumerable<dynamic>)data.BUY).Take(request.Limit).Select(x => new OrderInBookResult { Rate = x[0], Volume = x[1] }).Where(x => x.Rate > 0);
+			var bids = ((IEnumerable<dynamic>)data.SELL).Take(request.Limit).Select(x => new OrderInBookResult { Rate = x[0], Volume = x[1] }).Where(x => x.Rate > 0);
 
 			if (!asks.Any() || !bids.Any())
 			{
@@ -92,7 +92,7 @@ namespace Kucoin.Api
 			{
 				bids = bids.Take(asks.Count());
 			}
-			else
+			else if (asks.Count() > bids.Count())
 			{
 				asks = asks.Take(bids.Count());
 			}

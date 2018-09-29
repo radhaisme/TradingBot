@@ -80,8 +80,8 @@ namespace Yobit.Api
 
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"depth/{request.Pair}?limit={request.Limit}&ignore_invalid=1"));
 			dynamic data = content[request.Pair];
-			var asks = ((IEnumerable<dynamic>)data.asks).Take(request.Limit).Select(x => new OrderInBookResult { Rate = x.Price, Volume = x.Volume }).Where(x => x.Rate > 0);
-			var bids = ((IEnumerable<dynamic>)data.bids).Take(request.Limit).Select(x => new OrderInBookResult { Rate = x.Price, Volume = x.Volume }).Where(x => x.Rate > 0);
+			var asks = ((IEnumerable<dynamic>)data.asks).Take(request.Limit).Select(x => new OrderInBookResult { Rate = x[0], Volume = x[1] }).Where(x => x.Rate > 0);
+			var bids = ((IEnumerable<dynamic>)data.bids).Take(request.Limit).Select(x => new OrderInBookResult { Rate = x[0], Volume = x[1] }).Where(x => x.Rate > 0);
 
 			if (!asks.Any() || !bids.Any())
 			{
@@ -92,7 +92,7 @@ namespace Yobit.Api
 			{
 				bids = bids.Take(asks.Count());
 			}
-			else
+			else if (asks.Count() > bids.Count())
 			{
 				asks = asks.Take(bids.Count());
 			}

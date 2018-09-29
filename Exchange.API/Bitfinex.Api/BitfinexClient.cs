@@ -72,8 +72,8 @@ namespace Bitfinex.Api
 			}
 
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"book/{request.Pair}?limit_bids={request.Limit}&limit_asks={request.Limit}"));
-			var asks = ((IEnumerable<dynamic>)content.Data.Buy).Take(request.Limit).Select(x => new OrderInBookResult { Rate = x.Price, Volume = x.Volume }).Where(x => x.Rate > 0);
-			var bids = ((IEnumerable<dynamic>)content.Data.Sell).Take(request.Limit).Select(x => new OrderInBookResult { Rate = x.Price, Volume = x.Volume }).Where(x => x.Rate > 0);
+			var asks = ((IEnumerable<dynamic>)content.asks).Take(request.Limit).Select(x => new OrderInBookResult { Rate = x.price, Volume = x.amount }).Where(x => x.Rate > 0);
+			var bids = ((IEnumerable<dynamic>)content.bids).Take(request.Limit).Select(x => new OrderInBookResult { Rate = x.price, Volume = x.amount }).Where(x => x.Rate > 0);
 
 			if (!asks.Any() || !bids.Any())
 			{
@@ -84,7 +84,7 @@ namespace Bitfinex.Api
 			{
 				bids = bids.Take(asks.Count());
 			}
-			else
+			else if (asks.Count() > bids.Count())
 			{
 				asks = asks.Take(bids.Count());
 			}

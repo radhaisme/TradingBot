@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Huobi.Api.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Huobi.Api.Models;
 using TradingBot.Core;
 using TradingBot.Core.Enums;
 
@@ -66,8 +66,8 @@ namespace Huobi.Api
 			}
 
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"market/depth?symbol={request.Pair}&type=step1"));
-			var asks = ((IEnumerable<dynamic>)content.asks).Take(request.Limit).Select(x => new OrderInBookResult { Rate = x[0], Volume = x[1] }).Where(x => x.Rate > 0);
-			var bids = ((IEnumerable<dynamic>)content.bids).Take(request.Limit).Select(x => new OrderInBookResult { Rate = x[0], Volume = x[1] }).Where(x => x.Rate > 0);
+			var asks = ((IEnumerable<dynamic>)content.tick.asks).Take(request.Limit).Select(x => new OrderInBookResult { Rate = x[0], Volume = x[1] }).Where(x => x.Rate > 0);
+			var bids = ((IEnumerable<dynamic>)content.tick.bids).Take(request.Limit).Select(x => new OrderInBookResult { Rate = x[0], Volume = x[1] }).Where(x => x.Rate > 0);
 
 			if (!asks.Any() || !bids.Any())
 			{
@@ -78,7 +78,7 @@ namespace Huobi.Api
 			{
 				bids = bids.Take(asks.Count());
 			}
-			else
+			else if (asks.Count() > bids.Count())
 			{
 				asks = asks.Take(bids.Count());
 			}

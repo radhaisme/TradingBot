@@ -1,6 +1,7 @@
 ﻿using Cryptopia.Api.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
@@ -89,7 +90,7 @@ namespace Cryptopia.Api
 			{
 				bids = bids.Take(asks.Count());
 			}
-			else
+			else if (asks.Count() > bids.Count())
 			{
 				asks = asks.Take(bids.Count());
 			}
