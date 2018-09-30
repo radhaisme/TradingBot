@@ -1273,6 +1273,19 @@
           "bin/placeholder/Bitfinex.Api.dll": {}
         }
       },
+      "Bitmex.Api/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "dependencies": {
+          "TradingBot.Core": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Bitmex.Api.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Bitmex.Api.dll": {}
+        }
+      },
       "Cryptopia.Api/1.0.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
@@ -4338,6 +4351,11 @@
       "path": "../Exchange.API/Bitfinex.Api/Bitfinex.Api.csproj",
       "msbuildProject": "../Exchange.API/Bitfinex.Api/Bitfinex.Api.csproj"
     },
+    "Bitmex.Api/1.0.0": {
+      "type": "project",
+      "path": "../Bitmex.Api/Bitmex.Api.csproj",
+      "msbuildProject": "../Bitmex.Api/Bitmex.Api.csproj"
+    },
     "Cryptopia.Api/1.0.0": {
       "type": "project",
       "path": "../Exchange.API/Cryptopia.Api/Cryptopia.Api.csproj",
@@ -4403,6 +4421,7 @@
     ".NETCoreApp,Version=v2.1": [
       "Binance.Api >= 1.0.0",
       "Bitfinex.Api >= 1.0.0",
+      "Bitmex.Api >= 1.0.0",
       "Cryptopia.Api >= 1.0.0",
       "Exmo.Api >= 1.0.0",
       "Huobi.Api >= 1.0.0",
@@ -4448,6 +4467,9 @@
       "frameworks": {
         "netcoreapp2.1": {
           "projectReferences": {
+            "D:\\Projects\\TradingBot\\Bitmex.Api\\Bitmex.Api.csproj": {
+              "projectPath": "D:\\Projects\\TradingBot\\Bitmex.Api\\Bitmex.Api.csproj"
+            },
             "D:\\Projects\\TradingBot\\Exchange.API\\Binance.Api\\Binance.Api.csproj": {
               "projectPath": "D:\\Projects\\TradingBot\\Exchange.API\\Binance.Api\\Binance.Api.csproj"
             },

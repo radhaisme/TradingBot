@@ -1,46 +1,56 @@
-﻿using System;
+﻿using Bitmex.Api.Models;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using TradingBot.Core;
-using TradingBot.Core.Entities;
 using TradingBot.Core.Enums;
 
 namespace Bitmex.Api
 {
 	public sealed class BitmexClient : ApiClient
 	{
+		private readonly IBitmexSettings _settings;
+
+		public BitmexClient()
+		{
+			_settings = new BitmexSettings();
+		}
+
 		public ExchangeType Type => ExchangeType.Bitmex;
 
 		#region Public API
 
-		public async Task<PairResponse> GetPairsAsync()
+		public async Task<TradePairsResponse> GetTradePairsAsync()
 		{
-			//var content = await CallAsync<string[]>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "symbols"));
-			var pairs = new Dictionary<string, TradePair>(0);
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, "instrument/active"));
+			var pairs = new List<TradePairResult>();
 
-			//foreach (var item in content)
-			//{
-			//	var dto = new TradePair();
-			//	dto.BaseAsset = item.Substring(0, item.Length - 3);
-			//	dto.QuoteAsset = item.Substring(item.Length - 3, 3);
-			//	pairs.Add(item, dto);
-			//}
+			foreach (var item in content)
+			{
+				var symbol = (string)item.symbol;
+				var pair = new TradePairResult
+				{
+					Symbol = symbol,
+					QuoteAsset = (string)item.underlying,
+					BaseAsset = symbol.Substring(3)
+				};
+				pairs.Add(pair);
+			}
 
-			return new PairResponse(pairs.Values.ToList());
+			return new TradePairsResponse(pairs);
 		}
 
-		public async Task<PairDetailResponse> GetPairDetailAsync(PairDetailRequest request)
+		public async Task<MarketResponse> GetMarketAsync(MarketRequest request)
 		{
-			//if (String.IsNullOrEmpty(request.Pair))
-			//{
-			//	throw new ArgumentNullException(nameof(request.Pair));
-			//}
+			if (String.IsNullOrEmpty(request.Pair))
+			{
+				throw new ArgumentNullException(nameof(request.Pair));
+			}
 
-			//var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"pubticker/{request.Pair}"));
-			var response = new PairDetailResponse();
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"trade/{request.Pair}"));
+			var response = new MarketResponse();
 			//response.LastPrice = content.last_price;
 			//response.Ask = content.ask;
 			//response.Bid = content.bid;
@@ -82,7 +92,7 @@ namespace Bitmex.Api
 			//	ocoorder = false //TODO: Unsupported an ocoorder orders
 			//};
 			//var content = await MakePrivateCallAsync(order, "order/new");
-			var response = new CreateOrderResponse();
+			var response = new CreateOrderResponse(0);
 			//response.OrderId = content.order_id;
 
 			return response;
@@ -92,17 +102,17 @@ namespace Bitmex.Api
 		{
 			//var order = new { order_id = request.OrderId };
 			//var content = await MakePrivateCallAsync(order, "order/cancel");
-			var dto = new CancelOrderResponse();
+			var response = new CancelOrderResponse(0);
 			//dto.OrderId = content.order_id;
 
-			return dto;
+			return response;
 		}
 
-		public async Task<OrderResponse> GetOpenOrdersAsync(OrderRequest request)
+		public async Task<OpenOrdersResponse> GetOpenOrdersAsync(OpenOrdersRequest request)
 		{
 			var order = new { nonce = DateTime.Now.ToString(CultureInfo.InvariantCulture) };
 			dynamic content = await MakePrivateCallAsync(order, "orders");
-			var response = new OrderResponse();
+			var response = new OpenOrdersResponse();
 
 			foreach (dynamic item in content)
 			{

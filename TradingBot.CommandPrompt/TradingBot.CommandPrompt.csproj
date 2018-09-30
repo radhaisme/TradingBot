@@ -15,6 +15,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\Bitmex.Api\Bitmex.Api.csproj" />
 		<ProjectReference Include="..\Exchange.API\Binance.Api\Binance.Api.csproj" />
 		<ProjectReference Include="..\Exchange.API\Bitfinex.Api\Bitfinex.Api.csproj" />
 		<ProjectReference Include="..\Exchange.API\Cryptopia.Api\Cryptopia.Api.csproj" />

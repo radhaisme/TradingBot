@@ -3,6 +3,7 @@ namespace Bitmex.Api.Models
 {
 	public class TradePairResult
 	{
+		public string Symbol { get; set; }
 		public string BaseAssetName { get; set; }
 		public string BaseAsset { get; set; }
 		public string QuoteAssetName { get; set; }
