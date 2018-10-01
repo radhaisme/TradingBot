@@ -4353,8 +4353,8 @@
     },
     "Bitmex.Api/1.0.0": {
       "type": "project",
-      "path": "../Bitmex.Api/Bitmex.Api.csproj",
-      "msbuildProject": "../Bitmex.Api/Bitmex.Api.csproj"
+      "path": "../Exchange.API/Bitmex.Api/Bitmex.Api.csproj",
+      "msbuildProject": "../Exchange.API/Bitmex.Api/Bitmex.Api.csproj"
     },
     "Cryptopia.Api/1.0.0": {
       "type": "project",
@@ -4438,7 +4438,7 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Roman\\.nuget\\packages\\": {},
+    "C:\\Users\\user\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
@@ -4447,14 +4447,14 @@
       "projectUniqueName": "D:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\TradingBot.CommandPrompt.csproj",
       "projectName": "TradingBot.CommandPrompt",
       "projectPath": "D:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\TradingBot.CommandPrompt.csproj",
-      "packagesPath": "C:\\Users\\Roman\\.nuget\\packages\\",
+      "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
       "outputPath": "D:\\Projects\\TradingBot\\TradingBot.CommandPrompt\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\Roman\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -4467,14 +4467,14 @@
       "frameworks": {
         "netcoreapp2.1": {
           "projectReferences": {
-            "D:\\Projects\\TradingBot\\Bitmex.Api\\Bitmex.Api.csproj": {
-              "projectPath": "D:\\Projects\\TradingBot\\Bitmex.Api\\Bitmex.Api.csproj"
-            },
             "D:\\Projects\\TradingBot\\Exchange.API\\Binance.Api\\Binance.Api.csproj": {
               "projectPath": "D:\\Projects\\TradingBot\\Exchange.API\\Binance.Api\\Binance.Api.csproj"
             },
             "D:\\Projects\\TradingBot\\Exchange.API\\Bitfinex.Api\\Bitfinex.Api.csproj": {
               "projectPath": "D:\\Projects\\TradingBot\\Exchange.API\\Bitfinex.Api\\Bitfinex.Api.csproj"
+            },
+            "D:\\Projects\\TradingBot\\Exchange.API\\Bitmex.Api\\Bitmex.Api.csproj": {
+              "projectPath": "D:\\Projects\\TradingBot\\Exchange.API\\Bitmex.Api\\Bitmex.Api.csproj"
             },
             "D:\\Projects\\TradingBot\\Exchange.API\\Cryptopia.Api\\Cryptopia.Api.csproj": {
               "projectPath": "D:\\Projects\\TradingBot\\Exchange.API\\Cryptopia.Api\\Cryptopia.Api.csproj"

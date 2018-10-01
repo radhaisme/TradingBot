@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TradingBot.Core\TradingBot.Core.csproj" />
+    <ProjectReference Include="..\..\TradingBot.Core\TradingBot.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp">
