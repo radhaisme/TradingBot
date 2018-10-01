@@ -1,9 +1,8 @@
-﻿
+﻿using System;
+
 namespace TradingBot.Core.Entities
 {
-	using System;
-
-	public class Trade
+	public class Order
 	{
 		public TradeType Type { get; set; }
 		public decimal Price { get; set; }

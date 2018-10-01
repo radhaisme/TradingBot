@@ -113,7 +113,7 @@ namespace Yobit.Api
 
 			string queryString = HttpHelper.QueryString(new Dictionary<string, string>
 			{
-				{"method", "Trade"},
+				{"method", "Order"},
 				{"pair", request.Pair},
 				{"type", request.TradeType.ToString()},
 				{"rate", request.Rate.ToString(CultureInfo.InvariantCulture)},
@@ -288,7 +288,7 @@ namespace Yobit.Api
 
 		//		foreach (dynamic item in result[pair])
 		//		{
-		//			var trade = new Trade
+		//			var trade = new Order
 		//			{
 		//				Type = (TradeType)Enum.Parse(typeof(TradeType), (string)item.type, true),
 		//				Rate = item.price,

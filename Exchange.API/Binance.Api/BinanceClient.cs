@@ -138,14 +138,20 @@ namespace Binance.Api
 				{ "timestamp", DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString() }
 			}, true);
 			dynamic content = await MakePrivateCallAsync(HttpMethod.Get, "openOrders", queryString);
-			var response = new OpenOrdersResponse();
+			var orders = new List<OrderResult>();
 
 			foreach (dynamic item in content)
 			{
-
+				var order = new OrderResult((long)item.orderId);
+				order.TradeType = item.side == "BUY" ? TradeType.Buy : TradeType.Sell;
+				order.OrderType = item.type == "LIMIT" ? OrderType.Limit : OrderType.Market;
+				order.Rate = item.price;
+				order.Amount = item.origQty;
+				//order.CreatedAt = DateTimeOffset.MinValue;
+				orders.Add(order);
 			}
 
-			return response;
+			return new OpenOrdersResponse(orders);
 		}
 
 		#endregion

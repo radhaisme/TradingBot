@@ -6,9 +6,9 @@ namespace TradingBot.Core.Entities
 	{
 		public OrderResponse()
 		{
-			Orders = new List<Trade>().AsReadOnly();
+			Orders = new List<Order>().AsReadOnly();
 		}
 
-		public IReadOnlyCollection<Trade> Orders { get; set; }
+		public IReadOnlyCollection<Order> Orders { get; set; }
 	}
 }
