@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Kucoin.Api.Models;
 using TradingBot.Common;
 using TradingBot.Core;
-using TradingBot.Core.Enums;
 
 namespace Kucoin.Api
 {
@@ -18,8 +17,6 @@ namespace Kucoin.Api
 		{
 			_settings = new KucoinSettings();
 		}
-
-		public ExchangeType Type => ExchangeType.Kucoin;
 
 		#region Public API
 
@@ -126,14 +123,14 @@ namespace Kucoin.Api
 			//	{ "timestamp", DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString() }
 			//}, true);
 			//dynamic content = await MakePrivateCallAsync(HttpMethod.Get, "openOrders", queryString);
-			var response = new OpenOrdersResponse();
+			var orders = new List<OrderResult>();
 
 			//foreach (dynamic item in content)
 			//{
 
 			//}
 
-			return response;
+			return new OpenOrdersResponse(orders);
 		}
 
 		#endregion

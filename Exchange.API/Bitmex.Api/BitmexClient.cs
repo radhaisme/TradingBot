@@ -5,7 +5,6 @@ using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using TradingBot.Core;
-using TradingBot.Core.Enums;
 
 namespace Bitmex.Api
 {
@@ -17,8 +16,6 @@ namespace Bitmex.Api
 		{
 			_settings = new BitmexSettings();
 		}
-
-		public ExchangeType Type => ExchangeType.Bitmex;
 
 		#region Public API
 
@@ -112,14 +109,14 @@ namespace Bitmex.Api
 		{
 			var order = new { nonce = DateTime.Now.ToString(CultureInfo.InvariantCulture) };
 			dynamic content = await MakePrivateCallAsync(order, "orders");
-			var response = new OpenOrdersResponse();
+			var orders = new List<OrderResult>();
 
 			foreach (dynamic item in content)
 			{
 
 			}
 
-			return response;
+			return new OpenOrdersResponse(orders);
 		}
 
 		#endregion

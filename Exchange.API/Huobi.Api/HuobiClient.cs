@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using TradingBot.Core;
-using TradingBot.Core.Enums;
 
 namespace Huobi.Api
 {
@@ -17,8 +16,6 @@ namespace Huobi.Api
 		{
 			_settings = new HuobiSettings();
 		}
-
-		public ExchangeType Type => ExchangeType.Huobi;
 
 		#region Public API
 
@@ -112,14 +109,14 @@ namespace Huobi.Api
 			//	{ "timestamp", DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString() }
 			//}, true);
 			//dynamic content = await MakePrivateCallAsync(HttpMethod.Get, "openOrders", queryString);
-			var response = new OpenOrdersResponse();
+			var orders = new List<OrderResult>();
 
 			//foreach (dynamic item in content)
 			//{
 
 			//}
 
-			return response;
+			return new OpenOrdersResponse(orders);
 		}
 
 		#endregion

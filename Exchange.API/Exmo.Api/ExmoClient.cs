@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Exmo.Api.Models;
 using TradingBot.Common;
 using TradingBot.Core;
-using TradingBot.Core.Enums;
 
 namespace Exmo.Api
 {
@@ -20,8 +19,6 @@ namespace Exmo.Api
 		{
 			_settings = new ExmoSettings();
 		}
-
-		public ExchangeType Type => ExchangeType.Exmo;
 
 		#region Public API
 
@@ -117,14 +114,14 @@ namespace Exmo.Api
 			//	{ "timestamp", DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString() }
 			//}, true);
 			//dynamic content = await MakePrivateCallAsync(HttpMethod.Get, "openOrders", queryString);
-			var response = new OpenOrdersResponse();
+			var orders = new List<OrderResult>();
 
 			//foreach (dynamic item in content)
 			//{
 
 			//}
 
-			return response;
+			return new OpenOrdersResponse(orders);
 		}
 
 		#endregion

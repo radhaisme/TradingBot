@@ -9,7 +9,6 @@ using System.Text;
 using System.Threading.Tasks;
 using TradingBot.Common;
 using TradingBot.Core;
-using TradingBot.Core.Enums;
 
 namespace Cryptopia.Api
 {
@@ -21,8 +20,6 @@ namespace Cryptopia.Api
 		{
 			_settings = new CryptopiaSettings();
 		}
-
-		public ExchangeType Type => ExchangeType.Cryptopia;
 
 		#region Public API
 
@@ -127,14 +124,14 @@ namespace Cryptopia.Api
 			//	{ "timestamp", DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString() }
 			//}, true);
 			//dynamic content = await MakePrivateCallAsync(HttpMethod.Get, "openOrders", queryString);
-			var response = new OpenOrdersResponse();
+			var orders = new List<OrderResult>();
 
 			//foreach (dynamic item in content)
 			//{
 
 			//}
 
-			return response;
+			return new OpenOrdersResponse(orders);
 		}
 
 		#endregion

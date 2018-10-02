@@ -9,7 +9,6 @@ using System.Text;
 using System.Threading.Tasks;
 using TradingBot.Common;
 using TradingBot.Core;
-using TradingBot.Core.Enums;
 
 namespace Bitfinex.Api
 {
@@ -21,8 +20,6 @@ namespace Bitfinex.Api
 		{
 			_settings = new BitfinexSettings();
 		}
-
-		public ExchangeType Type => ExchangeType.Bitfinex;
 
 		#region Public API
 
@@ -124,14 +121,14 @@ namespace Bitfinex.Api
 		{
 			var order = new { nonce = DateTime.Now.ToString(CultureInfo.InvariantCulture) };
 			dynamic content = await MakePrivateCallAsync(order, "orders");
-			var response = new OpenOrdersResponse();
+			var orders = new List<OrderResult>();
 
 			foreach (dynamic item in content)
 			{
 
 			}
 
-			return response;
+			return new OpenOrdersResponse(orders);
 		}
 
 		#endregion

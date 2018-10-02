@@ -9,7 +9,6 @@ using System.Text;
 using System.Threading.Tasks;
 using TradingBot.Common;
 using TradingBot.Core;
-using TradingBot.Core.Enums;
 
 namespace Binance.Api
 {
@@ -22,8 +21,6 @@ namespace Binance.Api
 		{
 			_settings = new BinanceSettings();
 		}
-
-		public ExchangeType Type => ExchangeType.Binance;
 
 		#region Public API
 

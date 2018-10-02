@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using TradingBot.Common;
 using TradingBot.Core;
-using TradingBot.Core.Enums;
 using Yobit.Api.Models;
 
 namespace Yobit.Api
@@ -21,8 +20,6 @@ namespace Yobit.Api
 		{
 			_settings = new YobitSettings();
 		}
-
-		public ExchangeType Type => ExchangeType.Yobit;
 
 		#region Public API
 
@@ -140,16 +137,21 @@ namespace Yobit.Api
 
 		public async Task<OpenOrdersResponse> GetOpenOrdersAsync(OpenOrdersRequest request)
 		{
-			//var order = new { nonce = DateTime.Now.ToString(CultureInfo.InvariantCulture) };
-			//dynamic content = await MakePrivateCallAsync(order, "orders");
-			var response = new OpenOrdersResponse();
+			if (String.IsNullOrEmpty(request.Pair))
+			{
+				throw new ArgumentNullException(nameof(request.Pair));
+			}
 
-			//foreach (dynamic item in content)
-			//{
+			string queryString = HttpHelper.QueryString(new Dictionary<string, string> { { "method", "ActiveOrders" }, { "pair", request.Pair }, { "nonce", GenerateNonce(_settings.CreatedAt) } }, true);
+			dynamic content = await MakePrivateCallAsync(queryString);
+			var orders = new List<OrderResult>();
 
-			//}
+			foreach (dynamic item in content)
+			{
 
-			return response;
+			}
+
+			return new OpenOrdersResponse(orders);
 		}
 
 		#endregion

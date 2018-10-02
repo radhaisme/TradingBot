@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using TradingBot.Common;
 using TradingBot.Core;
-using TradingBot.Core.Enums;
 
 namespace Okex.Api
 {
@@ -20,8 +19,6 @@ namespace Okex.Api
 		{
 			_settings = new OkexSettings();
 		}
-
-		public ExchangeType Type => ExchangeType.Okex;
 
 		#region Public API
 
@@ -118,14 +115,14 @@ namespace Okex.Api
 				{ "timestamp", DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString() }
 			}, true);
 			//dynamic content = await MakePrivateCallAsync(HttpMethod.Get, "openOrders", queryString);
-			var response = new OpenOrdersResponse();
+			var orders = new List<OrderResult>();
 
 			//foreach (dynamic item in content)
 			//{
 				
 			//}
 
-			return response;
+			return new OpenOrdersResponse(orders);
 		}
 
 		#endregion
