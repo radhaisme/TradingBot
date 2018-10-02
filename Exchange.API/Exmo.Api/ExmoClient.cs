@@ -11,7 +11,7 @@ using TradingBot.Core;
 
 namespace Exmo.Api
 {
-	public class ExmoClient : ApiClient
+	public sealed class ExmoClient : ApiClient
 	{
 		private readonly IExmoSettings _settings;
 
