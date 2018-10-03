@@ -1,7 +1,6 @@
 ﻿using Bitfinex.Api.Models;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
@@ -95,37 +94,33 @@ namespace Bitfinex.Api
 
 		public async Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)
 		{
-			var order = new
-			{
-				symbol = request.Pair,
-				amount = request.Amount,
-				price = request.Rate,
-				side = request.TradeType.ToString().ToLower(),
-				type = GetOrderType(request.OrderType),
-				ocoorder = false //TODO: Unsupported an ocoorder orders
-			};
-			var content = await MakePrivateCallAsync(order, "order/new");
+			var content = await MakePrivateCallAsync(request, "order/new");
 
 			return new CreateOrderResponse((long)content.order_id);
 		}
 
 		public async Task<CancelOrderResponse> CancelOrderAsync(CancelOrderRequest request)
 		{
-			var order = new { order_id = request.OrderId };
-			var content = await MakePrivateCallAsync(order, "order/cancel");
+			var content = await MakePrivateCallAsync(request, "order/cancel");
 
 			return new CancelOrderResponse((long)content.order_id);
 		}
 
 		public async Task<OpenOrdersResponse> GetOpenOrdersAsync(OpenOrdersRequest request)
 		{
-			var order = new { nonce = DateTime.Now.ToString(CultureInfo.InvariantCulture) };
-			dynamic content = await MakePrivateCallAsync(order, "orders");
+			dynamic content = await MakePrivateCallAsync(request, "orders");
 			var orders = new List<OrderResult>();
 
 			foreach (dynamic item in content)
 			{
-
+				var order = new OrderResult((long)item.id)
+				{
+					Pair = item.symbol,
+					TradeType = item.side == "buy" ? TradeType.Buy : TradeType.Sell,
+					Rate = item.price,
+					Amount = item.original_amount
+				};
+				orders.Add(order);
 			}
 
 			return new OpenOrdersResponse(orders);

@@ -148,7 +148,15 @@ namespace Yobit.Api
 
 			foreach (dynamic item in content)
 			{
-
+				dynamic data = content[item];
+				var order = new OrderResult((long)item)
+				{
+					Pair = data.pair,
+					TradeType = data.type == "sell" ? TradeType.Sell : TradeType.Buy,
+					Rate = data.rate,
+					Amount = data.amount
+				};
+				orders.Add(order);
 			}
 
 			return new OpenOrdersResponse(orders);

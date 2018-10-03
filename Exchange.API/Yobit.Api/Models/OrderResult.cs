@@ -9,6 +9,7 @@ namespace Yobit.Api.Models
 			OrderId = orderId;
 		}
 
+		public string Pair { get; set; }
 		public long OrderId { get; }
 		public TradeType TradeType { get; set; }
 		public OrderType OrderType { get; set; }

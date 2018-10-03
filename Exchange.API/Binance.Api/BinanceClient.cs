@@ -50,9 +50,8 @@ namespace Binance.Api
 			}
 
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"ticker/price?symbol={request.Pair}"));
-			var response = new MarketResponse { LastPrice = content.price };
 
-			return response;
+			return new MarketResponse { LastPrice = content.price };
 		}
 
 		public async Task<DepthResponse> GetOrderBookAsync(DepthRequest request)
@@ -140,6 +139,7 @@ namespace Binance.Api
 			foreach (dynamic item in content)
 			{
 				var order = new OrderResult((long)item.orderId);
+				order.Pair = item.symbol;
 				order.TradeType = item.side == "BUY" ? TradeType.Buy : TradeType.Sell;
 				order.OrderType = item.type == "LIMIT" ? OrderType.Limit : OrderType.Market;
 				order.Rate = item.price;

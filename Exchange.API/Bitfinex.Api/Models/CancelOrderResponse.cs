@@ -8,6 +8,6 @@ namespace Bitfinex.Api.Models
 		    OrderId = orderId;
 	    }
 
-		public long OrderId { get; set; }
+		public long OrderId { get; }
     }
 }
