@@ -113,13 +113,14 @@ namespace Exmo.Api
 			//	{ "symbol", request.Pair },
 			//	{ "timestamp", DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString() }
 			//}, true);
-			//dynamic content = await MakePrivateCallAsync(HttpMethod.Get, "openOrders", queryString);
+			//TODO: user_open_orders
+			dynamic content = null; //await MakePrivateCallAsync(HttpMethod.Get, "user_open_orders", queryString);
 			var orders = new List<OrderResult>();
 
-			//foreach (dynamic item in content)
-			//{
+			foreach (dynamic item in content)
+			{
 
-			//}
+			}
 
 			return new OpenOrdersResponse(orders);
 		}

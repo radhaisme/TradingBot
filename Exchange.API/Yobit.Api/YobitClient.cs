@@ -37,10 +37,12 @@ namespace Yobit.Api
 					continue;
 				}
 
-				var item = new TradePairResult();
 				string[] assets = ((string)key.Name).Split('_');
-				item.BaseAsset = assets[0];
-				item.QuoteAsset = assets[1];
+				var item = new TradePairResult
+				{
+					BaseAsset = assets[0],
+					QuoteAsset = assets[1]
+				};
 				pairs.Add(item);
 			}
 

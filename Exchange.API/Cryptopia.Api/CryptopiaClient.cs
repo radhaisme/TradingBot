@@ -118,18 +118,20 @@ namespace Cryptopia.Api
 
 		public async Task<OpenOrdersResponse> GetOpenOrdersAsync(OpenOrdersRequest request)
 		{
-			//var queryString = HttpHelper.QueryString(new Dictionary<string, string>
-			//{
-			//	{ "symbol", request.Pair },
-			//	{ "timestamp", DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString() }
-			//}, true);
-			//dynamic content = await MakePrivateCallAsync(HttpMethod.Get, "openOrders", queryString);
+			dynamic content = await MakePrivateCallAsync(BuildUrl(_settings.PrivateUrl, "GetOpenOrders"), request);
 			var orders = new List<OrderResult>();
 
-			//foreach (dynamic item in content)
-			//{
-
-			//}
+			foreach (dynamic item in content.Data)
+			{
+				var order = new OrderResult((long) item.OrderId)
+				{
+					Pair = item.Market,
+					TradeType = item.Type == "Buy" ? TradeType.Buy : TradeType.Sell,
+					Rate = item.Rate,
+					Amount = item.Amount
+				};
+				orders.Add(order);
+			}
 
 			return new OpenOrdersResponse(orders);
 		}

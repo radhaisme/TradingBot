@@ -32,9 +32,11 @@ namespace Kucoin.Api
 					continue;
 				}
 
-				var pair = new TradePairResult();
-				pair.BaseAsset = item.coinType;
-				pair.QuoteAsset = item.coinTypePair;
+				var pair = new TradePairResult
+				{
+					BaseAsset = item.coinType,
+					QuoteAsset = item.coinTypePair
+				};
 				pairs.Add(pair);
 			}
 
