@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
-using TradingBot.Core;
+using TradingBot.Api;
 
 namespace Bitmex.Api
 {

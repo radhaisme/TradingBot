@@ -6,8 +6,8 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using TradingBot.Common;
-using TradingBot.Core;
+using TradingBot.Api;
+using TradingBot.Api.Helpers;
 
 namespace Okex.Api
 {

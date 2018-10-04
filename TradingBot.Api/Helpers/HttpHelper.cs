@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TradingBot.Common
+namespace TradingBot.Api.Helpers
 {
 	public static class HttpHelper
 	{

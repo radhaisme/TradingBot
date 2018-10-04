@@ -1,4 +1,4 @@
-﻿using TradingBot.Core;
+﻿using TradingBot.Api;
 
 namespace Bitmex.Api
 {

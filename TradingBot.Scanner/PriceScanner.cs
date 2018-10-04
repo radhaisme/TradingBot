@@ -1,4 +1,4 @@
-﻿using TradingBot.Core;
+﻿using TradingBot.Api;
 
 namespace TradingBot.Scanner
 {
@@ -10,7 +10,5 @@ namespace TradingBot.Scanner
 		{
 			_client = client;
 		}
-
-
 	}
 }

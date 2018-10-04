@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Reflection;
-using TradingBot.Core.Enums;
 
-namespace TradingBot.Core
+namespace TradingBot.Api
 {
 	public abstract class ApiSettings : IApiSettings
 	{
-		public ExchangeType Type { get; set; }
 		public string PublicUrl { get; set; }
 		public string PrivateUrl { get; set; }
 		public string ApiKey { get; set; }
@@ -40,11 +38,6 @@ namespace TradingBot.Core
 				KeyValueConfigurationElement element = configuration.AppSettings.Settings[key.Name];
 				PropertyInfo property = GetType().GetProperty(key.Name);
 				object value = null;
-
-				if (key.PropertyType.IsEnum)
-				{
-					value = Enum.Parse(typeof(ExchangeType), element.Value);
-				}
 
 				if (key.PropertyType == typeof(DateTimeOffset))
 				{

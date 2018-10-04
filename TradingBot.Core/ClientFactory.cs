@@ -29,17 +29,17 @@ namespace TradingBot.Core
 			return Clients.ContainsKey(exchangeType);
 		}
 
-		public IApiClient Create(ExchangeType type, IApiSettings settings = null)
-		{
-			if (!IsExists(type))
-			{
-				throw new ArgumentOutOfRangeException("Such Exchange is not registered.");
-			}
+		//public IApiClient Create(ExchangeType type, IApiSettings settings = null)
+		//{
+		//	if (!IsExists(type))
+		//	{
+		//		throw new ArgumentOutOfRangeException("Such Exchange is not registered.");
+		//	}
 
-			ExchangeInfo client = Clients[type];
+		//	ExchangeInfo client = Clients[type];
 
-			return (IApiClient)Activator.CreateInstance(client.ExchangeApi, client.PublicEndpoint, client.PrivateEndpoint, settings);
-		}
+		//	return (IApiClient)Activator.CreateInstance(client.ExchangeApi, client.PublicEndpoint, client.PrivateEndpoint, settings);
+		//}
 
 		#region Private methods
 
@@ -57,9 +57,9 @@ namespace TradingBot.Core
 
 			//temporary:
 
-			var assembly = Assembly.Load("Yobit.Api");
-			Type clientType = assembly.GetType("Yobit.Api.YobitClient");
-			Clients.Add(ExchangeType.Yobit, new ExchangeInfo("https://yobit.net/api/3/", "https://yobit.net/tapi", clientType));
+			//var assembly = Assembly.Load("Yobit.Api");
+			//Type clientType = assembly.GetType("Yobit.Api.YobitClient");
+			//Clients.Add(ExchangeType.Yobit, new ExchangeInfo("https://yobit.net/api/3/", "https://yobit.net/tapi", clientType));
 		}
 
 		#endregion

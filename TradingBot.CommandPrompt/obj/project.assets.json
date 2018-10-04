@@ -2,6 +2,18 @@
   "version": 3,
   "targets": {
     ".NETCoreApp,Version=v2.1": {
+      "Enums.NET/2.3.2": {
+        "type": "package",
+        "dependencies": {
+          "System.ComponentModel.Annotations": "4.4.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/Enums.NET.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Enums.NET.dll": {}
+        }
+      },
       "Microsoft.AspNetCore.Hosting.Abstractions/2.0.0": {
         "type": "package",
         "dependencies": {
@@ -1249,8 +1261,7 @@
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
-          "TradingBot.Common": "1.0.0",
-          "TradingBot.Core": "1.0.0"
+          "TradingBot.Api": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Binance.Api.dll": {}
@@ -1263,8 +1274,7 @@
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
-          "TradingBot.Common": "1.0.0",
-          "TradingBot.Core": "1.0.0"
+          "TradingBot.Api": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Bitfinex.Api.dll": {}
@@ -1277,7 +1287,7 @@
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
-          "TradingBot.Core": "1.0.0"
+          "TradingBot.Api": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Bitmex.Api.dll": {}
@@ -1290,8 +1300,7 @@
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
-          "TradingBot.Common": "1.0.0",
-          "TradingBot.Core": "1.0.0"
+          "TradingBot.Api": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Cryptopia.Api.dll": {}
@@ -1304,8 +1313,7 @@
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
-          "TradingBot.Common": "1.0.0",
-          "TradingBot.Core": "1.0.0"
+          "TradingBot.Api": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Exmo.Api.dll": {}
@@ -1318,8 +1326,7 @@
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
-          "TradingBot.Common": "1.0.0",
-          "TradingBot.Core": "1.0.0"
+          "TradingBot.Api": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Huobi.Api.dll": {}
@@ -1332,8 +1339,7 @@
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
-          "TradingBot.Common": "1.0.0",
-          "TradingBot.Core": "1.0.0"
+          "TradingBot.Api": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Kucoin.Api.dll": {}
@@ -1346,14 +1352,27 @@
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
-          "TradingBot.Common": "1.0.0",
-          "TradingBot.Core": "1.0.0"
+          "TradingBot.Api": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Okex.Api.dll": {}
         },
         "runtime": {
           "bin/placeholder/Okex.Api.dll": {}
+        }
+      },
+      "TradingBot.Api/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "dependencies": {
+          "enums.net": "2.3.2",
+          "newtonsoft.json": "11.0.2"
+        },
+        "compile": {
+          "bin/placeholder/TradingBot.Api.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/TradingBot.Api.dll": {}
         }
       },
       "TradingBot.Common/1.0.0": {
@@ -1388,8 +1407,7 @@
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
-          "TradingBot.Common": "1.0.0",
-          "TradingBot.Core": "1.0.0"
+          "TradingBot.Api": "1.0.0"
         },
         "compile": {
           "bin/placeholder/TradingBot.CurrencyProvider.dll": {}
@@ -1456,8 +1474,7 @@
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
-          "TradingBot.Core": "1.0.0",
-          "TradingBot.Data": "1.0.0"
+          "TradingBot.Api": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Yobit.Api.dll": {}
@@ -1469,6 +1486,39 @@
     }
   },
   "libraries": {
+    "Enums.NET/2.3.2": {
+      "sha512": "rIPr6Ac8eu/j8p7j2NM2R+8aYj4vn1Yl6aiReX0srWYw4Jw/q/RmNThKyzIizzE8UJO6KWDZKrzPD9giD5u/ow==",
+      "type": "package",
+      "path": "enums.net/2.3.2",
+      "files": [
+        "enums.net.2.3.2.nupkg.sha512",
+        "enums.net.nuspec",
+        "lib/net20/Enums.NET.dll",
+        "lib/net20/Enums.NET.pdb",
+        "lib/net20/Enums.NET.xml",
+        "lib/net35/Enums.NET.dll",
+        "lib/net35/Enums.NET.pdb",
+        "lib/net35/Enums.NET.xml",
+        "lib/net40/Enums.NET.dll",
+        "lib/net40/Enums.NET.pdb",
+        "lib/net40/Enums.NET.xml",
+        "lib/net45/Enums.NET.dll",
+        "lib/net45/Enums.NET.pdb",
+        "lib/net45/Enums.NET.xml",
+        "lib/netstandard1.0/Enums.NET.dll",
+        "lib/netstandard1.0/Enums.NET.pdb",
+        "lib/netstandard1.0/Enums.NET.xml",
+        "lib/netstandard1.1/Enums.NET.dll",
+        "lib/netstandard1.1/Enums.NET.pdb",
+        "lib/netstandard1.1/Enums.NET.xml",
+        "lib/netstandard1.3/Enums.NET.dll",
+        "lib/netstandard1.3/Enums.NET.pdb",
+        "lib/netstandard1.3/Enums.NET.xml",
+        "lib/netstandard2.0/Enums.NET.dll",
+        "lib/netstandard2.0/Enums.NET.pdb",
+        "lib/netstandard2.0/Enums.NET.xml"
+      ]
+    },
     "Microsoft.AspNetCore.Hosting.Abstractions/2.0.0": {
       "sha512": "IR2zlm3d/CmYbkw+cMM7M6mUAi+xsFUPfWqGYqzZVC5o6jX3xD2Z4Uf44UBaWKMBf5Z7q9dodIdXxwFPF2Hxhg==",
       "type": "package",
@@ -4380,6 +4430,11 @@
       "type": "project",
       "path": "../Exchange.API/Okex.Api/Okex.Api.csproj",
       "msbuildProject": "../Exchange.API/Okex.Api/Okex.Api.csproj"
+    },
+    "TradingBot.Api/1.0.0": {
+      "type": "project",
+      "path": "../TradingBot.Api/TradingBot.Api.csproj",
+      "msbuildProject": "../TradingBot.Api/TradingBot.Api.csproj"
     },
     "TradingBot.Common/1.0.0": {
       "type": "project",

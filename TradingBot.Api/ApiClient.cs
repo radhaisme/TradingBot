@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using TradingBot.Common;
+using TradingBot.Api.Helpers;
 
-namespace TradingBot.Core
+namespace TradingBot.Api
 {
 	public abstract class ApiClient : IDisposable
 	{

@@ -1,9 +1,8 @@
 ﻿using System;
+using Newtonsoft.Json;
 
-namespace TradingBot.Common
+namespace TradingBot.Api.Helpers
 {
-	using Newtonsoft.Json;
-
 	public static class JsonHelper
 	{
 		public static string ToJson(object @object)

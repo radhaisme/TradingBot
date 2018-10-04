@@ -6,6 +6,7 @@ using Huobi.Api;
 using Kucoin.Api;
 using Okex.Api;
 using System.Collections.Generic;
+using TradingBot.Api;
 using TradingBot.Core;
 using TradingBot.Core.Entities;
 using TradingBot.Core.Enums;
@@ -20,7 +21,7 @@ namespace TradingBot.Scanner
 
 		public ExchangeFactory(ICurrencyProvider provider)
 		{
-			_currencies = provider.GetCurrenciesAsync().Result;
+			//_currencies = provider.GetCurrenciesAsync().Result;
 			//TODO: Add logic for finding registered exchanges
 		}
 

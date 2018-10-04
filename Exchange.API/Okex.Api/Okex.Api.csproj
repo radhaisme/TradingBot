@@ -5,8 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\TradingBot.Common\TradingBot.Common.csproj" />
-    <ProjectReference Include="..\..\TradingBot.Core\TradingBot.Core.csproj" />
+    <ProjectReference Include="..\..\TradingBot.Api\TradingBot.Api.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Kucoin.Api.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Kucoin.Api.Models;
-using TradingBot.Common;
-using TradingBot.Core;
+using TradingBot.Api;
+using TradingBot.Api.Helpers;
 
 namespace Kucoin.Api
 {
