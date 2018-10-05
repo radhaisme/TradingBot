@@ -1,4 +1,5 @@
 ﻿using Bitfinex.Api.Models;
+using EnumsNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -116,7 +117,7 @@ namespace Bitfinex.Api
 				var order = new OrderResult((long)item.id)
 				{
 					Pair = item.symbol,
-					TradeType = item.side == "buy" ? TradeType.Buy : TradeType.Sell,
+					TradeType = Enums.Parse<TradeType>((string)item.side, true),
 					Rate = item.price,
 					Amount = item.original_amount
 				};

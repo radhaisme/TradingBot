@@ -1,4 +1,5 @@
 ﻿using Binance.Api.Models;
+using EnumsNET;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -138,12 +139,14 @@ namespace Binance.Api
 
 			foreach (dynamic item in content)
 			{
-				var order = new OrderResult((long)item.orderId);
-				order.Pair = item.symbol;
-				order.TradeType = item.side == "BUY" ? TradeType.Buy : TradeType.Sell;
-				order.OrderType = item.type == "LIMIT" ? OrderType.Limit : OrderType.Market;
-				order.Rate = item.price;
-				order.Amount = item.origQty;
+				var order = new OrderResult((long)item.orderId)
+				{
+					Pair = item.symbol,
+					TradeType = Enums.Parse<TradeType>((string)item.side, true),
+					OrderType = Enums.Parse<OrderType>((string)item.type, true),
+					Rate = item.price,
+					Amount = item.origQty
+				};
 				//order.CreatedAt = DateTimeOffset.MinValue;
 				orders.Add(order);
 			}

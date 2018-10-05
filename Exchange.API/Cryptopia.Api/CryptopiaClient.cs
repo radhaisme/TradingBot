@@ -1,4 +1,5 @@
 ﻿using Cryptopia.Api.Models;
+using EnumsNET;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -126,7 +127,7 @@ namespace Cryptopia.Api
 				var order = new OrderResult((long) item.OrderId)
 				{
 					Pair = item.Market,
-					TradeType = item.Type == "Buy" ? TradeType.Buy : TradeType.Sell,
+					TradeType = Enums.Parse<TradeType>((string)item.Type, true),
 					Rate = item.Rate,
 					Amount = item.Amount
 				};

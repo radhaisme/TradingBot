@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using EnumsNET;
 using TradingBot.Api;
 using TradingBot.Api.Helpers;
 using Yobit.Api.Models;
@@ -154,7 +155,7 @@ namespace Yobit.Api
 				var order = new OrderResult((long)item)
 				{
 					Pair = data.pair,
-					TradeType = data.type == "sell" ? TradeType.Sell : TradeType.Buy,
+					TradeType = Enums.Parse<TradeType>((string)data.type, true),
 					Rate = data.rate,
 					Amount = data.amount
 				};

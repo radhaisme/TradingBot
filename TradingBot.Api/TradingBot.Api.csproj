@@ -4,8 +4,12 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="enums.net" Version="2.3.2" />
+    <PackageReference Include="Enums.NET" Version="2.3.2" />
     <PackageReference Include="newtonsoft.json" Version="11.0.2" />
   </ItemGroup>
 
