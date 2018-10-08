@@ -119,7 +119,8 @@ namespace Bitfinex.Api
 					Pair = item.symbol,
 					TradeType = Enums.Parse<TradeType>((string)item.side, true),
 					Rate = item.price,
-					Amount = item.original_amount
+					Amount = item.original_amount,
+					CreatedAt = DateTimeOffset.FromUnixTimeSeconds((long)double.Parse((string)item.timestamp))
 				};
 				orders.Add(order);
 			}

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EnumsNET;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -6,7 +7,6 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using EnumsNET;
 using TradingBot.Api;
 using TradingBot.Api.Helpers;
 using Yobit.Api.Models;
@@ -157,7 +157,8 @@ namespace Yobit.Api
 					Pair = data.pair,
 					TradeType = Enums.Parse<TradeType>((string)data.type, true),
 					Rate = data.rate,
-					Amount = data.amount
+					Amount = data.amount,
+					CreatedAt = DateTimeOffset.FromUnixTimeSeconds((long)double.Parse((string)data.timestamp_created))
 				};
 				orders.Add(order);
 			}

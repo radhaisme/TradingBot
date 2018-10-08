@@ -103,18 +103,16 @@ namespace Cryptopia.Api
 		{
 			//TODO: Place an order validation to here
 			var content = await MakePrivateCallAsync(BuildUrl(_settings.PrivateUrl, "SubmitTrade"), request);
-			var response = new CreateOrderResponse();
 			
-			return response;
+			return new CreateOrderResponse((long)content.Data.OrderId);
 		}
 
 		public async Task<CancelOrderResponse> CancelOrderAsync(CancelOrderRequest request)
 		{
 			//TODO: Place an order validation to here
-			var content = await MakePrivateCallAsync(BuildUrl(_settings.PrivateUrl, "CancelTrade"), request);
-			var response = new CancelOrderResponse();
+			await MakePrivateCallAsync(BuildUrl(_settings.PrivateUrl, "CancelTrade"), request);
 			
-			return response;
+			return new CancelOrderResponse(request.OrderId);
 		}
 
 		public async Task<OpenOrdersResponse> GetOpenOrdersAsync(OpenOrdersRequest request)
@@ -124,12 +122,13 @@ namespace Cryptopia.Api
 
 			foreach (dynamic item in content.Data)
 			{
-				var order = new OrderResult((long) item.OrderId)
+				var order = new OrderResult((long)item.OrderId)
 				{
 					Pair = item.Market,
 					TradeType = Enums.Parse<TradeType>((string)item.Type, true),
 					Rate = item.Rate,
-					Amount = item.Amount
+					Amount = item.Amount,
+					CreatedAt = DateTimeOffset.Parse((string)item.TimeStamp)
 				};
 				orders.Add(order);
 			}

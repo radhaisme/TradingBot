@@ -145,9 +145,9 @@ namespace Binance.Api
 					TradeType = Enums.Parse<TradeType>((string)item.side, true),
 					OrderType = Enums.Parse<OrderType>((string)item.type, true),
 					Rate = item.price,
-					Amount = item.origQty
+					Amount = item.origQty,
+					CreatedAt = DateTimeOffset.FromUnixTimeSeconds((long)double.Parse((string)item.time))
 				};
-				//order.CreatedAt = DateTimeOffset.MinValue;
 				orders.Add(order);
 			}
 
