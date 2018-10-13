@@ -149,18 +149,21 @@ namespace Yobit.Api
 			dynamic content = await MakePrivateCallAsync(queryString);
 			var orders = new List<OrderResult>();
 
-			foreach (dynamic item in content)
+			if (content.@return != null)
 			{
-				dynamic data = content[item];
-				var order = new OrderResult((long)item)
+				foreach (dynamic key in content.@return)
 				{
-					Pair = data.pair,
-					TradeType = Enums.Parse<TradeType>((string)data.type, true),
-					Rate = data.rate,
-					Amount = data.amount,
-					CreatedAt = DateTimeOffset.FromUnixTimeSeconds((long)double.Parse((string)data.timestamp_created))
-				};
-				orders.Add(order);
+					dynamic data = content.@return[key];
+					var order = new OrderResult((long)key)
+					{
+						Pair = data.pair,
+						TradeType = Enums.Parse<TradeType>((string)data.type, true),
+						Rate = data.rate,
+						Amount = data.amount,
+						CreatedAt = DateTimeOffset.FromUnixTimeSeconds((long)double.Parse((string)data.timestamp_created))
+					};
+					orders.Add(order);
+				}
 			}
 
 			return new OpenOrdersResponse(orders);
@@ -195,19 +198,19 @@ namespace Yobit.Api
 				}
 			});
 
-			return CallAsync<dynamic>(HttpMethod.Post, BuildUrl(_settings.PrivateUrl, content), new StringContent(content, Encoding.UTF8, "application/x-www-form-urlencoded"));
+			return CallAsync<dynamic>(HttpMethod.Post, BuildUrl(_settings.PrivateUrl, "?" + content), new StringContent(content, Encoding.UTF8, "application/x-www-form-urlencoded"));
 		}
 
 		private string GenerateNonce(DateTimeOffset date)
 		{
-			return (DateTime.UtcNow - date).TotalSeconds.ToString(CultureInfo.InvariantCulture);
+			return ((DateTime.UtcNow - date).TotalSeconds).ToString(CultureInfo.InvariantCulture);
 		}
 
 		protected override async void HandleError(HttpResponseMessage response)
 		{
-			var content = await HttpHelper.AcquireContentAsync<ErrorModel>(response);
+			var content = await HttpHelper.AcquireContentAsync<dynamic>(response);
 
-			if (!content.Success && !String.IsNullOrEmpty(content.Error))
+			if (!(bool)content.success && !String.IsNullOrEmpty((string)content.error))
 			{
 				throw new HttpRequestException(content.Error);
 			}

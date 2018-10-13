@@ -1,14 +1,13 @@
-﻿using Exmo.Api.Models;
+﻿using EnumsNET;
+using Exmo.Api.Models;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using EnumsNET;
 using TradingBot.Api;
 using TradingBot.Api.Helpers;
 
@@ -32,10 +31,12 @@ namespace Exmo.Api
 
 			foreach (string key in content.Keys)
 			{
-				var pair = new TradePairResult();
 				string[] assets = key.Split('_');
-				pair.BaseAsset = assets[0];
-				pair.QuoteAsset = assets[1];
+				var pair = new TradePairResult
+				{
+					BaseAsset = assets[0],
+					QuoteAsset = assets[1]
+				};
 				pairs.Add(pair);
 			}
 
