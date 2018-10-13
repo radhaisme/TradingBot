@@ -1,11 +1,14 @@
 ﻿using Exmo.Api.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using EnumsNET;
 using TradingBot.Api;
 using TradingBot.Api.Helpers;
 
@@ -92,34 +95,50 @@ namespace Exmo.Api
 
 		#region Private API
 
-		public Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)
+		public async Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)
 		{
-			//HMACSHA512
+			var queryString = HttpHelper.QueryString(new Dictionary<string, string>
+			{
+				{"pair", request.Pair},
+				{"price", request.Rate.ToString(CultureInfo.InvariantCulture)},
+				{"quantity", request.Amount.ToString(CultureInfo.InvariantCulture)},
+				{"type", request.TradeType.ToString()}
+			});
+			dynamic content = await MakePrivateCallAsync("order_create", queryString);
 
-			return null;
+			return new CreateOrderResponse((long)content.order_id);
 		}
 
-		public Task<CancelOrderResponse> CancelOrderAsync(CancelOrderRequest request)
+		public async Task<CancelOrderResponse> CancelOrderAsync(CancelOrderRequest request)
 		{
+			var queryString = HttpHelper.QueryString(new Dictionary<string, string>
+			{
+				{"order_id", request.OrderId.ToString()}
+			});
+			await MakePrivateCallAsync("order_cancel", queryString);
 
-
-			return null;
+			return new CancelOrderResponse(0);
 		}
 
 		public async Task<OpenOrdersResponse> GetOpenOrdersAsync(OpenOrdersRequest request)
 		{
-			//var queryString = HttpHelper.QueryString(new Dictionary<string, string>
-			//{
-			//	{ "symbol", request.Pair },
-			//	{ "timestamp", DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString() }
-			//}, true);
-			//TODO: user_open_orders
-			dynamic content = null; //await MakePrivateCallAsync(HttpMethod.Get, "user_open_orders", queryString);
+			dynamic content = await MakePrivateCallAsync("user_open_orders", String.Empty);
 			var orders = new List<OrderResult>();
 
-			foreach (dynamic item in content)
+			foreach (dynamic key in content)
 			{
-
+				foreach (dynamic item in content[key])
+				{
+					var order = new OrderResult((long)item.order_id)
+					{
+						Pair = item.pair,
+						TradeType = Enums.Parse<TradeType>((string)item.type, true),
+						Rate = item.price,
+						Amount = item.quantity,
+						CreatedAt = DateTimeOffset.FromUnixTimeSeconds((long)item.created)
+					};
+					orders.Add(order);
+				}
 			}
 
 			return new OpenOrdersResponse(orders);
@@ -129,7 +148,7 @@ namespace Exmo.Api
 
 		#region Private methods
 
-		private Task<dynamic> MakePrivateCallAsync(string content)
+		private Task<dynamic> MakePrivateCallAsync(string url, string content)
 		{
 			if (String.IsNullOrEmpty(_settings.PrivateUrl))
 			{
@@ -150,11 +169,11 @@ namespace Exmo.Api
 			{
 				{"Key", _settings.ApiKey},
 				{
-					"Sign", BitConverter.ToString(new HMACSHA512(Encoding.UTF8.GetBytes(_settings.Secret)).ComputeHash(Encoding.UTF8.GetBytes(content))).Replace("-", "").ToLower()
+					"Sign", HttpHelper.GetHash(new HMACSHA512(), _settings.Secret, content)
 				}
 			});
 
-			return CallAsync<dynamic>(HttpMethod.Post, BuildUrl(_settings.PrivateUrl, content), new StringContent(content, Encoding.UTF8, "application/x-www-form-urlencoded"));
+			return CallAsync<dynamic>(HttpMethod.Post, BuildUrl(_settings.PrivateUrl, url), new StringContent(content, Encoding.UTF8, "application/x-www-form-urlencoded"));
 		}
 
 		protected override async void HandleError(HttpResponseMessage response)

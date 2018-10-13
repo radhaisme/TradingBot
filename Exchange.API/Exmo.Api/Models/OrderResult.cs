@@ -10,6 +10,7 @@ namespace Exmo.Api.Models
 		}
 
 		public long OrderId { get; }
+		public string Pair { get; set; }
 		public TradeType TradeType { get; set; }
 		public OrderType OrderType { get; set; }
 		public decimal Rate { get; set; }
