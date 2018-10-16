@@ -1,10 +1,12 @@
 ﻿using Bitmex.Api.Models;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Net.Http;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using TradingBot.Api;
+using TradingBot.Api.Helpers;
 
 namespace Bitmex.Api
 {
@@ -107,14 +109,25 @@ namespace Bitmex.Api
 
 		public async Task<OpenOrdersResponse> GetOpenOrdersAsync(OpenOrdersRequest request)
 		{
-			var order = new { nonce = DateTime.Now.ToString(CultureInfo.InvariantCulture) };
-			dynamic content = await MakePrivateCallAsync(order, "orders");
+			string queryString = HttpHelper.QueryString(new Dictionary<string, string> { { "symbol", request.Pair } });
+			dynamic content = await MakePrivateCallAsync(HttpMethod.Get, "order" + queryString, String.Empty);
 			var orders = new List<OrderResult>();
 
-			foreach (dynamic item in content)
-			{
+			//foreach (dynamic item in content)
+			//{
+			//	if (!(bool) item.IsOpen)
+			//	{
+			//		continue;
+			//	}
 
-			}
+			//	var order = new OrderResult((string) item.Symbol)
+			//	{
+			//		Rate = item.MarkPrice,
+			//		Amount = item.CurrentQty,
+			//		CreatedAt = item.TimeStamp
+			//	};
+			//	orders.Add(order);
+			//}
 
 			return new OpenOrdersResponse(orders);
 		}
@@ -123,19 +136,46 @@ namespace Bitmex.Api
 
 		#region Private method
 
-		private Task<dynamic> MakePrivateCallAsync(object obj, string url)
+		private Task<dynamic> MakePrivateCallAsync(HttpMethod method, string url, string content)
 		{
-			//string base64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonHelper.ToJson(obj)));
-			//SetHeaders(new Dictionary<string, string>
-			//{
-			//	{ "X-BFX-APIKEY", _settings.ApiKey },
-			//	{ "X-BFX-PAYLOAD", base64 },
-			//	{ "X-BFX-SIGNATURE", HttpHelper.GetHash(new HMACSHA384(), _settings.Secret, base64) }
-			//});
+			var uri = BuildUrl(_settings.PrivateUrl, url);
+			string expires = GetExpiresArg();
+			string message = method + uri.PathAndQuery + expires + content;
+			string signature = HttpHelper.GetHash(new HMACSHA256(), _settings.Secret, message); //ByteArrayToString(hmacsha256(Encoding.UTF8.GetBytes(_settings.Secret),
+				//Encoding.UTF8.GetBytes(message))); //HttpHelper.GetHash(new HMACSHA256(), _settings.Secret, message);
+			SetHeaders(new Dictionary<string, string>
+			{
+				{ "api-expires", expires },
+				{ "api-key", _settings.ApiKey },
+				{ "api-signature", signature }
+			});
+			//new StringContent(content, Encoding.UTF8, "application/x-www-form-urlencoded")
+			
+			return CallAsync<dynamic>(method, uri);
+		}
 
-			//return CallAsync<dynamic>(HttpMethod.Post, BuildUrl(_settings.PrivateUrl, url));
+		public static string ByteArrayToString(byte[] arr)
+		{
+			StringBuilder hex = new StringBuilder(arr.Length * 2);
+			foreach (byte b in arr)
+				hex.AppendFormat("{0:x2}", b);
+			return hex.ToString();
+		}
 
-			return null;
+		public byte[] hmacsha256(byte[] keyByte, byte[] messageBytes)
+		{
+			using (var hash = new HMACSHA256(keyByte))
+			{
+				return hash.ComputeHash(messageBytes);
+			}
+		}
+
+		private string GetExpiresArg()
+		{
+			long timestamp = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+			string expires = (timestamp + 60).ToString();
+
+			return (expires);
 		}
 
 		protected override async void HandleError(HttpResponseMessage response)

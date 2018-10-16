@@ -51,11 +51,12 @@ namespace TradingBot.Api.Helpers
 			return sb.ToString();
 		}
 
-		public static string GetHash(HMAC hmac, string key, string content)
+		public static string GetHash(HMAC hmac, string secret, string message)
 		{
-			hmac.Key = Encoding.UTF8.GetBytes(key);
+			hmac.Key = Encoding.UTF8.GetBytes(secret);
 
-			return BitConverter.ToString(hmac.ComputeHash(Encoding.UTF8.GetBytes(content))).Replace("-", String.Empty);
+			return BitConverter.ToString(
+				hmac.ComputeHash(Encoding.UTF8.GetBytes(message))).Replace("-", String.Empty);
 		}
 	}
 }

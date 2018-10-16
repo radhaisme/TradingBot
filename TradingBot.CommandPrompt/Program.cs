@@ -1,6 +1,7 @@
 ﻿using Bitmex.Api;
 using System;
 using System.Threading.Tasks;
+using Bitmex.Api.Models;
 
 namespace TradingBot.CommandPrompt
 {
@@ -8,8 +9,8 @@ namespace TradingBot.CommandPrompt
 	{
 		private static async Task Main(string[] args)
 		{
-			//var client = new BitmexClient();
-			//var r = await client.GetTradePairsAsync();
+			var client = new BitmexClient();
+			var r = await client.GetOpenOrdersAsync(new OpenOrdersRequest("XBTUSD"));
 
 			//foreach (var pair in r.Pairs)
 			//{
