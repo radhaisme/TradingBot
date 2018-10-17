@@ -1,9 +1,9 @@
 ﻿using Bitmex.Api.Models;
+using EnumsNET;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 using TradingBot.Api;
 using TradingBot.Api.Helpers;
@@ -109,25 +109,27 @@ namespace Bitmex.Api
 
 		public async Task<OpenOrdersResponse> GetOpenOrdersAsync(OpenOrdersRequest request)
 		{
-			string queryString = HttpHelper.QueryString(new Dictionary<string, string> { { "symbol", request.Pair } });
-			dynamic content = await MakePrivateCallAsync(HttpMethod.Get, "order" + queryString, String.Empty);
+			if (String.IsNullOrEmpty(request.Pair))
+			{
+				throw new ArgumentNullException(nameof(request.Pair));
+			}
+
+			string queryString = HttpHelper.QueryString(new Dictionary<string, string> { { "symbol", request.Pair } }, true);
+			dynamic content = await MakePrivateCallAsync(HttpMethod.Get, $"order?{queryString}&filter=%7B%22open%22%3A%20true%7D", String.Empty);
 			var orders = new List<OrderResult>();
 
-			//foreach (dynamic item in content)
-			//{
-			//	if (!(bool) item.IsOpen)
-			//	{
-			//		continue;
-			//	}
-
-			//	var order = new OrderResult((string) item.Symbol)
-			//	{
-			//		Rate = item.MarkPrice,
-			//		Amount = item.CurrentQty,
-			//		CreatedAt = item.TimeStamp
-			//	};
-			//	orders.Add(order);
-			//}
+			foreach (dynamic item in content)
+			{
+				var order = new OrderResult((string)item.orderID)
+				{
+					Pair = item.symbol,
+					TradeType = Enums.Parse<TradeType>((string)item.side, true),
+					Rate = item.price,
+					Amount = item.orderQty,
+					CreatedAt = DateTimeOffset.Parse((string)item.timestamp)
+				};
+				orders.Add(order);
+			}
 
 			return new OpenOrdersResponse(orders);
 		}
@@ -141,33 +143,14 @@ namespace Bitmex.Api
 			var uri = BuildUrl(_settings.PrivateUrl, url);
 			string expires = GetExpiresArg();
 			string message = method + uri.PathAndQuery + expires + content;
-			string signature = HttpHelper.GetHash(new HMACSHA256(), _settings.Secret, message); //ByteArrayToString(hmacsha256(Encoding.UTF8.GetBytes(_settings.Secret),
-				//Encoding.UTF8.GetBytes(message))); //HttpHelper.GetHash(new HMACSHA256(), _settings.Secret, message);
 			SetHeaders(new Dictionary<string, string>
 			{
 				{ "api-expires", expires },
 				{ "api-key", _settings.ApiKey },
-				{ "api-signature", signature }
+				{ "api-signature", HttpHelper.GetHash(new HMACSHA256(), _settings.Secret, message) }
 			});
-			//new StringContent(content, Encoding.UTF8, "application/x-www-form-urlencoded")
 			
 			return CallAsync<dynamic>(method, uri);
-		}
-
-		public static string ByteArrayToString(byte[] arr)
-		{
-			StringBuilder hex = new StringBuilder(arr.Length * 2);
-			foreach (byte b in arr)
-				hex.AppendFormat("{0:x2}", b);
-			return hex.ToString();
-		}
-
-		public byte[] hmacsha256(byte[] keyByte, byte[] messageBytes)
-		{
-			using (var hash = new HMACSHA256(keyByte))
-			{
-				return hash.ComputeHash(messageBytes);
-			}
 		}
 
 		private string GetExpiresArg()
@@ -180,13 +163,12 @@ namespace Bitmex.Api
 
 		protected override async void HandleError(HttpResponseMessage response)
 		{
-			//if (response.IsSuccessStatusCode)
-			//{
-			//	return;
-			//}
-
-			//var content = await HttpHelper.AcquireContentAsync<ErrorModel>(response);
-			//throw new HttpRequestException(content.Message);
+			var content = await HttpHelper.AcquireContentAsync<dynamic>(response);
+			
+			if (content.error != null && !response.IsSuccessStatusCode)
+			{
+				throw new HttpRequestException((string)content.error.message);
+			}
 		}
 
 		#endregion

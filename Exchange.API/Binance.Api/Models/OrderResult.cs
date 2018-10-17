@@ -2,7 +2,7 @@
 
 namespace Binance.Api.Models
 {
-	public class OrderResult
+	public sealed class OrderResult
 	{
 		public OrderResult(long orderId)
 		{
