@@ -10,7 +10,9 @@ namespace TradingBot.CommandPrompt
 		private static async Task Main(string[] args)
 		{
 			var client = new BitmexClient();
-			var r = await client.GetOpenOrdersAsync(new OpenOrdersRequest("XBTUSD"));
+			var r = await client.CreateOrderAsync(new CreateOrderRequest("XBTUSD", TradeType.Buy, 1, 1));
+
+			//var r2 = await client.GetOpenOrdersAsync(new OpenOrdersRequest("XBTUSD"));
 
 			//foreach (var pair in r.Pairs)
 			//{

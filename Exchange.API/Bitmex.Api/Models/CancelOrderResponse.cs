@@ -1,13 +1,14 @@
-﻿
+﻿using System;
+
 namespace Bitmex.Api.Models
 {
-    public sealed class CancelOrderResponse
-    {
-	    public CancelOrderResponse(long orderId)
-	    {
-		    OrderId = orderId;
-	    }
+	public sealed class CancelOrderResponse
+	{
+		public CancelOrderResponse(Guid orderId)
+		{
+			OrderId = orderId;
+		}
 
-		public long OrderId { get; set; }
-    }
+		public Guid OrderId { get; }
+	}
 }

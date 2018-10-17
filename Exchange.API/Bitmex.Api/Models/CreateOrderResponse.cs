@@ -1,13 +1,14 @@
-﻿
+﻿using System;
+
 namespace Bitmex.Api.Models
 {
-    public sealed class CreateOrderResponse
-    {
-	    public CreateOrderResponse(long orderId)
-	    {
-		    OrderId = orderId;
-	    }
+	public sealed class CreateOrderResponse
+	{
+		public CreateOrderResponse(Guid orderId)
+		{
+			OrderId = orderId;
+		}
 
-		public long OrderId { get; }
-    }
+		public Guid OrderId { get; }
+	}
 }

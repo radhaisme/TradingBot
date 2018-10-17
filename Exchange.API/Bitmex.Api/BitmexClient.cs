@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using TradingBot.Api;
 using TradingBot.Api.Helpers;
@@ -81,30 +82,35 @@ namespace Bitmex.Api
 
 		public async Task<CreateOrderResponse> CreateOrderAsync(CreateOrderRequest request)
 		{
-			//var order = new
-			//{
-			//	symbol = request.Pair,
-			//	amount = request.Amount,
-			//	price = request.Rate,
-			//	side = request.TradeType.ToString().ToLower(),
-			//	type = GetOrderType(request.Type),
-			//	ocoorder = false //TODO: Unsupported an ocoorder orders
-			//};
-			//var content = await MakePrivateCallAsync(order, "order/new");
-			var response = new CreateOrderResponse(0);
-			//response.OrderId = content.order_id;
+			if (String.IsNullOrEmpty(request.Pair))
+			{
+				throw new ArgumentNullException(nameof(request.Pair));
+			}
 
-			return response;
+			var order = new
+			{
+				symbol = request.Pair,
+				side = request.TradeType.ToString(),
+				orderQty = request.Amount,
+				price = request.Rate,
+				ordType = request.OrderType.ToString()
+			};
+			string json = JsonHelper.ToJson(order);
+			dynamic content = await MakePrivateCallAsync(HttpMethod.Post, "order", json);
+			
+			return new CreateOrderResponse(Guid.Parse((string)content.orderID));
 		}
 
 		public async Task<CancelOrderResponse> CancelOrderAsync(CancelOrderRequest request)
 		{
-			//var order = new { order_id = request.OrderId };
-			//var content = await MakePrivateCallAsync(order, "order/cancel");
-			var response = new CancelOrderResponse(0);
-			//dto.OrderId = content.order_id;
+			if (request.OrderId == Guid.Empty)
+			{
+				throw new ArgumentException(nameof(request.OrderId));
+			}
 
-			return response;
+			dynamic content = await MakePrivateCallAsync(HttpMethod.Delete, "order", JsonHelper.ToJson(new { orderID = request.OrderId }));
+
+			return new CancelOrderResponse(Guid.Parse((string)content.orderID));
 		}
 
 		public async Task<OpenOrdersResponse> GetOpenOrdersAsync(OpenOrdersRequest request)
@@ -140,6 +146,13 @@ namespace Bitmex.Api
 
 		private Task<dynamic> MakePrivateCallAsync(HttpMethod method, string url, string content)
 		{
+			StringContent body = null;
+
+			if (!method.Equals(HttpMethod.Get))
+			{
+				body = new StringContent(content, Encoding.UTF8, "application/json");
+			}
+
 			var uri = BuildUrl(_settings.PrivateUrl, url);
 			string expires = GetExpiresArg();
 			string message = method + uri.PathAndQuery + expires + content;
@@ -150,22 +163,22 @@ namespace Bitmex.Api
 				{ "api-signature", HttpHelper.GetHash(new HMACSHA256(), _settings.Secret, message) }
 			});
 			
-			return CallAsync<dynamic>(method, uri);
+			return CallAsync<dynamic>(method, uri, body);
 		}
 
 		private string GetExpiresArg()
 		{
-			long timestamp = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-			string expires = (timestamp + 60).ToString();
+			var timestamp = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+			var expires = (timestamp + 60).ToString();
 
-			return (expires);
+			return expires;
 		}
 
 		protected override async void HandleError(HttpResponseMessage response)
 		{
 			var content = await HttpHelper.AcquireContentAsync<dynamic>(response);
 			
-			if (content.error != null && !response.IsSuccessStatusCode)
+			if (!response.IsSuccessStatusCode && content.error != null)
 			{
 				throw new HttpRequestException((string)content.error.message);
 			}
