@@ -2,8 +2,10 @@
 using EnumsNET;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Net.Http;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using TradingBot.Api;
@@ -68,12 +70,30 @@ namespace Bitmex.Api
 				throw new ArgumentNullException(nameof(request.Pair));
 			}
 
-			//var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"book/{request.Pair}?limit_bids={request.Limit}&limit_asks={request.Limit}"));
-			//var response = Helper.BuildOrderBook(((IEnumerable<dynamic>)content.asks).Take((int)request.Limit), ((IEnumerable<dynamic>)content.bids).Take((int)request.Limit), item => new BookOrderDto { Price = item.price, Amount = item.amount });
+			if (request.Limit < 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(request.Limit));
+			}
 
-			//return response;
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"orderBook/L2?symbol={request.Pair}&depth={request.Limit}"));
+			var asks = new List<OrderInBookResult>();
+			var bids = new List<OrderInBookResult>();
 
-			return new DepthResponse();
+			foreach (dynamic item in content)
+			{
+				var side = Enums.Parse<TradeType>((string)item.side, true);
+
+				if (side == TradeType.Buy)
+				{
+					asks.Add(new OrderInBookResult { Rate = item.price, Volume = item.size });
+				}
+				else
+				{
+					bids.Add(new OrderInBookResult { Rate = item.price, Volume = item.size });
+				}
+			}
+
+			return new DepthResponse(asks, bids);
 		}
 
 		#endregion
