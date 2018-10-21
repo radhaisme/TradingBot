@@ -49,7 +49,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradingBot.Jobs", "TradingB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bitmex.Api", "Exchange.API\Bitmex.Api\Bitmex.Api.csproj", "{C31C44AB-8865-44DF-BCFD-B64E255F040B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingBot.Api", "TradingBot.Api\TradingBot.Api.csproj", "{CEFD60F9-2536-4516-8300-E1B4DAC9319C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradingBot.Api", "TradingBot.Api\TradingBot.Api.csproj", "{CEFD60F9-2536-4516-8300-E1B4DAC9319C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

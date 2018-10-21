@@ -3,6 +3,11 @@ namespace Bitmex.Api.Models
 {
     public sealed class MarketRequest
     {
-	    public string Pair { get; set; }
+	    public MarketRequest(string pair)
+	    {
+		    Pair = pair;
+	    }
+
+	    public string Pair { get; }
 	}
 }

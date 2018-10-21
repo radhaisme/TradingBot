@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Exchange.API\Binance.Api\Binance.Api.csproj" />
+    <ProjectReference Include="..\Exchange.API\Bitmex.Api\Bitmex.Api.csproj" />
     <ProjectReference Include="..\Exchange.API\Huobi.Api\Huobi.Api.csproj" />
     <ProjectReference Include="..\Exchange.API\Yobit.Api\Yobit.Api.csproj" />
     <ProjectReference Include="..\TradingBot.Tasks\TradingBot.Jobs.csproj" />

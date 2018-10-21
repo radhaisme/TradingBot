@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -22,7 +23,7 @@ namespace TradingBot.Api
 				return;
 			}
 
-			Configuration configuration = ConfigurationManager.OpenExeConfiguration(Assembly.GetAssembly(type).ManifestModule.Name);
+			Configuration configuration = ConfigurationManager.OpenExeConfiguration(Assembly.GetAssembly(type).Location);
 			var interfaces = new List<Type>(2);
 			interfaces.AddRange(type.GetInterfaces());
 			interfaces.Add(type);

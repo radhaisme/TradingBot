@@ -4486,6 +4486,19 @@
           "bin/placeholder/Binance.Api.dll": {}
         }
       },
+      "Bitmex.Api/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "dependencies": {
+          "TradingBot.Api": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Bitmex.Api.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Bitmex.Api.dll": {}
+        }
+      },
       "Huobi.Api/1.0.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
@@ -12005,6 +12018,11 @@
       "path": "../Exchange.API/Binance.Api/Binance.Api.csproj",
       "msbuildProject": "../Exchange.API/Binance.Api/Binance.Api.csproj"
     },
+    "Bitmex.Api/1.0.0": {
+      "type": "project",
+      "path": "../Exchange.API/Bitmex.Api/Bitmex.Api.csproj",
+      "msbuildProject": "../Exchange.API/Bitmex.Api/Bitmex.Api.csproj"
+    },
     "Huobi.Api/1.0.0": {
       "type": "project",
       "path": "../Exchange.API/Huobi.Api/Huobi.Api.csproj",
@@ -12041,6 +12059,7 @@
       "Autofac >= 4.8.1",
       "Autofac.Extensions.DependencyInjection >= 4.3.0",
       "Binance.Api >= 1.0.0",
+      "Bitmex.Api >= 1.0.0",
       "Huobi.Api >= 1.0.0",
       "Microsoft.AspNetCore.App >= 2.1.1",
       "Microsoft.NETCore.App >= 2.1.0",
@@ -12080,6 +12099,9 @@
           "projectReferences": {
             "D:\\Projects\\TradingBot\\Exchange.API\\Binance.Api\\Binance.Api.csproj": {
               "projectPath": "D:\\Projects\\TradingBot\\Exchange.API\\Binance.Api\\Binance.Api.csproj"
+            },
+            "D:\\Projects\\TradingBot\\Exchange.API\\Bitmex.Api\\Bitmex.Api.csproj": {
+              "projectPath": "D:\\Projects\\TradingBot\\Exchange.API\\Bitmex.Api\\Bitmex.Api.csproj"
             },
             "D:\\Projects\\TradingBot\\Exchange.API\\Huobi.Api\\Huobi.Api.csproj": {
               "projectPath": "D:\\Projects\\TradingBot\\Exchange.API\\Huobi.Api\\Huobi.Api.csproj"

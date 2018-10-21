@@ -2,10 +2,8 @@
 using EnumsNET;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Net.Http;
 using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using TradingBot.Api;
@@ -51,16 +49,9 @@ namespace Bitmex.Api
 				throw new ArgumentNullException(nameof(request.Pair));
 			}
 
-			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"trade/{request.Pair}"));
-			var response = new MarketResponse();
-			//response.LastPrice = content.last_price;
-			//response.Ask = content.ask;
-			//response.Bid = content.bid;
-			//response.Volume = content.volume;
-			//response.High = content.high;
-			//response.Low = content.low;
-
-			return response;
+			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"instrument?symbol={request.Pair}"));
+			
+			return new MarketResponse { LastPrice = content[0].lastPrice };
 		}
 
 		public async Task<DepthResponse> GetOrderBookAsync(DepthRequest request)
@@ -117,7 +108,7 @@ namespace Bitmex.Api
 			};
 			string json = JsonHelper.ToJson(order);
 			dynamic content = await MakePrivateCallAsync(HttpMethod.Post, "order", json);
-			
+
 			return new CreateOrderResponse(Guid.Parse((string)content.orderID));
 		}
 
@@ -182,7 +173,7 @@ namespace Bitmex.Api
 				{ "api-key", _settings.ApiKey },
 				{ "api-signature", HttpHelper.GetHash(new HMACSHA256(), _settings.Secret, message) }
 			});
-			
+
 			return CallAsync<dynamic>(method, uri, body);
 		}
 
@@ -197,7 +188,7 @@ namespace Bitmex.Api
 		protected override async void HandleError(HttpResponseMessage response)
 		{
 			var content = await HttpHelper.AcquireContentAsync<dynamic>(response);
-			
+
 			if (!response.IsSuccessStatusCode && content.error != null)
 			{
 				throw new HttpRequestException((string)content.error.message);
