@@ -10,6 +10,11 @@ namespace TradingBot.Core.Models
             Name = name;
         }
 
+	    public Currency(string symbol) : this(0, symbol, null)
+	    {
+
+	    }
+
         public int Id { get; }
         public string Symbol { get; }
         public string Name { get; }

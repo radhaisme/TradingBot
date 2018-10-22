@@ -1,12 +1,8 @@
-﻿using System.Collections.Generic;
-using Bitmex.Api;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using Binance.Api;
 using TradingBot.Common;
-using TradingBot.Core.Enums;
 using TradingBot.Web.Models;
-using System;
+using TradingBot.Proxies;
 
 namespace TradingBot.Web.Controllers
 {
@@ -27,25 +23,10 @@ namespace TradingBot.Web.Controllers
 				return BadRequest();
 			}
 
-			var client = new BinanceClient();
-			var r = await client.GetTradePairsAsync();
-
-			return Json(r);
+			var proxy = new BinanceProxy();
+			var response = await proxy.GetTradePairsAsync();
+			
+			return Json(response);
 		}
 	}
-
-    public static class ProxyFactory
-    {
-        private static readonly IDictionary<ExchangeType, Type> _connectors = new Dictionary<ExchangeType, Type>();
-
-        static ProxyFactory()
-        {
-            _connectors.Add(ExchangeType.Binance, typeof(BinanceClient));
-        }
-
-        public static object GetConnector(ExchangeType type)
-        {
-            return null;
-        }
-    }
 }

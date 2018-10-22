@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>2.8</TypeScriptToolsVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\ts\Ticker.ts" />
+    <Content Remove="wwwroot\ts\Loader.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,15 +31,16 @@
     <ProjectReference Include="..\Exchange.API\Bitmex.Api\Bitmex.Api.csproj" />
     <ProjectReference Include="..\Exchange.API\Huobi.Api\Huobi.Api.csproj" />
     <ProjectReference Include="..\Exchange.API\Yobit.Api\Yobit.Api.csproj" />
+    <ProjectReference Include="..\TradingBot.Proxies\TradingBot.Proxies.csproj" />
     <ProjectReference Include="..\TradingBot.Tasks\TradingBot.Jobs.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="wwwroot\ts\Ticker.ts" />
+    <TypeScriptCompile Include="wwwroot\ts\Loader.ts" />
   </ItemGroup>  
 
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptTarget>ES2015</TypeScriptTarget>
     <TypeScriptJSXEmit>React</TypeScriptJSXEmit>
     <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
     <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>

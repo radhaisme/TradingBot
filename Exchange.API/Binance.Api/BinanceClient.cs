@@ -32,12 +32,7 @@ namespace Binance.Api
 
 			foreach (dynamic item in content.symbols)
 			{
-				var pair = new TradePairResult
-				{
-					BaseAsset = item.baseAsset,
-					QuoteAsset = item.quoteAsset
-				};
-				pairs.Add(pair);
+				pairs.Add(new TradePairResult((string)item.baseAsset, (string)item.quoteAsset));
 			}
 
 			return new TradePairsResponse(pairs);
