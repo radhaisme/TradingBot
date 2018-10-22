@@ -1,5 +1,5 @@
 ﻿
-namespace TradingBot.Core.Entities
+namespace TradingBot.Core.Models
 {
     public class Currency
     {

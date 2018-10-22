@@ -10,37 +10,29 @@ namespace TradingBot.CommandPrompt
 	{
 		private static async Task Main(string[] args)
 		{
-			var client = new BitmexClient();
-			var r = await client.GetMarketAsync(new MarketRequest("XBTUSD"));
+			//var client = new BitmexClient();
+			//var r = await client.GetMarketAsync(new MarketRequest("XBTUSD"));
 
-			//var minRate = 200.1m;
-			//var maxRate = 200.5m;
-			//var amount = 0.0987m;
-			//var ordersCount = 5;
+			var minRate = 6100m;
+			var maxRate = 6200m;
+			var amount = 0.0987m;
+			var ordersCount = 5;
+            
+			var scale = new ScaledOrder("XBTUSD", minRate, maxRate, amount, ordersCount, TradeType.Buy);
+			var orders = scale.Orders;
+            
+            //var spread = maxRate - minRate;
+            //var ratePerOrder = spread / ordersCount;
+            //var amountPerOrder = amount / 5;
 
-			//var spread = maxRate - minRate;
-			//var ratePerOrder = spread / ordersCount;
-			//var amountPerOrder = amount / 5;
+            //var orders = new List<CreateOrderRequest>(ordersCount);
 
-			//var orders = new List<CreateOrderRequest>(ordersCount);
+            //for (var i = 0; i < ordersCount; i++)
+            //{
+            //	orders.Add(new CreateOrderRequest("XBTUSD", TradeType.Buy, ratePerOrder, amountPerOrder));
+            //}
 
-			//for (var i = 0; i < ordersCount; i++)
-			//{
-			//	orders.Add(new CreateOrderRequest("XBTUSD", TradeType.Buy, ratePerOrder, amountPerOrder));
-			//}
-
-			//var rateResult = 0m;
-			//var amountResult = 0m;
-
-			//foreach (var order in orders)
-			//{
-			//	rateResult += order.Rate;
-			//	amountResult += order.Amount;
-			//}
-
-			//var r = amount == amountResult;
-
-			Console.ReadLine();
+            Console.ReadLine();
 		}
 	}
 
@@ -70,12 +62,14 @@ namespace TradingBot.CommandPrompt
 			count = count <= 0 ? 1 : count;
 			var spread = maxRate - minRate;
 			var ratePerOrder = spread / count;
-			var amountPerOrder = amount / count;
+			var amountPerOrder = amount / (count + 1);
+			var currentRate = minRate;
 
-			for (var i = 0; i < count; i++)
+			for (var i = 0; i <= count; i++)
 			{
-				_orders.Add(new CreateOrderRequest("XBTUSD", tradeType, ratePerOrder, amountPerOrder));
-			}
+				_orders.Add(new CreateOrderRequest(pair, tradeType, currentRate, amountPerOrder));
+			    currentRate += ratePerOrder;
+            }
 		}
 
 		public IReadOnlyCollection<CreateOrderRequest> Orders => _orders.AsReadOnly();

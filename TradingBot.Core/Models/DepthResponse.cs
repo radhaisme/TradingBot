@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TradingBot.Core.Entities
+namespace TradingBot.Core.Models
 {
 	public class DepthResponse
 	{

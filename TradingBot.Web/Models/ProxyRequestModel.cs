@@ -9,6 +9,8 @@ namespace TradingBot.Web.Models
 	    public string ApiName { get; set; }
 	    [Required]
 	    public string Action { get; set; }
-	    public IDictionary<string, string> Params { get; set; }
+        [Required]
+        public string ModelType { get; set; }
+        public string Body { get; set; }
 	}
 }

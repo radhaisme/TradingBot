@@ -18,7 +18,7 @@ namespace TradingBot.Tests
 		[Fact]
 		public async void GetOrderBookTest()
 		{
-			//var book = await _client.GetOrderBookAsync(new DepthRequest { Pair = "ETHBTC", Limit = 100 });
+			//var book = await _client.GetOrderBookAsync(new DepthRequest { TradePair = "ETHBTC", Limit = 100 });
 			//Assert.NotNull(book);
 			//Assert.NotEmpty(book.Asks);
 			//Assert.NotEmpty(book.Bids);
@@ -27,7 +27,7 @@ namespace TradingBot.Tests
 		[Fact]
 		public async void GetPairDetailTest()
 		{
-			//PairDetailResponse detail = await _client.GetMarketAsync(new PairDetailRequest { Pair = "ETHBTC" });
+			//PairDetailResponse detail = await _client.GetMarketAsync(new PairDetailRequest { TradePair = "ETHBTC" });
 			//Assert.NotNull(detail);
 			//Assert.NotEqual(0, detail.LastPrice);
 		}

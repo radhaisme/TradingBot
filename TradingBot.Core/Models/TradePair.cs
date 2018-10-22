@@ -1,11 +1,11 @@
 ﻿using System;
 using TradingBot.Core.Enums;
 
-namespace TradingBot.Core.Entities
+namespace TradingBot.Core.Models
 {
-	public class Pair : IEquatable<Pair>
+	public class TradePair : IEquatable<TradePair>
 	{
-		public Pair(Currency baseAsset, Currency quoteAsset)
+		public TradePair(Currency baseAsset, Currency quoteAsset)
 		{
 			BaseAsset = baseAsset;
 			QuoteAsset = quoteAsset;
@@ -51,7 +51,7 @@ namespace TradingBot.Core.Entities
 
 		public override bool Equals(object obj)
 		{
-			return Equals((Pair)obj);
+			return Equals((TradePair)obj);
 		}
 
 		public override int GetHashCode()
@@ -59,7 +59,7 @@ namespace TradingBot.Core.Entities
 			return BaseAsset.Id ^ QuoteAsset.Id;
 		}
 
-		public bool Equals(Pair other)
+		public bool Equals(TradePair other)
 		{
 			if (other == null)
 			{

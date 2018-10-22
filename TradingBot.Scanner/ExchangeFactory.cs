@@ -8,8 +8,8 @@ using Okex.Api;
 using System.Collections.Generic;
 using TradingBot.Api;
 using TradingBot.Core;
-using TradingBot.Core.Entities;
 using TradingBot.Core.Enums;
+using TradingBot.Core.Models;
 using Yobit.Api;
 
 namespace TradingBot.Scanner

@@ -1,12 +1,13 @@
 ﻿using TradingBot.Api;
+using TradingBot.Core.Proxies;
 
 namespace TradingBot.Scanner
 {
 	public sealed class PriceScanner
 	{
-		private readonly IApiClient _client;
+		private readonly IProxy _client;
 		
-		public PriceScanner(IApiClient client)
+		public PriceScanner(IProxy client)
 		{
 			_client = client;
 		}

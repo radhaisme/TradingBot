@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using TradingBot.Core;
-using TradingBot.Core.Entities;
 using TradingBot.Core.Enums;
+using TradingBot.Core.Models;
 
 namespace TradingBot.Scanner
 {
@@ -36,7 +36,7 @@ namespace TradingBot.Scanner
 
 		private async Task ProcessItem(ExchangePair exchangePair, IProducerConsumerCollection<ArbitrageInfo> output)
 		{
-			foreach (Pair pair in exchangePair.Pairs)
+			foreach (TradePair pair in exchangePair.Pairs)
 			{
 				(decimal buy, decimal sell) first = await exchangePair.First.GetBookOrderPriceAsync(pair);
 				(decimal buy, decimal sell) second = await exchangePair.Second.GetBookOrderPriceAsync(pair);

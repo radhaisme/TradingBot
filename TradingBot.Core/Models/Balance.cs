@@ -1,8 +1,7 @@
-﻿
-namespace TradingBot.Core.Entities
-{
-	using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
+namespace TradingBot.Core.Models
+{
 	public class Balance
 	{
 		public Balance()

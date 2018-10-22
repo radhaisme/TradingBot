@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace TradingBot.Core.Entities
+namespace TradingBot.Core.Models
 {
-	public class PairResponse
+	public class TradePairsResponse
 	{
-		public PairResponse(List<TradePair> pairs)
+		public TradePairsResponse(List<TradePair> pairs)
 		{
 			Pairs = pairs.AsReadOnly();
 		}

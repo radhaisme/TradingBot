@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TradingBot.Core.Entities;
 using TradingBot.Core.Enums;
+using TradingBot.Core.Models;
 
 namespace TradingBot.Core
 {
@@ -18,11 +18,11 @@ namespace TradingBot.Core
 		//}
 
 		//public ExchangeType Type => _client.Type;
-		//public IReadOnlyCollection<Pair> Pairs { get; private set; }
+		//public IReadOnlyCollection<TradePair> Pairs { get; private set; }
 
 		//void IExchange.Initialize()
 		//{
-		//	var pairs = new List<Pair>();
+		//	var pairs = new List<TradePair>();
 
 		//	foreach (TradePair item in _client.GetTradePairsAsync().Result.Pairs)
 		//	{
@@ -44,23 +44,23 @@ namespace TradingBot.Core
 		//			continue;
 		//		}
 
-		//		var pair = new Pair(bases[0], quotes[0]);
-		//		pairs.Add(pair);
+		//		var tradePair = new TradePair(bases[0], quotes[0]);
+		//		pairs.Add(tradePair);
 		//	}
 
 		//	Pairs = pairs.AsReadOnly();
 		//}
 
-		//public async Task<decimal> GetPriceAsync(Pair pair)
+		//public async Task<decimal> GetPriceAsync(TradePair tradePair)
 		//{
-		//	PairDetailResponse detailResponse = null;//await _client.GetPairDetailAsync(pair.GetSymbol(Type));
+		//	PairDetailResponse detailResponse = null;//await _client.GetPairDetailAsync(tradePair.GetSymbol(Type));
 
 		//	return detailResponse.LastPrice;
 		//}
 
-		//public async Task<(decimal ask, decimal bid)> GetBookOrderPriceAsync(Pair pair)
+		//public async Task<(decimal ask, decimal bid)> GetBookOrderPriceAsync(TradePair tradePair)
 		//{
-		//	//DepthResponse response = await _client.GetOrderBookAsync(pair.GetSymbol(Type), 5);
+		//	//DepthResponse response = await _client.GetOrderBookAsync(tradePair.GetSymbol(Type), 5);
 		//	//decimal ask = 0;
 		//	//decimal bid = 0;
 
@@ -84,18 +84,18 @@ namespace TradingBot.Core
 		//	return (0, 0);
 		//}
 		public ExchangeType Type { get; }
-		public IReadOnlyCollection<Pair> Pairs { get; }
+		public IReadOnlyCollection<TradePair> Pairs { get; }
 		public void Initialize()
 		{
 			throw new NotImplementedException();
 		}
 
-		public Task<decimal> GetPriceAsync(Pair pair)
+		public Task<decimal> GetPriceAsync(TradePair tradePair)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Task<(decimal ask, decimal bid)> GetBookOrderPriceAsync(Pair pair)
+		public Task<(decimal ask, decimal bid)> GetBookOrderPriceAsync(TradePair tradePair)
 		{
 			throw new NotImplementedException();
 		}

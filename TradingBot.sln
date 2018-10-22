@@ -51,6 +51,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bitmex.Api", "Exchange.API\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradingBot.Api", "TradingBot.Api\TradingBot.Api.csproj", "{CEFD60F9-2536-4516-8300-E1B4DAC9319C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingBot.Proxies", "TradingBot.Proxies\TradingBot.Proxies.csproj", "{A671CA61-B338-4242-898B-1225CC11C38E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -137,6 +139,10 @@ Global
 		{CEFD60F9-2536-4516-8300-E1B4DAC9319C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEFD60F9-2536-4516-8300-E1B4DAC9319C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CEFD60F9-2536-4516-8300-E1B4DAC9319C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A671CA61-B338-4242-898B-1225CC11C38E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A671CA61-B338-4242-898B-1225CC11C38E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A671CA61-B338-4242-898B-1225CC11C38E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A671CA61-B338-4242-898B-1225CC11C38E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -162,6 +168,7 @@ Global
 		{5029F47B-E1C5-4AFC-AB69-AAEF9D85DD48} = {DA2B2593-4642-4C9F-9D15-2F64D8B9CA1C}
 		{C31C44AB-8865-44DF-BCFD-B64E255F040B} = {9061B569-A4A3-47B9-8F23-5C04F3526046}
 		{CEFD60F9-2536-4516-8300-E1B4DAC9319C} = {DA2B2593-4642-4C9F-9D15-2F64D8B9CA1C}
+		{A671CA61-B338-4242-898B-1225CC11C38E} = {DA2B2593-4642-4C9F-9D15-2F64D8B9CA1C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BDE7EDEE-E5DB-4F69-8BE2-21FE15B3001B}

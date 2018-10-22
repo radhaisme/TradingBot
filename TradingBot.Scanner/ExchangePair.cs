@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using TradingBot.Core;
-using TradingBot.Core.Entities;
+using TradingBot.Core.Models;
 
 namespace TradingBot.Scanner
 {
@@ -12,10 +12,10 @@ namespace TradingBot.Scanner
 		{
 			First = first;
 			Second = second;
-			Pairs = new ReadOnlyCollection<Pair>(first.Pairs.Intersect(second.Pairs).ToList());
+			Pairs = new ReadOnlyCollection<TradePair>(first.Pairs.Intersect(second.Pairs).ToList());
 		}
 
-		public IReadOnlyCollection<Pair> Pairs { get; }
+		public IReadOnlyCollection<TradePair> Pairs { get; }
 		public IExchange First { get; }
 		public IExchange Second { get; }
 	}
