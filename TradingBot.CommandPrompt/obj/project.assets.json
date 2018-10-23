@@ -1395,6 +1395,7 @@
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
+          "TradingBot.Api": "1.0.0",
           "TradingBot.Common": "1.0.0"
         },
         "compile": {
