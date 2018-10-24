@@ -3,15 +3,16 @@ namespace TradingBot.Core.Models
 {
 	public class TradePair //: IEquatable<TradePair>
 	{
+		private readonly Currency _baseAsset;
+		private readonly Currency _quoteAsset;
+
 		public TradePair(Currency baseAsset, Currency quoteAsset)
 		{
-			BaseAsset = baseAsset;
-			QuoteAsset = quoteAsset;
+			_baseAsset = baseAsset;
+			_quoteAsset = quoteAsset;
 		}
 
-		public string Label => $"{BaseAsset.Symbol}/{QuoteAsset.Symbol}";
-		public Currency BaseAsset { get; }
-		public Currency QuoteAsset { get; }
+		public string Label => $"{_baseAsset.Symbol}/{_quoteAsset.Symbol}";
 
 		//public string GetSymbol(ExchangeType type)
 		//{

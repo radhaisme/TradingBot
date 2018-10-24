@@ -1,0 +1,3 @@
+interface ITradePairsResponse {
+    pairs: ITradePair[]
+}

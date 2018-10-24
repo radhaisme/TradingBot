@@ -4,11 +4,11 @@ namespace TradingBot.Web.Models
 {
     public class ProxyRequestModel
     {
-	    [Required]
+	    //[Required]
 	    public string ApiName { get; set; }
-	    [Required]
+	    //[Required]
 	    public string Action { get; set; }
-	    [Required]
+	    //[Required]
 	    public string ModelType { get; set; }
 	    public string Body { get; set; }
 	}

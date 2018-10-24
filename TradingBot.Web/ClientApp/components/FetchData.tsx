@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import 'isomorphic-fetch';
+import Connector from "../ts/Connector";
 
 interface FetchDataExampleState {
     forecasts: WeatherForecast[];
@@ -11,12 +12,26 @@ export class FetchData extends React.Component<RouteComponentProps<{}>, FetchDat
     constructor() {
         super();
         this.state = { forecasts: [], loading: true };
+        var connector = new Connector();
 
-        fetch('api/SampleData/WeatherForecasts')
-            .then(response => response.json() as Promise<WeatherForecast[]>)
-            .then(data => {
-                this.setState({ forecasts: data, loading: false });
-            });
+        (async function () {
+            var r = await connector.Call<ITradePairsResponse>({ apiName: "Binance", action: "GetTradePairsAsync", modelType: "ITradePairsResponse" });
+            console.log(r);
+        })();
+
+
+
+        // let exchanges: string[] = ["Binance", "Bitfinex", "Cryptopia", "Exmo", "Huobi", "Kucoin", "Okex", "Yobit"];
+
+        // exchanges.forEach((value: string) => {
+
+        // });
+
+        // fetch('api/SampleData/WeatherForecasts')
+        //     .then(response => response.json() as Promise<WeatherForecast[]>)
+        //     .then(data => {
+        //         this.setState({ forecasts: data, loading: false });
+        //     });
     }
 
     public render() {
@@ -27,7 +42,7 @@ export class FetchData extends React.Component<RouteComponentProps<{}>, FetchDat
         return <div>
             <h1>Weather forecast</h1>
             <p>This component demonstrates fetching data from the server.</p>
-            { contents }
+            {contents}
         </div>;
     }
 
@@ -42,14 +57,14 @@ export class FetchData extends React.Component<RouteComponentProps<{}>, FetchDat
                 </tr>
             </thead>
             <tbody>
-            {forecasts.map(forecast =>
-                <tr key={ forecast.dateFormatted }>
-                    <td>{ forecast.dateFormatted }</td>
-                    <td>{ forecast.temperatureC }</td>
-                    <td>{ forecast.temperatureF }</td>
-                    <td>{ forecast.summary }</td>
-                </tr>
-            )}
+                {forecasts.map(forecast =>
+                    <tr key={forecast.dateFormatted}>
+                        <td>{forecast.dateFormatted}</td>
+                        <td>{forecast.temperatureC}</td>
+                        <td>{forecast.temperatureF}</td>
+                        <td>{forecast.summary}</td>
+                    </tr>
+                )}
             </tbody>
         </table>;
     }

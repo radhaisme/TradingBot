@@ -9,12 +9,12 @@ namespace TradingBot.Web.Controllers
 	[Route("api/proxy")]
     public class ProxyController : Controller
     {
-	    private readonly ILog _log;
+	    //private readonly ILog _log;
 
-	    public ProxyController(ILog log)
-	    {
-		    _log = log;
-	    }
+	    //public ProxyController(ILog log)
+	    //{
+		   // _log = log;
+	    //}
 
 	    [HttpPost]
 	    public async Task<IActionResult> Execute([FromBody]ProxyRequestModel model)

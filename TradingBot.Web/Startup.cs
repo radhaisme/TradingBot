@@ -48,8 +48,9 @@ namespace TradingBot.Web
 			app.UseStaticFiles();
 			app.UseMvc(routes =>
 			{
+				routes.MapRoute("defaultApi", "api/{controller}/{action}");
 				routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
-				routes.MapSpaFallbackRoute("spa-fallback", new { controller = "Home", action = "Index" });
+				//routes.MapSpaFallbackRoute("spa-fallback", new { controller = "Home", action = "Index" });
 			});
 		}
 	}
