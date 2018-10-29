@@ -1,5 +1,3 @@
-interface IProxyRequest {
-    apiName: string,
-    action: string,
-    modelType: string
+export default interface IProxyRequest {
+    apiName: string
 }

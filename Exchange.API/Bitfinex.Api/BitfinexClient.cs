@@ -30,12 +30,7 @@ namespace Bitfinex.Api
 
 			foreach (var item in content)
 			{
-				var pair = new TradePairResult
-				{
-					BaseAsset = item.Substring(0, item.Length - 3),
-					QuoteAsset = item.Substring(item.Length - 3, 3)
-				};
-				pairs.Add(item, pair);
+				pairs.Add(item, new TradePairResult(item.Substring(0, item.Length - 3), item.Substring(item.Length - 3, 3)));
 			}
 
 			return new TradePairsResponse(pairs.Values.ToList());

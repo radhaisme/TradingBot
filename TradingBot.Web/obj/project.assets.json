@@ -4838,6 +4838,19 @@
           "bin/placeholder/Binance.Api.dll": {}
         }
       },
+      "Bitfinex.Api/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "dependencies": {
+          "TradingBot.Api": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Bitfinex.Api.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Bitfinex.Api.dll": {}
+        }
+      },
       "TradingBot.Api/1.0.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
@@ -4888,6 +4901,7 @@
         "dependencies": {
           "AutoMapper": "7.0.1",
           "Binance.Api": "1.0.0",
+          "Bitfinex.Api": "1.0.0",
           "TradingBot.Core": "1.0.0"
         },
         "compile": {
@@ -13007,6 +13021,11 @@
       "type": "project",
       "path": "../Exchange.API/Binance.Api/Binance.Api.csproj",
       "msbuildProject": "../Exchange.API/Binance.Api/Binance.Api.csproj"
+    },
+    "Bitfinex.Api/1.0.0": {
+      "type": "project",
+      "path": "../Exchange.API/Bitfinex.Api/Bitfinex.Api.csproj",
+      "msbuildProject": "../Exchange.API/Bitfinex.Api/Bitfinex.Api.csproj"
     },
     "TradingBot.Api/1.0.0": {
       "type": "project",

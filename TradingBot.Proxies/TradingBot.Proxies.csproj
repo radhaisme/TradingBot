@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Exchange.API\Binance.Api\Binance.Api.csproj" />
+    <ProjectReference Include="..\Exchange.API\Bitfinex.Api\Bitfinex.Api.csproj" />
     <ProjectReference Include="..\TradingBot.Core\TradingBot.Core.csproj" />
   </ItemGroup>
 
