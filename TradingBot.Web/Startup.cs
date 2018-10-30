@@ -1,7 +1,8 @@
 using Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.SpaServices.Webpack;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TradingBot.Common;
@@ -20,7 +21,12 @@ namespace TradingBot.Web
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddMvc();
+			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+			// In production, the React files will be served from this directory
+			services.AddSpaStaticFiles(configuration =>
+			{
+				configuration.RootPath = "ClientApp/build";
+			});
 		}
 
 		public void ConfigureContainer(ContainerBuilder builder)
@@ -34,23 +40,27 @@ namespace TradingBot.Web
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
-				app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
-				{
-					HotModuleReplacement = true,
-					ReactHotModuleReplacement = true
-				});
 			}
 			else
 			{
-				app.UseExceptionHandler("/Home/Error");
+				app.UseExceptionHandler("/Error");
 			}
 
 			app.UseStaticFiles();
+			app.UseSpaStaticFiles();
 			app.UseMvc(routes =>
 			{
 				routes.MapRoute("defaultApi", "api/{controller}/{action}");
-				routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
-				//routes.MapSpaFallbackRoute("spa-fallback", new { controller = "Home", action = "Index" });
+				routes.MapRoute("default", "{controller}/{action=Index}/{id?}");
+			});
+			app.UseSpa(spa =>
+			{
+				spa.Options.SourcePath = "ClientApp";
+
+				if (env.IsDevelopment())
+				{
+					spa.UseReactDevelopmentServer("start");
+				}
 			});
 		}
 	}

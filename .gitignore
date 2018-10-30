@@ -103,3 +103,4 @@ Newtonsoft.Json.10.0.3
 /TradingBot.Data/Db/BotDb_log.ldf
 /TradingBot.Data/Db/BotDb.mdf
 /TradingBot.Web/Logs
+/TradingBot.Web/ClientApp/src/js

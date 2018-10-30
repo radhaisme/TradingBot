@@ -7,9 +7,9 @@ using TradingBot.Proxies;
 namespace TradingBot.Web.Controllers
 {
 	public class BinanceController : Controller
-    {
+	{
 		private readonly ILog _log;
-	    private readonly IProxy _proxy;
+		private readonly IProxy _proxy;
 
 		public BinanceController(ILog log)
 		{
@@ -18,11 +18,11 @@ namespace TradingBot.Web.Controllers
 		}
 
 		[HttpGet]
-	    public async Task<IActionResult> GetTradePairsAsync()
-	    {
-		    var response = await _proxy.GetTradePairsAsync();
+		public async Task<IActionResult> GetTradePairsAsync()
+		{
+			var response = await _proxy.GetTradePairsAsync();
 
-		    return Json(response);
-	    }
+			return Json(response);
+		}
 	}
 }
