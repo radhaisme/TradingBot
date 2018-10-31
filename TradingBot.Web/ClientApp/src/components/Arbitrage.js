@@ -6,29 +6,33 @@ export class Arbitrage extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { forecasts: [], loading: true };
-
+    this.state = { pairs: [], loading: true };
     var scanner = new ArbitrageScanner();
+    scanner.Start().then(pairs => {
+      this.setState({ pairs: pairs, loading: false });
+    });
   }
 
-  static renderForecastsTable(forecasts) {
+  static renderTable(pairs) {
     return (
       <table className='table'>
         <thead>
           <tr>
-            <th>Date</th>
-            <th>Temp. (C)</th>
-            <th>Temp. (F)</th>
-            <th>Summary</th>
+            <th>Pair</th>
+            <th>Exchange (buy->sell)</th>
+            <th>Rate (buy->sell)</th>
+            <th>Spread (%)</th>
+            <th>Profit (%)</th>
           </tr>
         </thead>
         <tbody>
-          {forecasts.map(forecast =>
-            <tr key={forecast.dateFormatted}>
-              <td>{forecast.dateFormatted}</td>
-              <td>{forecast.temperatureC}</td>
-              <td>{forecast.temperatureF}</td>
-              <td>{forecast.summary}</td>
+          {pairs.map(pair =>
+            <tr key={pair.label}>
+              <td>{pair.label}</td>
+              <td>{"Binance->Bitfinex"}</td>
+              <td>{"0->0.5"}</td>
+              <td>{0.1}</td>
+              <td>+{10}</td>
             </tr>
           )}
         </tbody>
@@ -39,12 +43,12 @@ export class Arbitrage extends Component {
   render() {
     let contents = this.state.loading
       ? <p><em>Loading...</em></p>
-      : Arbitrage.renderForecastsTable(this.state.forecasts);
+      : Arbitrage.renderTable(this.state.pairs);
 
     return (
       <div>
-        <h1>Weather forecast</h1>
-        <p>This component demonstrates fetching data from the server.</p>
+        <h1>Arbitrage opportunities</h1>
+        <p>This component demonstrates searching arbitrage opportunities.</p>
         {contents}
       </div>
     );

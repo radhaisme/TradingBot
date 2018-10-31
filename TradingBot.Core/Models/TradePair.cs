@@ -12,7 +12,9 @@ namespace TradingBot.Core.Models
 			_quoteAsset = quoteAsset;
 		}
 
-		public string Label => $"{_baseAsset.Symbol}/{_quoteAsset.Symbol}".ToUpper();
+		public string Label => $"{_baseAsset.Symbol}/{_quoteAsset.Symbol}";
+		public string BaseAsset => _baseAsset.Symbol;
+		public string QuoteAsset => _quoteAsset.Symbol;
 
 		//public string GetSymbol(ExchangeType type)
 		//{
