@@ -1,6 +1,8 @@
 import Connector from "./Connector";
 import ITradePair from "./models/ITradePair";
 import ITradePairsResponse from "./models/ITradePairsResponse";
+import wsBinance from "./wsBinance";
+import IOrderBook from "./models/IOrderBook";
 
 export default class ArbitrageScanner {
     constructor() {
@@ -18,10 +20,18 @@ export default class ArbitrageScanner {
         //     });
         // });
 
+        let ws = new wsBinance();
+        ws.SubscribeToDepth(5, ["BTCUSDT", "ETHBTC"], (depth: IOrderBook): void => {
+            console.log(depth);
+        }).Start();
+        // ws.Subscribe();
+
         // let symbol: string = "btcusdt";
         // let depth: number = 5;
         // let tradeStream: string = `${symbol}@depth${depth}`;
-        // let ws: WebSocket = new WebSocket(`wss://stream.binance.com:9443/stream?streams=${tradeStream}`);
+        // let wsUrl: string = `wss://stream.binance.com:9443/stream?streams=${tradeStream}`;
+        // console.log(wsUrl);
+        // let ws: WebSocket = new WebSocket(wsUrl);
         // ws.onopen = () => {
         //     console.log("Opened");
         // };

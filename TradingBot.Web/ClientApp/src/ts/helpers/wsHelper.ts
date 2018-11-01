@@ -1,0 +1,1 @@
+export let s = (symbol: string) => symbol.toLowerCase()
