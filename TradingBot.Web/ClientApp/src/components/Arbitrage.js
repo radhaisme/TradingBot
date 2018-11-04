@@ -3,13 +3,18 @@ import ArbitrageScanner from "../js/ArbitrageScanner";
 
 export class Arbitrage extends Component {
   displayName = Arbitrage.name;
+  _scanner = new ArbitrageScanner();
 
   constructor(props) {
     super(props);
     this.state = { pairs: [], loading: true };
-    var scanner = new ArbitrageScanner();
-    scanner.Start().then(pairs => {
-      this.setState({ pairs: pairs, loading: false });
+    this._scanner.Start().then(result => {
+      if (result) {
+
+        setInterval(() => {
+          this.setState({ pairs: this._scanner.Pairs, loading: false });
+        }, 1000);
+      }
     });
   }
 
@@ -30,7 +35,7 @@ export class Arbitrage extends Component {
             <tr key={pair.label}>
               <td>{pair.label}</td>
               <td>{"Binance->Bitfinex"}</td>
-              <td>{"0->0.5"}</td>
+              <td>{pair.rate}</td>
               <td>{0.1}</td>
               <td>+{10}</td>
             </tr>

@@ -1,10 +1,13 @@
 import Connector from "./Connector";
 import ITradePair from "./models/ITradePair";
-import ITradePairsResponse from "./models/ITradePairsResponse";
 import wsBinance from "./wsBinance";
 import IOrderBook from "./models/IOrderBook";
+import ITradePairsResponse from "./models/ITradePairsResponse";
 
 export default class ArbitrageScanner {
+    private readonly _connector: Connector = new Connector();
+    private _pairs: ReadonlyArray<ITradePair> = [];
+
     constructor() {
         // let pairs: { [key: string]: ITradePair } = {};
         // let exchanges: string[] = ["Binance", "Bitfinex"];
@@ -18,34 +21,28 @@ export default class ArbitrageScanner {
         //             });
         //         });
         //     });
-        // });
-
-        let ws = new wsBinance();
-        ws.SubscribeToDepth(5, ["BTCUSDT"], (depth: IOrderBook): void => {
-            console.log(depth);
-        }).Start();
-        // ws.Subscribe();
-
-        // let symbol: string = "btcusdt";
-        // let depth: number = 5;
-        // let tradeStream: string = `${symbol}@depth${depth}`;
-        // let wsUrl: string = `wss://stream.binance.com:9443/stream?streams=${tradeStream}`;
-        // console.log(wsUrl);
-        // let ws: WebSocket = new WebSocket(wsUrl);
-        // ws.onopen = () => {
-        //     console.log("Opened");
-        // };
-        // ws.onmessage = (ev: MessageEvent) => {
-        //     console.log(ev);
-        // };
+        // });        
     }
 
-    /**
-     * Test method
-     */
-    public async Start(): Promise<ReadonlyArray<ITradePair>> {
-        let connector = new Connector();
+    public get Pairs(): ReadonlyArray<ITradePair> {
+        return this._pairs;
+    }
 
-        return (await connector.GetTradePairsAsync({ apiName: "Binance" })).pairs;
+    public async Start(): Promise<boolean> {
+        // let ws = new wsOkex();
+        // ws.SubscribeToDepth(5, ["btc_usdt"], (depth: IOrderBook): void => { });
+        // ws.Start();
+
+        // return (await this._connector.GetTradePairsAsync({ apiName: "Binance" })).pairs;
+
+        let response: ITradePairsResponse = await this._connector.GetTradePairsAsync({ apiName: "Binance" });
+        this._pairs = response.pairs;
+        let ws = new wsBinance();
+        ws.SubscribeToDepth(5, ["BTCUSDT"], (depth: IOrderBook): void => {
+            let pair: ITradePair = this._pairs.find((item: ITradePair): boolean => { return item.label === "BTC/USDT"; });
+            pair.rate = depth.asks[0][0];
+        }).Start();
+
+        return true;
     }
 }

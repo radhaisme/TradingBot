@@ -2,14 +2,14 @@ import IWebSocket from "./IWebSocket";
 import IOrderBook from "./models/IOrderBook";
 import IMessageData from "./models/IMessageData";
 
-export default class wsBinance {
+export default class wsBinance implements IWebSocket {
     private readonly _baseAddress: string = "wss://stream.binance.com:9443";
     private readonly _limits: number[] = [5, 10, 20];
     private readonly _handlers: { [key: string]: { (message: IMessageData): void } } = {};
     private _streamUrl: string;
     private _ws: WebSocket;
 
-    public SubscribeToDepth(depth: number, symbols: string[], callback: (depth: IOrderBook) => void): wsBinance {
+    public SubscribeToDepth(depth: number, symbols: string[], callback: (depth: IOrderBook) => void): IWebSocket {
         if (!this._limits.includes(depth)) {
             throw Error(`Invalid range of depth.`);
         }
@@ -63,7 +63,7 @@ export default class wsBinance {
         };
     }
 
-    public Start(): wsBinance {
+    public Start(): IWebSocket {
         if (Object.keys(this._handlers).length === 0) {
             throw Error("The socket is not initialized.");
         }
@@ -73,7 +73,7 @@ export default class wsBinance {
         return this;
     }
 
-    public Stop(): wsBinance {
+    public Stop(): IWebSocket {
         if (this._ws) {
             this._ws.close();
         }
