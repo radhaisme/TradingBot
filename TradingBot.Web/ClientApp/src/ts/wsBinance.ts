@@ -1,14 +1,15 @@
 import IWebSocket from "./IWebSocket";
 import IOrderBook from "./models/IOrderBook";
+import IMessageData from "./models/IMessageData";
 
 export default class wsBinance {
-    private _ws: WebSocket;
     private readonly _baseAddress: string = "wss://stream.binance.com:9443";
     private readonly _limits: number[] = [5, 10, 20];
+    private readonly _handlers: { [key: string]: { (message: IMessageData): void } } = {};
     private _streamUrl: string;
-    private _messageHandler: (message: MessageEvent) => void;
+    private _ws: WebSocket;
 
-    public SubscribeToDepth(depth: number, symbols: string[], callback?: (depth: IOrderBook) => void): wsBinance {
+    public SubscribeToDepth(depth: number, symbols: string[], callback: (depth: IOrderBook) => void): wsBinance {
         if (!this._limits.includes(depth)) {
             throw Error(`Invalid range of depth.`);
         }
@@ -21,25 +22,29 @@ export default class wsBinance {
             throw Error(`The 'symbols' did not provide.`);
         }
 
-        let streams: string[] = symbols.map(symbol => `${symbol.toLowerCase()}@depth${depth}`);
+        if (!callback) {
+            throw Error("The callbaack function is not provided.");
+        }
+
+        let stream: string = `@depth${depth}`;
+        let streams: string[] = symbols.map(symbol => `${symbol.toLowerCase()}${stream}`);
         this._streamUrl = `${this._baseAddress}/stream?streams=${streams.join("/")}`;
-        this._messageHandler = (message: MessageEvent): void => {
-            let { data: depth } = JSON.parse(message.data);
+        let local = (messageData: IMessageData): void => {
             let orderBook: IOrderBook = {
-                bids: depth.bids.map(([a, b]) => [+a, +b]),
-                asks: depth.asks.map(([a, b]) => [+a, +b]),
+                bids: messageData.data.bids.map(([a, b]) => [+a, +b]),
+                asks: messageData.data.asks.map(([a, b]) => [+a, +b]),
             };
 
             if (callback) {
                 callback(orderBook);
             }
         };
+        this._handlers[stream] = local;
 
         return this;
     }
 
     private InitializeSocket(): void {
-        console.log(this._streamUrl);
         this._ws = new WebSocket(this._streamUrl);
         this._ws.onopen = () => {
             console.log("opened.");
@@ -50,11 +55,16 @@ export default class wsBinance {
         this._ws.onerror = () => {
             console.log("error.");
         };
-        this._ws.onmessage = this._messageHandler;
+        this._ws.onmessage = (message: MessageEvent): void => {
+            let data = <IMessageData>JSON.parse(message.data);
+            let position: number = data.stream.indexOf("@");
+            let stream: string = data.stream.substring(position);
+            this._handlers[stream](data);
+        };
     }
 
     public Start(): wsBinance {
-        if (!this._streamUrl || !this._messageHandler) {
+        if (Object.keys(this._handlers).length === 0) {
             throw Error("The socket is not initialized.");
         }
 

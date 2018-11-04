@@ -21,7 +21,7 @@ export default class ArbitrageScanner {
         // });
 
         let ws = new wsBinance();
-        ws.SubscribeToDepth(5, ["BTCUSDT", "ETHBTC"], (depth: IOrderBook): void => {
+        ws.SubscribeToDepth(5, ["BTCUSDT"], (depth: IOrderBook): void => {
             console.log(depth);
         }).Start();
         // ws.Subscribe();
