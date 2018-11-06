@@ -8,17 +8,15 @@ export class Arbitrage extends Component {
   constructor(props) {
     super(props);
     this.state = { pairs: [], loading: true };
-    this._scanner.Start().then(result => {
-      if (result) {
-
-        setInterval(() => {
-          this.setState({ pairs: this._scanner.Pairs, loading: false });
-        }, 1000);
-      }
-    });
+    (async () => {
+      await this._scanner.Start();
+      setInterval(() => {
+        this.setState({ pairs: this._scanner.Pairs, loading: false });
+      }, 3000);
+    })();
   }
 
-  static renderTable(pairs) {
+  static renderTable(opportunities) {
     return (
       <table className='table'>
         <thead>
@@ -28,16 +26,18 @@ export class Arbitrage extends Component {
             <th>Rate (buy->sell)</th>
             <th>Spread (%)</th>
             <th>Profit (%)</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
-          {pairs.map(pair =>
-            <tr key={pair.label}>
-              <td>{pair.label}</td>
+          {opportunities.map(opportunity =>
+            <tr key={opportunity.label}>
+              <td>{opportunity.label}</td>
               <td>{"Binance->Bitfinex"}</td>
-              <td>{pair.rate}</td>
+              <td>{opportunity.rate}</td>
               <td>{0.1}</td>
               <td>+{10}</td>
+              <td><button onClick={() => { alert("СКОРЕЕЕ!!!!"); }}>Take profit!!!</button></td>
             </tr>
           )}
         </tbody>

@@ -1,4 +1,3 @@
-import TradePair from "./models/TradePair";
 import IRequest from "./IRequest";
 import ITradePairsResponse from "./models/ITradePairsResponse";
 
