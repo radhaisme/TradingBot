@@ -1,6 +1,6 @@
 export default interface ITradePair {
-    label: string;
-    baseAsset: string;
-    quoteAsset: string;
+    readonly label: string;
+    readonly baseAsset: string;
+    readonly quoteAsset: string;
     rate: number;
 }
