@@ -40,7 +40,7 @@ export default class wsBinance implements IWebSocket {
         let local = (messageData: IMessageData): void => {
             let orderBook: IOrderBook = {
                 bids: messageData.data.bids.map(([a, b]) => [+a, +b]),
-                asks: messageData.data.asks.map(([a, b]) => [+a, +b]),
+                asks: messageData.data.asks.map(([a, b]) => [+a, +b])
             };
             let message: IDepthMessage = {
                 source: "Binance",

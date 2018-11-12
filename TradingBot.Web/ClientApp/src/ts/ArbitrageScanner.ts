@@ -41,10 +41,17 @@ export default class ArbitrageScanner {
     }
 
     private async Initialize(): Promise<void> {
-        let response: ITradePairsResponse = await this._connector.GetTradePairsAsync({ apiName: "Binance" });
-        response.pairs.forEach(pair => {
-            this._pairsMap[pair.label] = pair;
+        let pairs: IDictionary<ReadonlyArray<ITradePair>> = {};
+        let exchanges: string[] = ["Binance", "Bitfinex"];
+        exchanges.forEach(async ex => {
+            let response: ITradePairsResponse = await this._connector.GetTradePairsAsync({ apiName: ex });
+            pairs[ex] = response.pairs;
+            // response.pairs.forEach(pair => {                
+            //     if (!this._pairsMap.hasOwnProperty(pair.label)) {
+            //         this._pairsMap[pair.label] = pair;
+            //     }
+            // });
         });
-        this._pairs = response.pairs;
+        Object.keys(pairs).flatMap(() => { });
     }
 }

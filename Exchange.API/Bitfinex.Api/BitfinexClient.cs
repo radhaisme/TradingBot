@@ -15,6 +15,7 @@ namespace Bitfinex.Api
 	public sealed class BitfinexClient : ApiClient
 	{
 		private readonly IBitfinexSettings _settings;
+		private readonly Dictionary<string, string> _substitutions = new Dictionary<string, string> { { "USD", "USDT" }, { "USDT", "USD" } };
 
 		public BitfinexClient()
 		{
@@ -30,7 +31,9 @@ namespace Bitfinex.Api
 
 			foreach (var item in content)
 			{
-				pairs.Add(item, new TradePairResult(item.Substring(0, item.Length - 3), item.Substring(item.Length - 3, 3)));
+				string baseAsset = Substitute(item.Substring(0, item.Length - 3));
+				string quoteAsset = Substitute(item.Substring(item.Length - 3, 3));
+				pairs.Add(item, new TradePairResult(baseAsset, quoteAsset));
 			}
 
 			return new TradePairsResponse(pairs.Values.ToList());
@@ -44,7 +47,7 @@ namespace Bitfinex.Api
 			}
 
 			var content = await CallAsync<dynamic>(HttpMethod.Get, BuildUrl(_settings.PublicUrl, $"pubticker/{request.Pair}"));
-			
+
 			return new MarketResponse
 			{
 				LastPrice = content.last_price,
@@ -126,6 +129,16 @@ namespace Bitfinex.Api
 		#endregion
 
 		#region Private method
+
+		private string Substitute(string asset)
+		{
+			if (!_substitutions.ContainsKey(asset))
+			{
+				return asset;
+			}
+
+			return _substitutions[asset];
+		}
 
 		private Task<dynamic> MakePrivateCallAsync(object obj, string url)
 		{
