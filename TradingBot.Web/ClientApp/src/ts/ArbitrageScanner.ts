@@ -10,80 +10,73 @@ import TradePair from "./models/TradePair";
 
 export default class ArbitrageScanner {
     private readonly _connector: Connector = new Connector();
-    private readonly _pairsMap: IDictionary<ITradePair> = {};
+    private readonly _pairsMap: IDictionary<TradePair> = {};
     private readonly _sockets: IWebSocket[] = [];
-    private _pairs: ReadonlyArray<ITradePair> = [];
+    private _pairs: ReadonlyArray<TradePair> = [];
     private readonly _opportunities: IDictionary<IDictionary<ITradePair>> = {};
 
     constructor() {
         this._sockets.push(new wsBinance());
     }
 
-    public get Pairs(): ReadonlyArray<ITradePair> {
+    public get Pairs(): ReadonlyArray<TradePair> {
         return this._pairs;
     }
 
     public async Start(): Promise<void> {
         await this.Initialize();
-        let pairs: string[] = this._pairs.map(item => item.label);
+        let pairs: string[] = this._pairs.map(item => item.Original.label);
         let local = this.DepthMessageHandler.bind(this);
         this._sockets.forEach(socket => {
-            // socket.SubscribeToDepth(5, pairs, local).Start();
+            socket.SubscribeToDepth(5, pairs, local).Start();
         });
     }
 
     private DepthMessageHandler(depth: IDepthMessage): void {
-        let pair: ITradePair = this._pairsMap[depth.pair];
-        pair.rate = depth.orderBook.asks[0][0];
+        console.log(depth);
+        // let pair: TradePair = this._pairsMap[depth.pair];
+        // pair.Original.rate = depth.orderBook.asks[0][0];
 
-        let rateBuy: number = depth.orderBook.asks[0][0];
-        let rateSell: number = depth.orderBook.asks[0][0];
+        // let rateBuy: number = depth.orderBook.asks[0][0];
+        // let rateSell: number = depth.orderBook.asks[0][0];
 
     }
 
     private async Initialize(): Promise<void> {
         let pairs: IDictionary<ReadonlyArray<TradePair>> = await this.LoadAssets();
+        console.log(pairs);
 
-        let r: TradePair[] = this.Intersect(pairs["Binance"], pairs["Bitfinex"]);
-        console.log(pairs.length);
+        let intersection: TradePair[] = this.Intersect(pairs["Binance"], pairs["Bitfinex"]);
+        console.log(intersection.length);
 
-        r.forEach(pair => {
+        intersection.forEach(pair => {
             console.log(pair.Original.label);
         });
+        this._pairs = intersection;
 
+        let exchanges: string[] = ["Binance", "Bitfinex"];
 
-
-
-
-        // let set: Set<TradePair> = new Set();
-
-
-        // let keys: string[] = Object.keys(pairs);
-
-        // for (let i = 0; i < exchanges.length; i++) {
-        //     for (let j = i + 1; j < exchanges.length; j++) {
-        //         let commonPairs: ITradePair[] = this.Intersect(pairs[exchanges[i]], pairs[exchanges[j]]);
-        //         let opportunity: IArbitrageOpportunity = {
-        //             from: exchanges[i],
-        //             to: exchanges[j],
-        //             pairs: commonPairs
-        //         };
-        //     }
-        // }
+        for (let i = 0; i < exchanges.length; i++) {
+            for (let j = i + 1; j < exchanges.length; j++) {
+                let intersection: TradePair[] = this.Intersect(pairs["Binance"], pairs["Bitfinex"]);
+                let opportunity: IArbitrageOpportunity = {
+                    from: exchanges[i],
+                    to: exchanges[j],
+                    pairs: intersection
+                };
+                console.log(opportunity);
+            }
+        }
     }
 
     private async LoadAssets(): Promise<IDictionary<ReadonlyArray<TradePair>>> {
         let pairs: IDictionary<ReadonlyArray<TradePair>> = {};
         let exchanges: string[] = ["Binance", "Bitfinex"];
-        exchanges.forEach(async ex => {
+
+        for (let ex of exchanges) {
             let response: ITradePairsResponse = await this._connector.GetTradePairsAsync({ apiName: ex });
-            pairs[ex] = response.pairs.map(pair => new TradePair(pair));
-            // response.pairs.forEach(pair => {                
-            //     if (!this._pairsMap.hasOwnProperty(pair.label)) {
-            //         this._pairsMap[pair.label] = pair;
-            //     }
-            // });
-        });
+            pairs[ex] = response.pairs;
+        }
 
         return pairs;
     }
@@ -120,5 +113,5 @@ export default class ArbitrageScanner {
 interface IArbitrageOpportunity {
     from: string;
     to: string;
-    pairs: ITradePair[];
+    pairs: TradePair[];
 }

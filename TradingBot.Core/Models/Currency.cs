@@ -6,7 +6,7 @@ namespace TradingBot.Core.Models
 		public Currency(int id, string symbol, string name)
 		{
 			Id = id;
-			Symbol = symbol.ToUpper();
+			Symbol = symbol;
 			Name = name;
 		}
 
