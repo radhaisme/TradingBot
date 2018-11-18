@@ -3,6 +3,7 @@ import IOrderBook from "./models/IOrderBook";
 import IMessageData from "./models/IMessageData";
 import IDictionary from "./models/IDictionary";
 import IDepthMessage from "./models/IDepthMessage";
+import { SourceType } from "./models/SourceType";
 
 export default class wsBinance implements IWebSocket {
     private readonly _baseAddress: string = "wss://stream.binance.com:9443";
@@ -43,7 +44,7 @@ export default class wsBinance implements IWebSocket {
                 asks: messageData.data.asks.map(([a, b]) => [+a, +b])
             };
             let message: IDepthMessage = {
-                source: "Binance",
+                source: SourceType.Binance,
                 pair: this._pairs[messageData.stream],
                 orderBook: orderBook,
             };

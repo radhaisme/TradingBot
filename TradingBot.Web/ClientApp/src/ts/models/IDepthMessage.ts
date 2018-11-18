@@ -1,7 +1,8 @@
 import IOrderBook from "./IOrderBook";
+import { SourceType } from "./SourceType";
 
 export default interface IDepthMessage {
-    readonly source: string;
+    readonly source: SourceType;
     readonly pair: string;
-    orderBook: IOrderBook;
+    readonly orderBook: IOrderBook;
 }

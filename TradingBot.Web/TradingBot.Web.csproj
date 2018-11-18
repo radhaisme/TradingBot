@@ -32,6 +32,7 @@
 
   <ItemGroup>
     <Folder Include="ClientApp\src\js\" />
+    <Folder Include="ClientApp\src\types\" />
     <Folder Include="ClientApp\src\ts\" />
   </ItemGroup>
 

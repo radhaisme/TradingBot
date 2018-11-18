@@ -16,7 +16,7 @@ export class Arbitrage extends Component {
     })();
   }
 
-  static renderTable(opportunities) {
+  static renderTable(arbitragePairs) {
     return (
       <table className='table'>
         <thead>
@@ -24,19 +24,17 @@ export class Arbitrage extends Component {
             <th>Pair</th>
             <th>Exchange (buy->sell)</th>
             <th>Rate (buy->sell)</th>
-            <th>Spread (%)</th>
             <th>Profit (%)</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
-          {opportunities.map(opportunity =>
-            <tr key={opportunity.label}>
-              <td>{opportunity.label}</td>
-              <td>{"Binance->Bitfinex"}</td>
-              <td>{opportunity.rate}</td>
-              <td>{0.1}</td>
-              <td>+{10}</td>
+          {arbitragePairs.map(arbitragePair =>
+            <tr key={arbitragePair.Symbol}>
+              <td>{arbitragePair.Symbol}</td>
+              <td>{arbitragePair.Route}</td>
+              <td>{`${arbitragePair.RateBuy}->${arbitragePair.RateSell}`}</td>
+              <td>+{arbitragePair.Profit}</td>
               <td><button onClick={() => { alert("СКОРЕЕЕ!!!!"); }}>Take profit!!!</button></td>
             </tr>
           )}
